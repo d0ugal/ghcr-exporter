@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  ghcr-exporter:
+    image: ghcr.io/d0ugal/ghcr-exporter:latest
+    container_name: ghcr-exporter
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount your configuration file
+      - ./config.yaml:/app/config.yaml:ro
+    environment:
+      - TZ=UTC
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+
+# Example with Prometheus and Grafana:
+
+# services:
+#   ghcr-exporter:
+#     image: ghcr.io/d0ugal/ghcr-exporter:latest
+#     container_name: ghcr-exporter
+#     ports:
+#       - "8080:8080"
+#     volumes:
+#       - ./config.yaml:/app/config.yaml:ro
+#     environment:
+#       - TZ=UTC
+#     restart: unless-stopped
+#     networks:
+#       - monitoring
+#
+#   prometheus:
+#     image: prom/prometheus:latest
+#     container_name: prometheus
+#     ports:
+#       - "9090:9090"
+#     volumes:
+#       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+#     restart: unless-stopped
+#     networks:
+#       - monitoring
+#
+#   grafana:
+#     image: grafana/grafana:latest
+#     container_name: grafana
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - GF_SECURITY_ADMIN_PASSWORD=admin
+#     restart: unless-stopped
+#     networks:
+#       - monitoring
+#
+# networks:
+#   monitoring:

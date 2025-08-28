@@ -1,0 +1,141 @@
+package metrics
+
+import (
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+)
+
+// Registry holds all the metrics for the GHCR exporter
+type Registry struct {
+	// Version info metric
+	VersionInfo *prometheus.GaugeVec
+
+	// GHCR package metrics
+	PackageDownloadsTotal        *prometheus.GaugeVec
+	PackageLastPublishedTimestamp *prometheus.GaugeVec
+	PackageVersionDownloadsTotal *prometheus.GaugeVec
+
+	// Collection statistics
+	CollectionErrorsTotal *prometheus.CounterVec
+	CollectionDuration    *prometheus.HistogramVec
+
+	// Metric information for UI
+	metricInfo []MetricInfo
+}
+
+// MetricInfo contains information about a metric for the UI
+type MetricInfo struct {
+	Name         string
+	Help         string
+	Labels       []string
+	ExampleValue string
+}
+
+// addMetricInfo adds metric information to the registry
+func (r *Registry) addMetricInfo(name, help string, labels []string) {
+	r.metricInfo = append(r.metricInfo, MetricInfo{
+		Name:         name,
+		Help:         help,
+		Labels:       labels,
+		ExampleValue: "",
+	})
+}
+
+// NewRegistry creates a new metrics registry
+func NewRegistry() *Registry {
+	r := &Registry{}
+
+	r.VersionInfo = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "ghcr_exporter_info",
+			Help: "Information about the GHCR exporter",
+		},
+		[]string{"version", "commit", "build_date"},
+	)
+	r.addMetricInfo("ghcr_exporter_info", "Information about the GHCR exporter", []string{"version", "commit", "build_date"})
+
+	r.PackageDownloadsTotal = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "ghcr_exporter_info",
+			Help: "Information about the GHCR exporter",
+		},
+		[]string{"version", "commit", "build_date"},
+	)
+	r.addMetricInfo("ghcr_exporter_info", "Information about the GHCR exporter", []string{"version", "commit", "build_date"})
+
+	r.PackageDownloadsTotal = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "ghcr_package_downloads_total",
+			Help: "Total number of downloads for a GHCR package (using version count as proxy)",
+		},
+		[]string{"owner", "package_name"},
+	)
+	r.addMetricInfo("ghcr_package_downloads_total", "Total number of downloads for a GHCR package (using version count as proxy)", []string{"owner", "package_name"})
+
+	r.PackageLastPublishedTimestamp = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "ghcr_package_last_published_timestamp",
+			Help: "Timestamp of the last published version for a GHCR package",
+		},
+		[]string{"owner", "package_name"},
+	)
+	r.addMetricInfo("ghcr_package_last_published_timestamp", "Timestamp of the last published version for a GHCR package", []string{"owner", "package_name"})
+
+	r.PackageVersionDownloadsTotal = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "ghcr_package_version_downloads_total",
+			Help: "Download count for a specific version of a GHCR package (1 indicates version exists)",
+		},
+		[]string{"owner", "package_name", "version"},
+	)
+	r.addMetricInfo("ghcr_package_version_downloads_total", "Download count for a specific version of a GHCR package (1 indicates version exists)", []string{"owner", "package_name", "version"})
+
+	r.CollectionErrorsTotal = promauto.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "ghcr_collection_errors_total",
+			Help: "Total number of errors during GHCR data collection",
+		},
+		[]string{"owner", "package_name", "error_type"},
+	)
+	r.addMetricInfo("ghcr_collection_errors_total", "Total number of errors during GHCR data collection", []string{"owner", "package_name", "error_type"})
+
+	r.CollectionDuration = promauto.NewHistogramVec(
+		prometheus.HistogramOpts{
+			Name:    "ghcr_collection_duration_seconds",
+			Help:    "Duration of GHCR data collection in seconds",
+			Buckets: prometheus.DefBuckets,
+		},
+		[]string{"owner", "package_name"},
+	)
+	r.addMetricInfo("ghcr_collection_duration_seconds", "Duration of GHCR data collection in seconds", []string{"owner", "package_name"})
+
+	return r
+}
+
+// GetMetricsInfo returns information about all metrics for the UI
+func (r *Registry) GetMetricsInfo() []MetricInfo {
+	return r.metricInfo
+}
+
+// MetricInfo contains information about a metric for the UI
+type MetricInfo struct {
+	Name         string
+	Help         string
+	Labels       []string
+	ExampleValue string
+}
+
+// addMetricInfo adds metric information to the registry
+func (r *Registry) addMetricInfo(name, help string, labels []string) {
+	r.metricInfo = append(r.metricInfo, MetricInfo{
+		Name:         name,
+		Help:         help,
+		Labels:       labels,
+		ExampleValue: "",
+	})
+}
+
+// GetMetricsInfo returns information about all metrics for the UI
+func (r *Registry) GetMetricsInfo() []MetricInfo {
+	return r.metricInfo
+}
