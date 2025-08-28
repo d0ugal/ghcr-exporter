@@ -1,0 +1,270 @@
+# Cursor Rules for GHCR Exporter
+
+## Commit Message Guidelines
+
+This project uses [release-please](https://github.com/googleapis/release-please) for automated releases. Follow these commit message conventions to ensure proper versioning and changelog generation.
+
+### Commit Message Format
+
+Use conventional commit format with the following structure:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### Types
+
+- **feat**: A new feature (triggers minor version bump)
+- **fix**: A bug fix (triggers patch version bump)
+- **docs**: Documentation only changes
+- **style**: Changes that do not affect the meaning of the code (white-space, formatting, etc)
+- **refactor**: A code change that neither fixes a bug nor adds a feature
+- **perf**: A code change that improves performance
+- **test**: Adding missing tests or correcting existing tests
+- **build**: Changes that affect the build system or external dependencies
+- **ci**: Changes to CI configuration files and scripts
+- **chore**: Other changes that don't modify src or test files
+- **revert**: Reverts a previous commit
+
+### Scopes (Optional)
+
+Use scopes to indicate which part of the codebase is affected:
+
+- **config**: Configuration changes
+- **metrics**: Metrics collection or export changes
+- **github**: GitHub API integration changes
+- **ghcr**: GitHub Container Registry specific changes
+- **collectors**: Data collection changes
+- **server**: HTTP server changes
+- **logging**: Logging system changes
+- **docker**: Docker-related changes
+- **docs**: Documentation changes
+- **ci**: CI/CD changes
+- **packages**: Package monitoring changes
+
+### Examples
+
+✅ **Good commit messages:**
+
+```
+feat(metrics): add package download count metrics
+
+feat: add support for organization package monitoring
+
+fix(github): handle API rate limiting gracefully
+
+fix: resolve memory leak in package collection
+
+docs: update configuration examples in README
+
+refactor(server): improve HTTP handler error handling
+
+perf: optimize package data processing algorithm
+
+test: add unit tests for GitHub API integration
+
+build: update Go version to 1.24
+
+ci: add automated security scanning
+
+chore: update dependencies to latest versions
+```
+
+❌ **Bad commit messages:**
+
+```
+update code
+fix stuff
+add feature
+bug fix
+```
+
+❌ **Bad commit practices:**
+
+- Committing multiple unrelated changes together
+- Large commits that are hard to review
+- Not reviewing changes before committing
+- Committing without understanding what changed
+
+### Breaking Changes
+
+For breaking changes, add `!` after the type/scope and include `BREAKING CHANGE:` in the footer:
+
+```
+feat!: remove deprecated config option
+
+BREAKING CHANGE: The `old_config_option` has been removed. Use `new_config_option` instead.
+```
+
+### Commit Message Best Practices
+
+1. **Use imperative mood**: "add" not "added" or "adds"
+2. **Don't capitalize the first letter**: "add feature" not "Add feature"
+3. **No period at the end**: "add feature" not "add feature."
+4. **Keep it under 72 characters** for the first line
+5. **Be specific and descriptive**
+6. **Reference issues when relevant**: "fix: resolve memory leak (#123)"
+7. **Inspect before committing**: Always review `git diff --staged` before committing
+8. **Keep commits focused**: One logical change per commit
+9. **Prefer smaller commits**: Easier to review, revert, and understand
+
+### Release-Please Integration
+
+- **feat** commits trigger minor version bumps
+- **fix** commits trigger patch version bumps
+- **BREAKING CHANGE** commits trigger major version bumps
+- **docs**, **style**, **refactor**, **perf**, **test**, **build**, **ci**, **chore** don't trigger version bumps
+
+### Development Workflow
+
+**Always follow this workflow when making changes:**
+
+1. ✅ **Check git status**: `git status` - Ensure you're up to date and on the right branch
+2. ✅ **Make your changes**
+3. ✅ **Run tests**: `make test` - Ensure all tests pass
+4. ✅ **Run linting**: `make lint` - Fix any linting issues
+5. ✅ **Format code**: `make fmt` - Ensure consistent formatting
+6. ✅ **Verify changes work** - Test your changes manually if needed
+7. ✅ **Inspect your changes**: Review what you're about to commit
+8. ✅ **Choose appropriate commit message**: Use conventional commit format
+9. ✅ **Commit when it works**: Only commit working, tested code
+10. ✅ **Push immediately**: `git push` - Don't let changes sit locally
+
+### Git Status Check
+
+**Always check git status before starting work:**
+
+```bash
+git status
+```
+
+**What to look for:**
+- ✅ **Clean working directory**: No uncommitted changes
+- ✅ **Up to date**: Your branch is not behind origin
+- ✅ **Correct branch**: You're on the intended branch (usually `main`)
+- ✅ **No conflicts**: No merge conflicts or rebase in progress
+
+**If you see issues:**
+- **Uncommitted changes**: Commit or stash them first
+- **Behind origin**: `git pull --rebase` to get latest changes
+- **Wrong branch**: `git checkout main` or appropriate branch
+- **Conflicts**: Resolve them before proceeding
+
+**Why this matters:**
+- Prevents working on outdated code
+- Avoids merge conflicts later
+- Ensures clean, focused commits
+- Maintains good git hygiene
+
+### Pre-commit Checklist
+
+Before committing, ensure:
+
+1. ✅ Tests pass: `make test`
+2. ✅ Code is formatted: `make fmt`
+3. ✅ **Linting passes: `make lint`** - **CRITICAL: Never commit with linting errors**
+4. ✅ **Inspect changes**: Review what you're committing with `git diff --staged`
+5. ✅ **Choose appropriate message**: Use conventional commit format
+6. ✅ **Keep commits focused**: Avoid multiple unrelated changes in one commit
+7. ✅ **Prefer smaller commits**: Break large changes into logical, focused commits
+8. ✅ Documentation is updated if needed
+9. ✅ Changes are verified and working
+
+### Linting Requirements
+
+**ALWAYS fix linting issues before committing:**
+- Run `make lint` and address ALL issues
+- If linting fails, fix the issues before committing
+- Never commit code that fails linting checks
+- Use `make fmt` to fix formatting issues automatically
+- For complex linting issues, consider disabling specific linters in `.golangci.yml` if they're too strict
+- The goal is to maintain clean, consistent code quality
+
+### Post-commit Workflow
+
+After committing, always:
+
+1. ✅ Push changes to remote: `git push`
+2. ✅ Verify CI checks pass
+3. ✅ Create/update PR if working on a feature branch
+
+### Branch Naming
+
+Use descriptive branch names:
+
+```
+feat/add-package-download-metrics
+fix/github-api-rate-limiting
+docs/update-configuration-examples
+refactor/improve-package-data-processing
+```
+
+### Dependency Management
+
+**Always use pinned versions instead of "latest" for better Renovate integration:**
+
+✅ **Good version specifications:**
+- `go install github.com/golangci/golangci-lint/cmd/golangci-lint@v2.0.0`
+- `FROM golang:1.24-alpine`
+- `RUN go install github.com/example/tool@v1.2.3`
+
+❌ **Avoid "latest" tags:**
+- `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`
+- `FROM golang:latest`
+- `RUN go install github.com/example/tool@latest`
+
+**Benefits of pinned versions:**
+- Renovate can detect and update them automatically
+- Reproducible builds
+- Better security (known versions)
+- Easier debugging and rollbacks
+
+### Pull Request Guidelines
+
+- Use conventional commit format for PR titles
+- Include detailed description of changes
+- Reference related issues
+- Ensure CI checks pass
+- Request reviews from maintainers
+
+### Automated Release Process
+
+1. Push commits to `main` branch
+2. Release-please analyzes commit messages
+3. Creates/updates release PR automatically
+4. Merging release PR creates new GitHub release
+5. Changelog is automatically generated
+
+### GHCR-Specific Guidelines
+
+- **Security**: Never commit GitHub tokens or API credentials
+- **Configuration**: Use `config.example.yaml` for public examples, keep actual configs private
+- **Testing**: Test GitHub API integration with mock data when possible
+- **Error Handling**: Implement robust error handling for API rate limits and network issues
+- **Metrics**: Ensure all package-related metrics are properly labeled with owner/repo information
+- **Rate Limiting**: Respect GitHub API rate limits and implement appropriate backoff strategies
+- **Package Types**: Handle different package types (container, npm, maven, etc.) appropriately
+- **Performance**: Optimize for efficient API usage without hitting rate limits
+
+### GitHub API Best Practices
+
+- **Authentication**: Use GitHub tokens with minimal required scopes (`read:packages`, `read:org`, `read:user`)
+- **Rate Limiting**: Implement exponential backoff for rate limit errors
+- **Caching**: Cache package metadata to reduce API calls
+- **Error Handling**: Handle various GitHub API error responses gracefully
+- **User vs Organization**: Support both user and organization package monitoring
+- **Package Discovery**: Efficiently discover and monitor packages without excessive API calls
+
+### Package Monitoring Best Practices
+
+- **Package States**: Track package availability and version information
+- **Download Metrics**: Monitor package download counts and trends
+- **Version Tracking**: Track package versions and update frequencies
+- **Organization Support**: Handle organization packages with proper permissions
+- **Data Collection**: Collect package data efficiently without overwhelming the GitHub API
+
+Remember: Good commit messages make the project history more readable and enable automated tools like release-please to work effectively!
