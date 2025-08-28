@@ -10,18 +10,18 @@ var templateFS embed.FS
 
 // ConfigData holds configuration information for the template
 type ConfigData struct {
-	TokenConfigured     string
-	PackageCount        int
-	CollectionInterval  string
+	TokenConfigured    string
+	PackageCount       int
+	CollectionInterval string
 }
 
 // TemplateData holds the data passed to the HTML template
 type TemplateData struct {
-	Version    string
-	Commit     string
-	BuildDate  string
-	Metrics    []MetricData
-	Config     ConfigData
+	Version   string
+	Commit    string
+	BuildDate string
+	Metrics   []MetricData
+	Config    ConfigData
 }
 
 // MetricData represents a metric for template rendering

@@ -33,11 +33,11 @@ func GetBuildTime() time.Time {
 	if BuildDate == "unknown" {
 		return time.Time{}
 	}
-	
+
 	t, err := time.Parse(time.RFC3339, BuildDate)
 	if err != nil {
 		return time.Time{}
 	}
-	
+
 	return t
 }

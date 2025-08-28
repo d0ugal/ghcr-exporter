@@ -106,6 +106,7 @@ func (c *Config) GetPackageInterval(group PackageGroup) int {
 	if c.Metrics.Collection.DefaultIntervalSet {
 		return c.Metrics.Collection.DefaultInterval.Seconds()
 	}
+
 	return 60 // Default to 60 seconds
 }
 
@@ -125,12 +126,15 @@ func LoadConfig(path string) (*Config, error) {
 	if config.Server.Host == "" {
 		config.Server.Host = "0.0.0.0"
 	}
+
 	if config.Server.Port == 0 {
 		config.Server.Port = 8080
 	}
+
 	if config.Logging.Level == "" {
 		config.Logging.Level = "info"
 	}
+
 	if config.Logging.Format == "" {
 		config.Logging.Format = "text"
 	}

@@ -131,6 +131,7 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, repo string, 
 	if err != nil {
 		slog.Error("Failed to collect package metrics after retries", "repo", repo, "error", err)
 		gc.metrics.CollectionFailedCounter.WithLabelValues(repo, strconv.Itoa(interval)).Inc()
+
 		return
 	}
 
@@ -180,12 +181,18 @@ func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packag
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			slog.Error("Error closing response body", "error", err)
+		}
+	}()
 
 	var packageInfo GHCRPackageResponse
 	if err := json.NewDecoder(resp.Body).Decode(&packageInfo); err != nil {
 		return nil, err
 	}
+
 	return &packageInfo, nil
 }
 
@@ -193,12 +200,14 @@ func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packag
 func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) (*http.Response, error) {
 	// Try user endpoint first
 	userURL := fmt.Sprintf("https://api.github.com%s", path)
-	userReq, err := http.NewRequestWithContext(ctx, "GET", userURL, nil)
+
+	userReq, err := http.NewRequestWithContext(ctx, http.MethodGet, userURL, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	userReq.Header.Set("Accept", "application/vnd.github.v3+json")
+
 	if gc.token != "" {
 		userReq.Header.Set("Authorization", "Bearer "+gc.token)
 	}
@@ -215,18 +224,21 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 
 	// If user endpoint returns 404, try org endpoint
 	if userResp.StatusCode == http.StatusNotFound {
-		userResp.Body.Close()
+		if err := userResp.Body.Close(); err != nil {
+			slog.Error("Error closing user response body", "error", err)
+		}
 
 		// Replace /users/ with /orgs/ in the path
 		orgPath := strings.Replace(path, "/users/", "/orgs/", 1)
 		orgURL := fmt.Sprintf("https://api.github.com%s", orgPath)
 
-		orgReq, err := http.NewRequestWithContext(ctx, "GET", orgURL, nil)
+		orgReq, err := http.NewRequestWithContext(ctx, http.MethodGet, orgURL, nil)
 		if err != nil {
 			return nil, err
 		}
 
 		orgReq.Header.Set("Accept", "application/vnd.github.v3+json")
+
 		if gc.token != "" {
 			orgReq.Header.Set("Authorization", "Bearer "+gc.token)
 		}
@@ -241,12 +253,18 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 		}
 
 		// If both fail, return the org endpoint error
-		orgResp.Body.Close()
+		if err := orgResp.Body.Close(); err != nil {
+			slog.Error("Error closing org response body", "error", err)
+		}
+
 		return nil, fmt.Errorf("API request failed with status %d", orgResp.StatusCode)
 	}
 
 	// If user endpoint fails with something other than 404, return that error
-	userResp.Body.Close()
+	if err := userResp.Body.Close(); err != nil {
+		slog.Error("Error closing user response body", "error", err)
+	}
+
 	return nil, fmt.Errorf("API request failed with status %d", userResp.StatusCode)
 }
 
@@ -255,29 +273,25 @@ func (gc *GHCRCollector) getPackageVersions(ctx context.Context, owner, repo, pa
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			slog.Error("Error closing response body", "error", err)
+		}
+	}()
 
 	var versions []GHCRVersionResponse
 	if err := json.NewDecoder(resp.Body).Decode(&versions); err != nil {
 		return nil, err
 	}
+
 	return versions, nil
-}
-
-func (gc *GHCRCollector) setFallbackMetrics(pkg config.PackageGroup) {
-	// Set fallback metrics when API calls fail
-	// This ensures we always have some metrics available
-	gc.metrics.PackageDownloadsGauge.WithLabelValues(pkg.Owner, pkg.Repo).Set(0)
-	gc.metrics.PackageLastPublishedGauge.WithLabelValues(pkg.Owner, pkg.Repo).Set(float64(time.Now().Unix()))
-
-	slog.Info("Set fallback metrics for package", "package", pkg.Repo)
 }
 
 func (gc *GHCRCollector) updatePackageMetrics(pkg config.PackageGroup, packageInfo *GHCRPackageResponse, versions []GHCRVersionResponse) {
 	// Update package-level metrics with real data
 	// Note: GitHub API doesn't provide download statistics for packages
 	// We'll use version count as a proxy metric and track last published time
-
 	var lastPublished time.Time
 
 	// Find the most recent version
@@ -306,6 +320,7 @@ func (gc *GHCRCollector) updatePackageMetrics(pkg config.PackageGroup, packageIn
 
 func (gc *GHCRCollector) retryWithBackoff(operation func() error, maxRetries int, initialDelay time.Duration) error {
 	var lastErr error
+
 	delay := initialDelay
 
 	for i := 0; i <= maxRetries; i++ {

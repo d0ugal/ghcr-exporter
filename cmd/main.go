@@ -85,7 +85,10 @@ func main() {
 		<-sigChan
 		slog.Info("Shutting down gracefully...")
 		cancel()
-		srv.Shutdown()
+
+		if err := srv.Shutdown(); err != nil {
+			slog.Error("Error during server shutdown", "error", err)
+		}
 	}()
 
 	// Start server

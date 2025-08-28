@@ -58,12 +58,12 @@ func NewRegistry() *Registry {
 
 	r.PackageDownloadsGauge = promauto.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "ghcr_package_downloads_total",
+			Name: "ghcr_package_downloads",
 			Help: "Total number of downloads for a GHCR package (using version count as proxy)",
 		},
 		[]string{"owner", "repo"},
 	)
-	r.addMetricInfo("ghcr_package_downloads_total", "Total number of downloads for a GHCR package (using version count as proxy)", []string{"owner", "repo"})
+	r.addMetricInfo("ghcr_package_downloads", "Total number of downloads for a GHCR package (using version count as proxy)", []string{"owner", "repo"})
 
 	r.PackageLastPublishedGauge = promauto.NewGaugeVec(
 		prometheus.GaugeOpts{
