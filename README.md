@@ -6,6 +6,7 @@ A Prometheus exporter for GitHub Container Registry (GHCR) metrics.
 
 - Collects package download statistics from GitHub Container Registry (GHCR)
 - Tracks package version counts and last published timestamps
+- Download statistics from package pages
 - Monitors collection performance and success rates
 - Supports both user and organization packages
 - Prometheus metrics endpoint with health checks
@@ -62,11 +63,16 @@ make build
 The exporter provides the following metrics:
 
 - `ghcr_exporter_info` - Information about the exporter
-- `ghcr_package_downloads_total` - Version count (proxy for package activity)
+- `ghcr_package_version_count` - Total number of versions for a package
+- `ghcr_package_downloads` - **Actual download count** scraped from package pages
 - `ghcr_package_last_published_timestamp` - Last published timestamp
 - `ghcr_collection_duration_seconds` - Collection duration
 - `ghcr_collection_success_total` - Successful collections
 - `ghcr_collection_failed_total` - Failed collections
+
+### Important Note About Download Statistics
+
+The `ghcr_package_downloads` metric provides **actual download counts** by scraping the package page HTML, which matches what you see on GitHub (e.g., "Total Downloads 176K"). This is different from version count, which only represents the number of different versions/tags available.
 
 ## Development
 

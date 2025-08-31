@@ -1,9 +1,11 @@
 package collectors
 
 import (
+	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -171,7 +173,7 @@ func (gc *GHCRCollector) collectPackageMetrics(ctx context.Context, repo string,
 	}
 
 	// Update metrics
-	gc.updatePackageMetrics(pkg, packageInfo, versions)
+	gc.updatePackageMetrics(ctx, pkg, packageInfo, versions)
 
 	return nil
 }
@@ -288,7 +290,7 @@ func (gc *GHCRCollector) getPackageVersions(ctx context.Context, owner, repo, pa
 	return versions, nil
 }
 
-func (gc *GHCRCollector) updatePackageMetrics(pkg config.PackageGroup, packageInfo *GHCRPackageResponse, versions []GHCRVersionResponse) {
+func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.PackageGroup, packageInfo *GHCRPackageResponse, versions []GHCRVersionResponse) {
 	// Update package-level metrics with real data
 	// Note: GitHub API doesn't provide download statistics for packages
 	// We'll use version count as a proxy metric and track last published time
@@ -308,6 +310,16 @@ func (gc *GHCRCollector) updatePackageMetrics(pkg config.PackageGroup, packageIn
 	// Use version count as a proxy for activity (more versions = more activity)
 	gc.metrics.PackageDownloadsGauge.WithLabelValues(pkg.Owner, pkg.Repo).Set(float64(packageInfo.VersionCount))
 
+	// Try to get actual download statistics from the package page
+	downloadCount, err := gc.getPackageDownloadStats(ctx, pkg.Owner, pkg.Repo)
+	if err != nil {
+		slog.Warn("Failed to get download statistics", "package", pkg.Repo, "error", err)
+		// Set to -1 to indicate no data available
+		gc.metrics.PackageDownloadStatsGauge.WithLabelValues(pkg.Owner, pkg.Repo).Set(-1)
+	} else {
+		gc.metrics.PackageDownloadStatsGauge.WithLabelValues(pkg.Owner, pkg.Repo).Set(float64(downloadCount))
+	}
+
 	if !lastPublished.IsZero() {
 		gc.metrics.PackageLastPublishedGauge.WithLabelValues(pkg.Owner, pkg.Repo).Set(float64(lastPublished.Unix()))
 	}
@@ -315,6 +327,7 @@ func (gc *GHCRCollector) updatePackageMetrics(pkg config.PackageGroup, packageIn
 	slog.Info("Updated package metrics",
 		"package", pkg.Repo,
 		"version_count", packageInfo.VersionCount,
+		"download_count", downloadCount,
 		"last_published", lastPublished.Format(time.RFC3339))
 }
 
@@ -337,4 +350,172 @@ func (gc *GHCRCollector) retryWithBackoff(operation func() error, maxRetries int
 	}
 
 	return fmt.Errorf("operation failed after %d retries: %w", maxRetries, lastErr)
+}
+
+// getPackageDownloadStats scrapes the package page to get actual download statistics
+func (gc *GHCRCollector) getPackageDownloadStats(ctx context.Context, owner, packageName string) (int64, error) {
+	slog.Info("Starting download statistics collection", "owner", owner, "package", packageName)
+
+	// Construct the package page URL
+	packageURL := fmt.Sprintf("https://github.com/%s/%s/pkgs/container/%s", owner, packageName, packageName)
+	slog.Debug("Constructed package URL", "url", packageURL)
+
+	// Create request to the package page
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, packageURL, nil)
+	if err != nil {
+		slog.Error("Failed to create HTTP request", "owner", owner, "package", packageName, "error", err)
+		return 0, fmt.Errorf("failed to create request: %w", err)
+	}
+
+	slog.Debug("Created HTTP request successfully")
+
+	// Set headers to mimic a browser request
+	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
+	req.Header.Set("Accept-Language", "en-US,en;q=0.9")
+	req.Header.Set("Accept-Encoding", "gzip, deflate, br")
+	req.Header.Set("DNT", "1")
+	req.Header.Set("Connection", "keep-alive")
+	req.Header.Set("Upgrade-Insecure-Requests", "1")
+	req.Header.Set("Sec-Fetch-Dest", "document")
+	req.Header.Set("Sec-Fetch-Mode", "navigate")
+	req.Header.Set("Sec-Fetch-Site", "none")
+	req.Header.Set("Sec-Fetch-User", "?1")
+	req.Header.Set("Cache-Control", "max-age=0")
+	slog.Debug("Set browser-like headers", "user_agent", req.Header.Get("User-Agent"))
+
+	// Make the request
+	slog.Debug("Making HTTP request to package page")
+
+	resp, err := gc.client.Do(req)
+	if err != nil {
+		slog.Error("Failed to fetch package page", "owner", owner, "package", packageName, "url", packageURL, "error", err)
+		return 0, fmt.Errorf("failed to fetch package page: %w", err)
+	}
+
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			slog.Warn("Failed to close response body", "error", closeErr)
+		}
+	}()
+
+	slog.Debug("Received HTTP response", "status_code", resp.StatusCode, "content_length", resp.ContentLength, "content_type", resp.Header.Get("Content-Type"))
+
+	if resp.StatusCode != http.StatusOK {
+		slog.Error("Package page returned non-OK status", "owner", owner, "package", packageName, "status_code", resp.StatusCode, "url", packageURL)
+		return 0, fmt.Errorf("package page returned status %d", resp.StatusCode)
+	}
+
+	// Read the response body
+	slog.Debug("Reading response body")
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		slog.Error("Failed to read response body", "owner", owner, "package", packageName, "error", err)
+		return 0, fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	// Handle gzip decompression if needed
+	if resp.Header.Get("Content-Encoding") == "gzip" {
+		slog.Debug("Decompressing gzipped response")
+
+		gzReader, err := gzip.NewReader(strings.NewReader(string(body)))
+		if err != nil {
+			slog.Error("Failed to create gzip reader", "owner", owner, "package", packageName, "error", err)
+			return 0, fmt.Errorf("failed to create gzip reader: %w", err)
+		}
+
+		defer func() {
+			if closeErr := gzReader.Close(); closeErr != nil {
+				slog.Warn("Failed to close gzip reader", "error", closeErr)
+			}
+		}()
+
+		// Read the decompressed content
+		decompressedBody, err := io.ReadAll(gzReader)
+		if err != nil {
+			slog.Error("Failed to read decompressed body", "owner", owner, "package", packageName, "error", err)
+			return 0, fmt.Errorf("failed to read decompressed body: %w", err)
+		}
+
+		body = decompressedBody
+		slog.Debug("Gzip decompression successful", "original_size", len(body), "decompressed_size", len(decompressedBody))
+	}
+
+	bodySize := len(body)
+	slog.Debug("Response body read successfully", "body_size_bytes", bodySize)
+
+	if bodySize == 0 {
+		slog.Error("Response body is empty", "owner", owner, "package", packageName, "url", packageURL)
+		return 0, fmt.Errorf("response body is empty")
+	}
+
+	// Parse the HTML document
+	slog.Debug("Parsing HTML document", "body_size_bytes", bodySize)
+
+	// Simple grep-like approach: find "Total downloads" and get the next line
+	htmlContent := string(body)
+	lines := strings.Split(htmlContent, "\n")
+
+	var downloadLine string
+
+	for i, line := range lines {
+		if strings.Contains(line, "Total downloads") {
+			if i+1 < len(lines) {
+				downloadLine = strings.TrimSpace(lines[i+1])
+				slog.Debug("Found download line after 'Total downloads'", "line", downloadLine)
+
+				break
+			}
+		}
+	}
+
+	if downloadLine == "" {
+		slog.Error("Download statistics not found", "owner", owner, "package", packageName)
+
+		// Log a few lines around where "Total downloads" should be for debugging
+		for i, line := range lines {
+			if strings.Contains(line, "download") {
+				slog.Debug("Found line with 'download'", "line_number", i, "content", strings.TrimSpace(line))
+
+				if i+1 < len(lines) {
+					slog.Debug("Next line content", "line_number", i+1, "content", strings.TrimSpace(lines[i+1]))
+				}
+			}
+		}
+
+		return 0, fmt.Errorf("download statistics not found in package page")
+	}
+
+	slog.Debug("Found download line", "line", downloadLine)
+
+	// Extract the title attribute which contains the full number
+	// Look for title="123456" in the line (e.g., from <h3 title="123456">123K</h3>)
+	titleStart := strings.Index(downloadLine, `title="`)
+	if titleStart == -1 {
+		slog.Error("Download count title attribute not found", "owner", owner, "package", packageName, "line", downloadLine)
+		return 0, fmt.Errorf("download count title attribute not found")
+	}
+
+	titleStart += 7 // Skip 'title="'
+
+	titleEnd := strings.Index(downloadLine[titleStart:], `"`)
+	if titleEnd == -1 {
+		slog.Error("Download count title attribute malformed", "owner", owner, "package", packageName, "line", downloadLine)
+		return 0, fmt.Errorf("download count title attribute malformed")
+	}
+
+	title := downloadLine[titleStart : titleStart+titleEnd]
+	slog.Debug("Extracted title attribute", "title", title)
+
+	// Parse the download count from the title attribute
+	downloadCount, err := strconv.ParseInt(title, 10, 64)
+	if err != nil {
+		slog.Error("Failed to parse download count", "owner", owner, "package", packageName, "title", title, "error", err)
+		return 0, fmt.Errorf("failed to parse download count %s: %w", title, err)
+	}
+
+	slog.Info("Successfully extracted download statistics", "owner", owner, "package", packageName, "download_count", downloadCount, "raw_title", title)
+
+	return downloadCount, nil
 }

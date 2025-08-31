@@ -13,6 +13,7 @@ type Registry struct {
 	// GHCR package metrics
 	PackageDownloadsGauge     *prometheus.GaugeVec
 	PackageLastPublishedGauge *prometheus.GaugeVec
+	PackageDownloadStatsGauge *prometheus.GaugeVec
 
 	// Collection statistics
 	CollectionFailedCounter  *prometheus.CounterVec
@@ -58,12 +59,21 @@ func NewRegistry() *Registry {
 
 	r.PackageDownloadsGauge = promauto.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "ghcr_package_downloads",
-			Help: "Total number of downloads for a GHCR package (using version count as proxy)",
+			Name: "ghcr_package_versions",
+			Help: "Total number of versions for a GHCR package",
 		},
 		[]string{"owner", "repo"},
 	)
-	r.addMetricInfo("ghcr_package_downloads", "Total number of downloads for a GHCR package (using version count as proxy)", []string{"owner", "repo"})
+	r.addMetricInfo("ghcr_package_versions", "Total number of versions for a GHCR package", []string{"owner", "repo"})
+
+	r.PackageDownloadStatsGauge = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "ghcr_package_downloads",
+			Help: "Total number of downloads for a GHCR package (scraped from package page)",
+		},
+		[]string{"owner", "repo"},
+	)
+	r.addMetricInfo("ghcr_package_downloads", "Total downloads for a package from GitHub Container Registry", []string{"owner", "repo"})
 
 	r.PackageLastPublishedGauge = promauto.NewGaugeVec(
 		prometheus.GaugeOpts{
