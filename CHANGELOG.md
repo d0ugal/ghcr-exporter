@@ -5,6 +5,13 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0](https://github.com/d0ugal/ghcr-exporter/compare/v1.0.0...v1.1.0) (2025-09-01)
+
+
+### Features
+
+* implement actual download statistics scraping from package pages ([40ff36d](https://github.com/d0ugal/ghcr-exporter/commit/40ff36d2cd95dae2dbead9422e3cc1c06509fce0))
+
 ## 1.0.0 (2025-08-28)
 
 
