@@ -3,6 +3,9 @@ FROM golang:1.25-alpine AS builder
 
 WORKDIR /app
 
+# Install git and ca-certificates for go mod download
+RUN apk add --no-cache git ca-certificates
+
 # Copy go mod files
 COPY go.mod go.sum ./
 
@@ -12,8 +15,21 @@ RUN go mod download
 # Copy source code
 COPY . .
 
-# Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ghcr-exporter ./cmd
+# Build the application with version information
+# Accept build args for version info, fall back to git describe if not provided
+ARG VERSION
+ARG COMMIT
+ARG BUILD_DATE
+
+RUN VERSION=${VERSION:-$(git describe --tags --always --dirty 2>/dev/null || echo "dev")} && \
+    COMMIT=${COMMIT:-$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")} && \
+    BUILD_DATE=${BUILD_DATE:-$(date -u +"%Y-%m-%dT%H:%M:%SZ")} && \
+    CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo \
+    -ldflags="-s -w \
+        -X github.com/d0ugal/ghcr-exporter/internal/version.Version=$VERSION \
+        -X github.com/d0ugal/ghcr-exporter/internal/version.Commit=$COMMIT \
+        -X github.com/d0ugal/ghcr-exporter/internal/version.BuildDate=$BUILD_DATE" \
+    -o ghcr-exporter ./cmd
 
 # Final stage
 FROM alpine:latest
