@@ -5,6 +5,13 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2](https://github.com/d0ugal/ghcr-exporter/compare/v1.1.1...v1.1.2) (2025-09-03)
+
+
+### Bug Fixes
+
+* pin Alpine version to 3.22.1 for consistency ([96b1e6b](https://github.com/d0ugal/ghcr-exporter/commit/96b1e6bcd0d4e5d2672ca24229efb865323eaf93))
+
 ## [1.1.1](https://github.com/d0ugal/ghcr-exporter/compare/v1.1.0...v1.1.1) (2025-09-03)
 
 
