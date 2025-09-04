@@ -5,6 +5,21 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0](https://github.com/d0ugal/ghcr-exporter/compare/v1.2.0...v1.3.0) (2025-09-04)
+
+
+### Features
+
+* update dev build versioning to use semver-compatible pre-release tags ([4821374](https://github.com/d0ugal/ghcr-exporter/commit/4821374450ad1cc4224523cf73bed9124a84c2a3))
+
+
+### Bug Fixes
+
+* **ci:** add v prefix to dev tags for consistent versioning ([edb79ed](https://github.com/d0ugal/ghcr-exporter/commit/edb79ede3743eaed97572f8be984e16aaa9e4c9e))
+* use actual release version as base for dev tags instead of hardcoded 0.0.0 ([33539ee](https://github.com/d0ugal/ghcr-exporter/commit/33539ee91ba80a1ecb0364488eb06c1e0644d1db))
+* use fetch-depth: 0 instead of fetch-tags for full git history ([4fbb734](https://github.com/d0ugal/ghcr-exporter/commit/4fbb734e4f6d21f5b6674efe1be9f281d5b6b7ee))
+* use fetch-tags instead of fetch-depth for GitHub Actions ([d396654](https://github.com/d0ugal/ghcr-exporter/commit/d396654d2ee6d3645883a0b12b42f3c95a5ca124))
+
 ## [1.2.0](https://github.com/d0ugal/ghcr-exporter/compare/v1.1.2...v1.2.0) (2025-09-04)
 
 
