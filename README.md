@@ -22,7 +22,7 @@ server:
 
 logging:
   level: "info"
-  format: "text"
+  format: "json"
 
 metrics:
   collection:

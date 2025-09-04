@@ -136,7 +136,7 @@ func LoadConfig(path string) (*Config, error) {
 	}
 
 	if config.Logging.Format == "" {
-		config.Logging.Format = "text"
+		config.Logging.Format = "json"
 	}
 
 	return &config, nil
