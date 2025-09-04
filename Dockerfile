@@ -26,9 +26,9 @@ RUN VERSION=${VERSION:-$(git describe --tags --always --dirty 2>/dev/null || ech
     BUILD_DATE=${BUILD_DATE:-$(date -u +"%Y-%m-%dT%H:%M:%SZ")} && \
     CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo \
     -ldflags="-s -w \
-        -X github.com/d0ugal/ghcr-exporter/internal/version.Version=$VERSION \
-        -X github.com/d0ugal/ghcr-exporter/internal/version.Commit=$COMMIT \
-        -X github.com/d0ugal/ghcr-exporter/internal/version.BuildDate=$BUILD_DATE" \
+        -X ghcr-exporter/internal/version.Version=$VERSION \
+        -X ghcr-exporter/internal/version.Commit=$COMMIT \
+        -X ghcr-exporter/internal/version.BuildDate=$BUILD_DATE" \
     -o ghcr-exporter ./cmd
 
 # Final stage
