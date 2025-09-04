@@ -34,7 +34,7 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
       with:
-        file: ./coverage.txt
+        files: ./coverage.txt
         flags: unittests
         name: codecov-umbrella
 
@@ -148,7 +148,7 @@ jobs:
           COMMIT_COUNT=$(git rev-list --count ${LAST_TAG}..HEAD)
         fi
         
-        DEV_TAG="${VERSION}-dev.${COMMIT_COUNT}.${SHORT_SHA}"
+        DEV_TAG="v${VERSION}-dev.${COMMIT_COUNT}.${SHORT_SHA}"
         echo "dev_tag=${DEV_TAG}" >> $GITHUB_OUTPUT
         echo "Last release tag: ${LAST_TAG:-'none'}"
         echo "Base version: ${VERSION}"
@@ -174,7 +174,6 @@ jobs:
         labels: ${{ steps.docker_meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=min
-        continue-on-error: false
         build-args: |
           VERSION=${{ steps.meta.outputs.dev_tag }}
           COMMIT=${{ github.sha }}
