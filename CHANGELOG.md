@@ -5,6 +5,14 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0](https://github.com/d0ugal/ghcr-exporter/compare/v1.1.2...v1.2.0) (2025-09-04)
+
+
+### Features
+
+* change default logging format to JSON ([1bff3b4](https://github.com/d0ugal/ghcr-exporter/commit/1bff3b47eddcea8b7500a09c9fdcd4fde228415f))
+* enable global automerge in Renovate config ([9b27884](https://github.com/d0ugal/ghcr-exporter/commit/9b2788410e52f044f5c2b975afe8e2d0cafa6672))
+
 ## [1.1.2](https://github.com/d0ugal/ghcr-exporter/compare/v1.1.1...v1.1.2) (2025-09-03)
 
 
