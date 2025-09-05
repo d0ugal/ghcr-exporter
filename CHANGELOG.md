@@ -5,6 +5,14 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2](https://github.com/d0ugal/ghcr-exporter/compare/v1.3.1...v1.3.2) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/prometheus/client_golang to v1.23.2 ([b110b93](https://github.com/d0ugal/ghcr-exporter/commit/b110b9361a40c0b961c36c5ee106ddd879328788))
+* **deps:** update module github.com/prometheus/client_golang to v1.23.2 ([c032b84](https://github.com/d0ugal/ghcr-exporter/commit/c032b84467b9d1e46a9410245216a66b9afc5cd4))
+
 ## [1.3.1](https://github.com/d0ugal/ghcr-exporter/compare/v1.3.0...v1.3.1) (2025-09-04)
 
 
