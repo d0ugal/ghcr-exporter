@@ -2,18 +2,49 @@
 
 A Prometheus exporter for GitHub Container Registry (GHCR) metrics.
 
-## Features
+**Image**: `ghcr.io/d0ugal/ghcr-exporter:latest`
 
-- Collects package download statistics from GitHub Container Registry (GHCR)
-- Tracks package version counts and last published timestamps
-- Download statistics from package pages
-- Monitors collection performance and success rates
-- Supports both user and organization packages
-- Prometheus metrics endpoint with health checks
+## Metrics
+
+### Package Information
+- `ghcr_exporter_info` - Information about the exporter
+- `ghcr_package_version_count` - Total number of versions for a package
+- `ghcr_package_downloads` - **Actual download count** scraped from package pages
+- `ghcr_package_last_published_timestamp` - Last published timestamp
+
+### Collection Metrics
+- `ghcr_collection_duration_seconds` - Collection duration
+- `ghcr_collection_success_total` - Successful collections
+- `ghcr_collection_failed_total` - Failed collections
+
+### Endpoints
+- `GET /`: HTML dashboard with service status and metrics information
+- `GET /metrics`: Prometheus metrics endpoint
+- `GET /health`: Health check endpoint
+
+## Quick Start
+
+### Docker Compose
+
+```yaml
+version: '3.8'
+services:
+  ghcr-exporter:
+    image: ghcr.io/d0ugal/ghcr-exporter:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+    restart: unless-stopped
+```
+
+1. Create a `config.yaml` file (see Configuration section)
+2. Run: `docker-compose up -d`
+3. Access metrics: `curl http://localhost:8080/metrics`
 
 ## Configuration
 
-Create a `config.yaml` file:
+Create a `config.yaml` file to configure GitHub API and packages to monitor:
 
 ```yaml
 server:
@@ -46,75 +77,96 @@ packages:
     repo: "home-assistant"
 ```
 
-## Building
+## Deployment
 
-```bash
-make build
+### Docker Compose (Environment Variables)
+
+```yaml
+version: '3.8'
+services:
+  ghcr-exporter:
+    image: ghcr.io/d0ugal/ghcr-exporter:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - GHCR_EXPORTER_GITHUB_TOKEN=your_github_token_here
+      - GHCR_EXPORTER_PACKAGES=filesystem-exporter:d0ugal:filesystem-exporter,mqtt-exporter:d0ugal:mqtt-exporter
+    restart: unless-stopped
 ```
 
-## Running
+### Kubernetes
 
-```bash
-./ghcr-exporter -config config.yaml
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ghcr-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ghcr-exporter
+  template:
+    metadata:
+      labels:
+        app: ghcr-exporter
+    spec:
+      containers:
+      - name: ghcr-exporter
+        image: ghcr.io/d0ugal/ghcr-exporter:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GHCR_EXPORTER_GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: github-credentials
+              key: token
+        - name: GHCR_EXPORTER_PACKAGES
+          value: "filesystem-exporter:d0ugal:filesystem-exporter,mqtt-exporter:d0ugal:mqtt-exporter"
 ```
 
-## Metrics
+## Prometheus Integration
 
-The exporter provides the following metrics:
+Add to your `prometheus.yml`:
 
-- `ghcr_exporter_info` - Information about the exporter
-- `ghcr_package_version_count` - Total number of versions for a package
-- `ghcr_package_downloads` - **Actual download count** scraped from package pages
-- `ghcr_package_last_published_timestamp` - Last published timestamp
-- `ghcr_collection_duration_seconds` - Collection duration
-- `ghcr_collection_success_total` - Successful collections
-- `ghcr_collection_failed_total` - Failed collections
+```yaml
+scrape_configs:
+  - job_name: 'ghcr-exporter'
+    static_configs:
+      - targets: ['ghcr-exporter:8080']
+```
 
-### Important Note About Download Statistics
+## Important Note About Download Statistics
 
 The `ghcr_package_downloads` metric provides **actual download counts** by scraping the package page HTML, which matches what you see on GitHub (e.g., "Total Downloads 176K"). This is different from version count, which only represents the number of different versions/tags available.
 
 ## Development
 
+### Building
+
 ```bash
-# Run tests
+make build
+```
+
+### Testing
+
+```bash
 make test
+```
 
-# Format code
-make fmt
+### Linting
 
-# Lint code
+```bash
 make lint
 ```
 
-## Docker Deployment
-
-The exporter is configured to run in Docker with:
-- Health checks
-- Non-root user
-- Configurable via volume mount
+### Formatting
 
 ```bash
-# Using Docker Compose
-docker-compose -f docker-compose.example.yml up -d
-
-# Using Docker directly
-docker run -d \
-  --name ghcr-exporter \
-  -p 8080:8080 \
-  -v $(pwd)/config.yaml:/app/config.yaml:ro \
-  ghcr.io/d0ugal/ghcr-exporter:latest
+make fmt
 ```
-
-## Quick Start
-
-See [QUICKSTART.md](QUICKSTART.md) for detailed setup instructions.
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-# Test comment
+This project is licensed under the MIT License.
