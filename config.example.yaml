@@ -11,8 +11,9 @@ metrics:
     default_interval: "60s"
 
 packages:
-  filesystem-exporter:
+  - name: "filesystem-exporter"
     owner: "d0ugal"
     repo: "filesystem-exporter"
-    package_name: "filesystem-exporter"
-    interval: "300s"  # 5 minutes
+  - name: "d0ugal-all"
+    owner: "d0ugal"
+    # repo not specified - will discover all packages for owner

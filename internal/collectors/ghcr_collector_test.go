@@ -36,8 +36,9 @@ func TestNewGHCRCollector(t *testing.T) {
 
 func TestGHCRCollectorStart(t *testing.T) {
 	cfg := &config.Config{
-		Packages: map[string]config.PackageGroup{
-			"test-package": {
+		Packages: []config.PackageGroup{
+			{
+				Name:  "test-package",
 				Owner: "test-owner",
 				Repo:  "test-repo",
 			},

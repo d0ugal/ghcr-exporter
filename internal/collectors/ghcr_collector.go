@@ -94,25 +94,25 @@ func (gc *GHCRCollector) run(ctx context.Context) {
 	}()
 
 	// Start individual tickers for each package
-	for groupName, group := range gc.config.Packages {
+	for _, group := range gc.config.Packages {
 		interval := gc.config.GetPackageInterval(group)
 		ticker := time.NewTicker(time.Duration(interval) * time.Second)
-		tickers[groupName] = ticker
+		tickers[group.Name] = ticker
 
 		// Initial collection for this package
-		gc.collectSinglePackage(ctx, group.Repo, group)
+		gc.collectSinglePackage(ctx, group.Name, group)
 
 		// Start goroutine for this package
-		go func(name string, pkg config.PackageGroup) {
+		go func(pkg config.PackageGroup) {
 			for {
 				select {
 				case <-ctx.Done():
 					return
 				case <-ticker.C:
-					gc.collectSinglePackage(ctx, pkg.Repo, pkg)
+					gc.collectSinglePackage(ctx, pkg.Name, pkg)
 				}
 			}
-		}(groupName, group)
+		}(group)
 	}
 
 	// Wait for context cancellation
@@ -120,32 +120,94 @@ func (gc *GHCRCollector) run(ctx context.Context) {
 	slog.Info("GHCR collector stopped")
 }
 
-func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, repo string, pkg config.PackageGroup) {
+func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, pkg config.PackageGroup) {
 	startTime := time.Now()
 	interval := gc.config.GetPackageInterval(pkg)
 
-	slog.Info("Starting GHCR package metrics collection", "repo", repo, "package", pkg.Repo)
+	// If repo is not specified, discover all repos for the owner
+	if pkg.Repo == "" {
+		gc.collectOwnerPackages(ctx, name, pkg)
+		return
+	}
+
+	slog.Info("Starting GHCR package metrics collection", "name", name, "owner", pkg.Owner, "repo", pkg.Repo)
 
 	// Retry with exponential backoff
 	err := gc.retryWithBackoff(func() error {
-		return gc.collectPackageMetrics(ctx, repo, pkg)
+		return gc.collectPackageMetrics(ctx, pkg.Repo, pkg)
 	}, 3, 2*time.Second)
 	if err != nil {
-		slog.Error("Failed to collect package metrics after retries", "repo", repo, "error", err)
-		gc.metrics.CollectionFailedCounter.WithLabelValues(repo, strconv.Itoa(interval)).Inc()
+		slog.Error("Failed to collect package metrics after retries", "name", name, "error", err)
+		gc.metrics.CollectionFailedCounter.WithLabelValues(name, strconv.Itoa(interval)).Inc()
 
 		return
 	}
 
-	gc.metrics.CollectionSuccessCounter.WithLabelValues(repo, strconv.Itoa(interval)).Inc()
+	gc.metrics.CollectionSuccessCounter.WithLabelValues(name, strconv.Itoa(interval)).Inc()
 	// Expose configured interval as a numeric gauge for PromQL arithmetic
-	gc.metrics.CollectionIntervalGauge.WithLabelValues(repo).Set(float64(interval))
+	gc.metrics.CollectionIntervalGauge.WithLabelValues(name).Set(float64(interval))
 
 	duration := time.Since(startTime).Seconds()
-	gc.metrics.CollectionDurationGauge.WithLabelValues(repo, strconv.Itoa(interval)).Set(duration)
-	gc.metrics.CollectionTimestampGauge.WithLabelValues(repo, strconv.Itoa(interval)).Set(float64(time.Now().Unix()))
+	gc.metrics.CollectionDurationGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(duration)
+	gc.metrics.CollectionTimestampGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(float64(time.Now().Unix()))
 
-	slog.Info("GHCR package metrics collection completed", "repo", repo, "duration", duration)
+	slog.Info("GHCR package metrics collection completed", "name", name, "duration", duration)
+}
+
+// collectOwnerPackages discovers and collects metrics for all packages owned by the specified owner
+func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, pkg config.PackageGroup) {
+	startTime := time.Now()
+	interval := gc.config.GetPackageInterval(pkg)
+
+	slog.Info("Starting GHCR owner package discovery", "name", name, "owner", pkg.Owner)
+
+	// Get all packages for the owner
+	packages, err := gc.getOwnerPackages(ctx, pkg.Owner)
+	if err != nil {
+		slog.Error("Failed to get owner packages", "name", name, "owner", pkg.Owner, "error", err)
+		gc.metrics.CollectionFailedCounter.WithLabelValues(name, strconv.Itoa(interval)).Inc()
+
+		return
+	}
+
+	slog.Info("Discovered packages for owner", "name", name, "owner", pkg.Owner, "package_count", len(packages))
+
+	// Collect metrics for each discovered package
+	successCount := 0
+
+	for _, discoveredPkg := range packages {
+		// Create a PackageGroup for the discovered package
+		discoveredGroup := config.PackageGroup{
+			Name:  fmt.Sprintf("%s-%s", name, discoveredPkg.Name),
+			Owner: pkg.Owner,
+			Repo:  discoveredPkg.Name,
+		}
+
+		err := gc.collectPackageMetrics(ctx, discoveredPkg.Name, discoveredGroup)
+		if err != nil {
+			slog.Warn("Failed to collect metrics for discovered package",
+				"name", name,
+				"owner", pkg.Owner,
+				"package", discoveredPkg.Name,
+				"error", err)
+		} else {
+			successCount++
+		}
+	}
+
+	gc.metrics.CollectionSuccessCounter.WithLabelValues(name, strconv.Itoa(interval)).Inc()
+	gc.metrics.CollectionIntervalGauge.WithLabelValues(name).Set(float64(interval))
+
+	duration := time.Since(startTime).Seconds()
+	gc.metrics.CollectionDurationGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(duration)
+	gc.metrics.CollectionTimestampGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(float64(time.Now().Unix()))
+
+	slog.Info("GHCR owner package discovery completed",
+		"name", name,
+		"owner", pkg.Owner,
+		"total_packages", len(packages),
+		"successful_collections", successCount,
+		"duration", duration)
 }
 
 func (gc *GHCRCollector) collectPackageMetrics(ctx context.Context, repo string, pkg config.PackageGroup) error {
@@ -518,4 +580,36 @@ func (gc *GHCRCollector) getPackageDownloadStats(ctx context.Context, owner, pac
 	slog.Info("Successfully extracted download statistics", "owner", owner, "package", packageName, "download_count", downloadCount, "raw_title", title)
 
 	return downloadCount, nil
+}
+
+// getOwnerPackages retrieves all packages for a given owner
+func (gc *GHCRCollector) getOwnerPackages(ctx context.Context, owner string) ([]GHCRPackageResponse, error) {
+	slog.Info("Getting packages for owner", "owner", owner)
+
+	// Try user endpoint first
+	resp, err := gc.makeGitHubAPIRequest(ctx, fmt.Sprintf("/users/%s/packages?package_type=container", owner))
+	if err != nil {
+		// If user endpoint fails, try org endpoint
+		slog.Debug("User endpoint failed, trying org endpoint", "owner", owner, "error", err)
+
+		resp, err = gc.makeGitHubAPIRequest(ctx, fmt.Sprintf("/orgs/%s/packages?package_type=container", owner))
+		if err != nil {
+			return nil, fmt.Errorf("failed to get packages for owner %s: %w", owner, err)
+		}
+	}
+
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			slog.Error("Error closing response body", "error", err)
+		}
+	}()
+
+	var packages []GHCRPackageResponse
+	if err := json.NewDecoder(resp.Body).Decode(&packages); err != nil {
+		return nil, fmt.Errorf("failed to decode packages response: %w", err)
+	}
+
+	slog.Info("Retrieved packages for owner", "owner", owner, "package_count", len(packages))
+
+	return packages, nil
 }
