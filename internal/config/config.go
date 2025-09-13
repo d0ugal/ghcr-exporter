@@ -106,7 +106,6 @@ func (p PackageGroup) GetName() string {
 	if p.Repo == "" {
 		return p.Owner + "-all"
 	}
-
 	return p.Owner + "-" + p.Repo
 }
 

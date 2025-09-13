@@ -15,11 +15,6 @@ type Registry struct {
 	PackageLastPublishedGauge *prometheus.GaugeVec
 	PackageDownloadStatsGauge *prometheus.GaugeVec
 
-	// Tag-level metrics
-	TagDownloadsGauge     *prometheus.GaugeVec
-	TagLastPublishedGauge *prometheus.GaugeVec
-	TagCountGauge         *prometheus.GaugeVec
-
 	// Collection statistics
 	CollectionFailedCounter  *prometheus.CounterVec
 	CollectionSuccessCounter *prometheus.CounterVec
@@ -88,34 +83,6 @@ func NewRegistry() *Registry {
 		[]string{"owner", "repo"},
 	)
 	r.addMetricInfo("ghcr_package_last_published_timestamp", "Timestamp of the last published version for a GHCR package", []string{"owner", "repo"})
-
-	// Tag-level metrics
-	r.TagDownloadsGauge = promauto.NewGaugeVec(
-		prometheus.GaugeOpts{
-			Name: "ghcr_tag_downloads",
-			Help: "Total number of downloads for a specific docker tag (scraped from package page)",
-		},
-		[]string{"owner", "repo", "tag"},
-	)
-	r.addMetricInfo("ghcr_tag_downloads", "Total downloads for a specific docker tag", []string{"owner", "repo", "tag"})
-
-	r.TagLastPublishedGauge = promauto.NewGaugeVec(
-		prometheus.GaugeOpts{
-			Name: "ghcr_tag_last_published_timestamp",
-			Help: "Timestamp when a specific docker tag was last published",
-		},
-		[]string{"owner", "repo", "tag"},
-	)
-	r.addMetricInfo("ghcr_tag_last_published_timestamp", "Timestamp when a specific docker tag was last published", []string{"owner", "repo", "tag"})
-
-	r.TagCountGauge = promauto.NewGaugeVec(
-		prometheus.GaugeOpts{
-			Name: "ghcr_package_tags",
-			Help: "Total number of tags for a GHCR package",
-		},
-		[]string{"owner", "repo"},
-	)
-	r.addMetricInfo("ghcr_package_tags", "Total number of tags for a GHCR package", []string{"owner", "repo"})
 
 	r.CollectionFailedCounter = promauto.NewCounterVec(
 		prometheus.CounterOpts{
