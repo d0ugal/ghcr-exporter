@@ -97,10 +97,10 @@ func (gc *GHCRCollector) run(ctx context.Context) {
 	for _, group := range gc.config.Packages {
 		interval := gc.config.GetPackageInterval(group)
 		ticker := time.NewTicker(time.Duration(interval) * time.Second)
-		tickers[group.Name] = ticker
+		tickers[group.GetName()] = ticker
 
 		// Initial collection for this package
-		gc.collectSinglePackage(ctx, group.Name, group)
+		gc.collectSinglePackage(ctx, group.GetName(), group)
 
 		// Start goroutine for this package
 		go func(pkg config.PackageGroup) {
@@ -109,7 +109,7 @@ func (gc *GHCRCollector) run(ctx context.Context) {
 				case <-ctx.Done():
 					return
 				case <-ticker.C:
-					gc.collectSinglePackage(ctx, pkg.Name, pkg)
+					gc.collectSinglePackage(ctx, pkg.GetName(), pkg)
 				}
 			}
 		}(group)
@@ -178,7 +178,6 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 	for _, discoveredPkg := range packages {
 		// Create a PackageGroup for the discovered package
 		discoveredGroup := config.PackageGroup{
-			Name:  fmt.Sprintf("%s-%s", name, discoveredPkg.Name),
 			Owner: pkg.Owner,
 			Repo:  discoveredPkg.Name,
 		}

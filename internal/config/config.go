@@ -97,9 +97,16 @@ func (c *CollectionConfig) UnmarshalYAML(unmarshal func(interface{}) error) erro
 }
 
 type PackageGroup struct {
-	Name  string `yaml:"name"`
 	Owner string `yaml:"owner"`
 	Repo  string `yaml:"repo,omitempty"` // Optional - if not provided, will discover all repos for owner
+}
+
+// GetName returns a unique name for this package group
+func (p PackageGroup) GetName() string {
+	if p.Repo == "" {
+		return p.Owner + "-all"
+	}
+	return p.Owner + "-" + p.Repo
 }
 
 // GetPackageInterval returns the interval for a package group

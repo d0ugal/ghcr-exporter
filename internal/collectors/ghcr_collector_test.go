@@ -12,6 +12,7 @@ import (
 
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
+
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -38,7 +39,6 @@ func TestGHCRCollectorStart(t *testing.T) {
 	cfg := &config.Config{
 		Packages: []config.PackageGroup{
 			{
-				Name:  "test-package",
 				Owner: "test-owner",
 				Repo:  "test-repo",
 			},
