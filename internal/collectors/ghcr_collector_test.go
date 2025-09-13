@@ -12,7 +12,6 @@ import (
 
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
-
 	"github.com/prometheus/client_golang/prometheus"
 )
 
