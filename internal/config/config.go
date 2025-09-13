@@ -47,11 +47,11 @@ func (d *Duration) Seconds() int {
 }
 
 type Config struct {
-	Server   ServerConfig            `yaml:"server"`
-	Logging  LoggingConfig           `yaml:"logging"`
-	Metrics  MetricsConfig           `yaml:"metrics"`
-	GitHub   GitHubConfig            `yaml:"github"`
-	Packages map[string]PackageGroup `yaml:"packages"`
+	Server   ServerConfig   `yaml:"server"`
+	Logging  LoggingConfig  `yaml:"logging"`
+	Metrics  MetricsConfig  `yaml:"metrics"`
+	GitHub   GitHubConfig   `yaml:"github"`
+	Packages []PackageGroup `yaml:"packages"`
 }
 
 type GitHubConfig struct {
@@ -97,8 +97,9 @@ func (c *CollectionConfig) UnmarshalYAML(unmarshal func(interface{}) error) erro
 }
 
 type PackageGroup struct {
+	Name  string `yaml:"name"` // Name for this package group (used in metrics labels)
 	Owner string `yaml:"owner"`
-	Repo  string `yaml:"repo"`
+	Repo  string `yaml:"repo,omitempty"` // Optional - if empty, will discover all repos for owner
 }
 
 // GetPackageInterval returns the interval for a package group

@@ -68,6 +68,18 @@ type GHCRVersionResponse struct {
 	} `json:"package_files"`
 }
 
+// GitHubRepository represents a GitHub repository
+type GitHubRepository struct {
+	ID       int    `json:"id"`
+	NodeID   string `json:"node_id"`
+	Name     string `json:"name"`
+	FullName string `json:"full_name"`
+	Private  bool   `json:"private"`
+	Owner    struct {
+		Login string `json:"login"`
+	} `json:"owner"`
+}
+
 func NewGHCRCollector(cfg *config.Config, registry *metrics.Registry) *GHCRCollector {
 	return &GHCRCollector{
 		config:  cfg,
@@ -94,25 +106,31 @@ func (gc *GHCRCollector) run(ctx context.Context) {
 	}()
 
 	// Start individual tickers for each package
-	for groupName, group := range gc.config.Packages {
+	for _, group := range gc.config.Packages {
 		interval := gc.config.GetPackageInterval(group)
 		ticker := time.NewTicker(time.Duration(interval) * time.Second)
-		tickers[groupName] = ticker
+		tickers[group.Name] = ticker
 
-		// Initial collection for this package
-		gc.collectSinglePackage(ctx, group.Repo, group)
+		// If repo is specified, collect for that specific repo
+		if group.Repo != "" {
+			// Initial collection for this package
+			gc.collectSinglePackage(ctx, group.Repo, group)
 
-		// Start goroutine for this package
-		go func(name string, pkg config.PackageGroup) {
-			for {
-				select {
-				case <-ctx.Done():
-					return
-				case <-ticker.C:
-					gc.collectSinglePackage(ctx, pkg.Repo, pkg)
+			// Start goroutine for this package
+			go func(pkg config.PackageGroup) {
+				for {
+					select {
+					case <-ctx.Done():
+						return
+					case <-ticker.C:
+						gc.collectSinglePackage(ctx, pkg.Repo, pkg)
+					}
 				}
-			}
-		}(groupName, group)
+			}(group)
+		} else {
+			// If no repo specified, discover all repos for the owner
+			gc.collectAllReposForOwner(ctx, group, ticker)
+		}
 	}
 
 	// Wait for context cancellation
@@ -179,7 +197,7 @@ func (gc *GHCRCollector) collectPackageMetrics(ctx context.Context, repo string,
 }
 
 func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packageName string) (*GHCRPackageResponse, error) {
-	resp, err := gc.makeGitHubAPIRequest(ctx, fmt.Sprintf("/users/%s/packages/container/%s", owner, packageName))
+	resp, err := gc.MakeGitHubAPIRequest(ctx, fmt.Sprintf("/users/%s/packages/container/%s", owner, packageName))
 	if err != nil {
 		return nil, err
 	}
@@ -198,8 +216,8 @@ func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packag
 	return &packageInfo, nil
 }
 
-// makeGitHubAPIRequest makes a request to GitHub API, trying user endpoint first, then org endpoint
-func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) (*http.Response, error) {
+// MakeGitHubAPIRequest makes a request to GitHub API, trying user endpoint first, then org endpoint
+func (gc *GHCRCollector) MakeGitHubAPIRequest(ctx context.Context, path string) (*http.Response, error) {
 	// Try user endpoint first
 	userURL := fmt.Sprintf("https://api.github.com%s", path)
 
@@ -271,7 +289,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 }
 
 func (gc *GHCRCollector) getPackageVersions(ctx context.Context, owner, repo, packageName string) ([]GHCRVersionResponse, error) {
-	resp, err := gc.makeGitHubAPIRequest(ctx, fmt.Sprintf("/users/%s/packages/container/%s/versions", owner, packageName))
+	resp, err := gc.MakeGitHubAPIRequest(ctx, fmt.Sprintf("/users/%s/packages/container/%s/versions", owner, packageName))
 	if err != nil {
 		return nil, err
 	}
@@ -288,6 +306,96 @@ func (gc *GHCRCollector) getPackageVersions(ctx context.Context, owner, repo, pa
 	}
 
 	return versions, nil
+}
+
+// getRepositoriesForOwner lists all repositories for a given owner
+func (gc *GHCRCollector) getRepositoriesForOwner(ctx context.Context, owner string) ([]GitHubRepository, error) {
+	var allRepos []GitHubRepository
+
+	page := 1
+	perPage := 100
+
+	for {
+		// Try user endpoint first
+		userPath := fmt.Sprintf("/users/%s/repos?page=%d&per_page=%d&type=all", owner, page, perPage)
+
+		resp, err := gc.MakeGitHubAPIRequest(ctx, userPath)
+		if err != nil {
+			return nil, err
+		}
+
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				slog.Error("Error closing response body", "error", err)
+			}
+		}()
+
+		var repos []GitHubRepository
+		if err := json.NewDecoder(resp.Body).Decode(&repos); err != nil {
+			return nil, err
+		}
+
+		// If we got no repos, we've reached the end
+		if len(repos) == 0 {
+			break
+		}
+
+		allRepos = append(allRepos, repos...)
+
+		// If we got fewer repos than requested, we've reached the end
+		if len(repos) < perPage {
+			break
+		}
+
+		page++
+	}
+
+	slog.Info("Discovered repositories for owner", "owner", owner, "count", len(allRepos))
+
+	return allRepos, nil
+}
+
+// collectAllReposForOwner discovers and collects metrics for all repositories of an owner
+func (gc *GHCRCollector) collectAllReposForOwner(ctx context.Context, group config.PackageGroup, ticker *time.Ticker) {
+	// Initial discovery and collection
+	gc.discoverAndCollectRepos(ctx, group)
+
+	// Start goroutine for periodic discovery and collection
+	go func(pkg config.PackageGroup) {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-ticker.C:
+				gc.discoverAndCollectRepos(ctx, pkg)
+			}
+		}
+	}(group)
+}
+
+// discoverAndCollectRepos discovers repositories and collects metrics for each
+func (gc *GHCRCollector) discoverAndCollectRepos(ctx context.Context, group config.PackageGroup) {
+	slog.Info("Discovering repositories for owner", "owner", group.Owner, "group", group.Name)
+
+	// Get all repositories for the owner
+	repos, err := gc.getRepositoriesForOwner(ctx, group.Owner)
+	if err != nil {
+		slog.Error("Failed to discover repositories", "owner", group.Owner, "group", group.Name, "error", err)
+		return
+	}
+
+	// Collect metrics for each repository
+	for _, repo := range repos {
+		// Create a package group for this specific repository
+		repoPackage := config.PackageGroup{
+			Name:  group.Name,
+			Owner: group.Owner,
+			Repo:  repo.Name,
+		}
+
+		// Collect metrics for this repository
+		gc.collectSinglePackage(ctx, repo.Name, repoPackage)
+	}
 }
 
 func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.PackageGroup, packageInfo *GHCRPackageResponse, versions []GHCRVersionResponse) {

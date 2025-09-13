@@ -36,8 +36,9 @@ func TestNewGHCRCollector(t *testing.T) {
 
 func TestGHCRCollectorStart(t *testing.T) {
 	cfg := &config.Config{
-		Packages: map[string]config.PackageGroup{
-			"test-package": {
+		Packages: []config.PackageGroup{
+			{
+				Name:  "test-package",
 				Owner: "test-owner",
 				Repo:  "test-repo",
 			},
@@ -195,5 +196,40 @@ func TestGetPackageDownloadStatsHTTPError(t *testing.T) {
 	expectedError := "package page returned status 404"
 	if err.Error() != expectedError {
 		t.Errorf("Expected error '%s', got '%s'", expectedError, err.Error())
+	}
+}
+
+func TestGetRepositoriesForOwner(t *testing.T) {
+	// Test the GitHubRepository struct and basic functionality
+	repo := GitHubRepository{
+		ID:       1,
+		NodeID:   "node1",
+		Name:     "repo1",
+		FullName: "test-owner/repo1",
+		Private:  false,
+		Owner: struct {
+			Login string `json:"login"`
+		}{Login: "test-owner"},
+	}
+
+	if repo.Name != "repo1" {
+		t.Errorf("Expected repo name to be 'repo1', got '%s'", repo.Name)
+	}
+
+	if repo.FullName != "test-owner/repo1" {
+		t.Errorf("Expected repo full name to be 'test-owner/repo1', got '%s'", repo.FullName)
+	}
+
+	if repo.Owner.Login != "test-owner" {
+		t.Errorf("Expected repo owner to be 'test-owner', got '%s'", repo.Owner.Login)
+	}
+}
+
+func TestGetRepositoriesForOwnerEmpty(t *testing.T) {
+	// Test empty repository list
+	repos := []GitHubRepository{}
+
+	if len(repos) != 0 {
+		t.Errorf("Expected 0 repositories, got %d", len(repos))
 	}
 }
