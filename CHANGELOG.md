@@ -5,6 +5,22 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0](https://github.com/d0ugal/ghcr-exporter/compare/v1.4.0...v2.0.0) (2025-09-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* packages config changed from map to list structure
+
+### feat\
+
+* refactor config to use list structure and support owner-only discovery ([cdee51c](https://github.com/d0ugal/ghcr-exporter/commit/cdee51c75937279bf86cb2ad0150416836ddef26))
+
+
+### Features
+
+* add docker tag-level metrics for granular download tracking ([f5997c5](https://github.com/d0ugal/ghcr-exporter/commit/f5997c558ce349cdbad606e12bf722966a1d9b2f))
+
 ## [1.4.0](https://github.com/d0ugal/ghcr-exporter/compare/v1.3.2...v1.4.0) (2025-09-12)
 
 
