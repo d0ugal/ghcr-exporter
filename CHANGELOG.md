@@ -5,6 +5,13 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1](https://github.com/d0ugal/ghcr-exporter/compare/v2.0.0...v2.0.1) (2025-09-13)
+
+
+### Bug Fixes
+
+* Revert "feat: add docker tag-level metrics for granular download tracking" ([b1f4f7c](https://github.com/d0ugal/ghcr-exporter/commit/b1f4f7c4e4b4ea1e2d47dcbeaf91ce6e4f24db13))
+
 ## [2.0.0](https://github.com/d0ugal/ghcr-exporter/compare/v1.4.0...v2.0.0) (2025-09-13)
 
 
