@@ -5,6 +5,13 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4](https://github.com/d0ugal/ghcr-exporter/compare/v2.0.3...v2.0.4) (2025-09-20)
+
+
+### Bug Fixes
+
+* **lint:** resolve gosec configuration contradiction ([eb217ff](https://github.com/d0ugal/ghcr-exporter/commit/eb217ffecbb6da78871b359d22546bcc564b9f32))
+
 ## [2.0.3](https://github.com/d0ugal/ghcr-exporter/compare/v2.0.2...v2.0.3) (2025-09-20)
 
 
