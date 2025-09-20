@@ -5,6 +5,14 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2](https://github.com/d0ugal/ghcr-exporter/compare/v2.0.1...v2.0.2) (2025-09-20)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/gin-gonic/gin to v1.11.0 ([f3288a6](https://github.com/d0ugal/ghcr-exporter/commit/f3288a69f168b6cb4affcabf12858497608c0216))
+* **deps:** update module github.com/gin-gonic/gin to v1.11.0 ([3059ad9](https://github.com/d0ugal/ghcr-exporter/commit/3059ad936f9ac57f10cf26acdf5a16109904e9bf))
+
 ## [2.0.1](https://github.com/d0ugal/ghcr-exporter/compare/v2.0.0...v2.0.1) (2025-09-13)
 
 
