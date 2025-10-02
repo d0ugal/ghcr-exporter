@@ -5,6 +5,13 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.7](https://github.com/d0ugal/ghcr-exporter/compare/v2.0.6...v2.0.7) (2025-10-02)
+
+
+### Bug Fixes
+
+* enable indirect dependency updates in renovate config ([9bc60ad](https://github.com/d0ugal/ghcr-exporter/commit/9bc60addb0bb9be778d983cc353ab5e5b7be1735))
+
 ## [2.0.6](https://github.com/d0ugal/ghcr-exporter/compare/v2.0.5...v2.0.6) (2025-09-22)
 
 
