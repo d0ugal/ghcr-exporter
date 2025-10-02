@@ -5,6 +5,20 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0](https://github.com/d0ugal/ghcr-exporter/compare/v2.0.8...v2.1.0) (2025-10-02)
+
+
+### Features
+
+* **deps:** migrate to YAML v3 ([4805af5](https://github.com/d0ugal/ghcr-exporter/commit/4805af5049754db96df22af8c36cc23e6c69adb5))
+* **renovate:** add gomodTidy post-update option for Go modules ([8d60cfd](https://github.com/d0ugal/ghcr-exporter/commit/8d60cfd329a70afb1e7f883a664f7522cddbb692))
+
+
+### Reverts
+
+* remove unnecessary renovate config changes ([dbdfc60](https://github.com/d0ugal/ghcr-exporter/commit/dbdfc608c471652f19319f265554ff7bd4941e58))
+* remove unnecessary renovate config changes ([9bb2118](https://github.com/d0ugal/ghcr-exporter/commit/9bb211846b5ab0d5fdb794f3a596c11a14b7cfb7))
+
 ## [2.0.8](https://github.com/d0ugal/ghcr-exporter/compare/v2.0.7...v2.0.8) (2025-10-02)
 
 
