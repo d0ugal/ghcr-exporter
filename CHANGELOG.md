@@ -5,6 +5,19 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0](https://github.com/d0ugal/ghcr-exporter/compare/v2.1.0...v2.2.0) (2025-10-03)
+
+
+### Features
+
+* pin versions in documentation and examples ([adf6a57](https://github.com/d0ugal/ghcr-exporter/commit/adf6a5754d60283d3be525e0c340eeebfead42a3))
+* **renovate:** add docs commit message format for documentation updates ([f2dae10](https://github.com/d0ugal/ghcr-exporter/commit/f2dae10ccda092af892ccd2b7be501090abc9177))
+
+
+### Reverts
+
+* remove unnecessary renovate config changes ([167be09](https://github.com/d0ugal/ghcr-exporter/commit/167be094ffa7150dcd4dd80b43b6b0504a9cf28c))
+
 ## [2.1.0](https://github.com/d0ugal/ghcr-exporter/compare/v2.0.8...v2.1.0) (2025-10-02)
 
 
