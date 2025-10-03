@@ -54,5 +54,17 @@
       datasourceTemplate: 'docker',
       versioningTemplate: 'semver',
     },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '**/*.md',
+      ],
+      matchStrings: [
+        'ghcr\\.io/d0ugal/ghcr-exporter:(?<currentValue>v[\\d\\.]+)',
+      ],
+      depNameTemplate: 'ghcr.io/d0ugal/ghcr-exporter',
+      datasourceTemplate: 'docker',
+      versioningTemplate: 'semver',
+    },
   ],
 }
