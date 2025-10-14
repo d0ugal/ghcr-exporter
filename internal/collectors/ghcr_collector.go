@@ -18,7 +18,7 @@ import (
 
 type GHCRCollector struct {
 	config  *config.Config
-	metrics *metrics.Registry
+	metrics *metrics.GHCRRegistry
 	client  *http.Client
 	token   string
 }
@@ -68,7 +68,7 @@ type GHCRVersionResponse struct {
 	} `json:"package_files"`
 }
 
-func NewGHCRCollector(cfg *config.Config, registry *metrics.Registry) *GHCRCollector {
+func NewGHCRCollector(cfg *config.Config, registry *metrics.GHCRRegistry) *GHCRCollector {
 	return &GHCRCollector{
 		config:  cfg,
 		metrics: registry,
@@ -611,4 +611,10 @@ func (gc *GHCRCollector) getOwnerPackages(ctx context.Context, owner string) ([]
 	slog.Info("Retrieved packages for owner", "owner", owner, "package_count", len(packages))
 
 	return packages, nil
+}
+
+// Stop stops the collector
+func (gc *GHCRCollector) Stop() {
+	slog.Info("Stopping GHCR collector...")
+	// No cleanup needed for HTTP client
 }
