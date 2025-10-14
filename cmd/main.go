@@ -1,20 +1,18 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"log/slog"
 	"os"
-	"os/signal"
-	"syscall"
 
+	"github.com/d0ugal/promexporter/app"
+	"github.com/d0ugal/promexporter/logging"
+	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
+	"github.com/d0ugal/promexporter/version"
 	"ghcr-exporter/internal/collectors"
 	"ghcr-exporter/internal/config"
-	"ghcr-exporter/internal/logging"
 	"ghcr-exporter/internal/metrics"
-	"ghcr-exporter/internal/server"
-	"ghcr-exporter/internal/version"
 )
 
 func main() {
@@ -53,48 +51,30 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Configure logging
+	// Configure logging using promexporter
 	logging.Configure(&logging.Config{
 		Level:  cfg.Logging.Level,
 		Format: cfg.Logging.Format,
 	})
 
-	// Initialize metrics
-	metricsRegistry := metrics.NewRegistry()
+	// Initialize metrics registry using promexporter
+	metricsRegistry := promexporter_metrics.NewRegistry()
 
-	// Set version info metric
-	versionInfo := version.Get()
-	metricsRegistry.VersionInfo.WithLabelValues(versionInfo.Version, versionInfo.Commit, versionInfo.BuildDate).Set(1)
+	// Add custom metrics to the registry
+	ghcrRegistry := metrics.NewGHCRRegistry(metricsRegistry)
 
-	// Create collectors
-	ghcrCollector := collectors.NewGHCRCollector(cfg, metricsRegistry)
+	// Create collector
+	ghcrCollector := collectors.NewGHCRCollector(cfg, ghcrRegistry)
 
-	// Start collectors
-	ctx, cancel := context.WithCancel(context.Background())
+	// Create and run application using promexporter
+	application := app.New("ghcr-exporter").
+		WithConfig(&cfg.BaseConfig).
+		WithMetrics(metricsRegistry).
+		WithCollector(ghcrCollector).
+		Build()
 
-	ghcrCollector.Start(ctx)
-
-	// Create and start server
-	srv := server.New(cfg, metricsRegistry)
-
-	// Handle graceful shutdown
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-
-	go func() {
-		<-sigChan
-		slog.Info("Shutting down gracefully...")
-		cancel()
-
-		if err := srv.Shutdown(); err != nil {
-			slog.Error("Error during server shutdown", "error", err)
-		}
-	}()
-
-	// Start server
-	if err := srv.Start(); err != nil {
-		slog.Error("Server failed", "error", err)
-		cancel() // Cancel context before exiting
+	if err := application.Run(); err != nil {
+		slog.Error("Application failed", "error", err)
 		os.Exit(1)
 	}
 }
