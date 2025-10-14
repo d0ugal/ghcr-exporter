@@ -21,6 +21,11 @@ type Server struct {
 }
 
 func New(cfg *config.Config, metricsRegistry *metrics.Registry) *Server {
+	// Set Gin to release mode unless debug logging is enabled
+	if cfg.Logging.Level != "debug" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	
 	router := gin.New()
 	router.Use(gin.Recovery())
 
