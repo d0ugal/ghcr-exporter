@@ -20,7 +20,14 @@ type Server struct {
 	router  *gin.Engine
 }
 
-func New(cfg *config.Config, metricsRegistry *metrics.Registry) *Server {
+func New(cfg *config.Config, metricsRegistry *metrics.Registry, debug bool) *Server {
+	// Set Gin mode based on debug flag or config
+	if debug || cfg.Server.Debug {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	router := gin.New()
 	router.Use(gin.Recovery())
 
