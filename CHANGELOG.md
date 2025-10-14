@@ -5,6 +5,19 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0](https://github.com/d0ugal/ghcr-exporter/compare/v2.6.1...v2.7.0) (2025-10-14)
+
+
+### Features
+
+* set Gin to release mode unless debug logging is enabled ([55c285f](https://github.com/d0ugal/ghcr-exporter/commit/55c285fba93b84a5f5da8caa01a0e45cf1618ba8))
+
+
+### Bug Fixes
+
+* auto-fix import ordering with golangci-lint ([93c2932](https://github.com/d0ugal/ghcr-exporter/commit/93c2932d13922380361488ca4e980002ea852604))
+* correct import ordering for gci linter ([b042342](https://github.com/d0ugal/ghcr-exporter/commit/b0423424e37276f0ef3626966a1b345088ac132f))
+
 ## [2.6.1](https://github.com/d0ugal/ghcr-exporter/compare/v2.6.0...v2.6.1) (2025-10-14)
 
 
