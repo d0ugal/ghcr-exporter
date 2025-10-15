@@ -6,13 +6,14 @@ import (
 	"log/slog"
 	"os"
 
+	"ghcr-exporter/internal/collectors"
+	"ghcr-exporter/internal/config"
+	"ghcr-exporter/internal/metrics"
+
 	"github.com/d0ugal/promexporter/app"
 	"github.com/d0ugal/promexporter/logging"
 	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
 	"github.com/d0ugal/promexporter/version"
-	"ghcr-exporter/internal/collectors"
-	"ghcr-exporter/internal/config"
-	"ghcr-exporter/internal/metrics"
 )
 
 func main() {

@@ -1,15 +1,15 @@
 package metrics
 
 import (
+	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
 )
 
 // GHCRRegistry wraps the promexporter registry with GHCR-specific metrics
 type GHCRRegistry struct {
 	*promexporter_metrics.Registry
-	
+
 	// GHCR package metrics
 	PackageDownloadsGauge     *prometheus.GaugeVec
 	PackageLastPublishedGauge *prometheus.GaugeVec
