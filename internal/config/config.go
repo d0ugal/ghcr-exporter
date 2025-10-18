@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	promexporter_config "github.com/d0ugal/promexporter/config"
@@ -37,7 +38,11 @@ func (p PackageGroup) GetName() string {
 }
 
 // LoadConfig loads configuration from a YAML file
-func LoadConfig(path string) (*Config, error) {
+func LoadConfig(path string, configFromEnv bool) (*Config, error) {
+	if configFromEnv {
+		return loadFromEnv()
+	}
+
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read config file: %w", err)
@@ -57,6 +62,73 @@ func LoadConfig(path string) (*Config, error) {
 	}
 
 	return &config, nil
+}
+
+// loadFromEnv loads configuration from environment variables
+func loadFromEnv() (*Config, error) {
+	config := &Config{}
+
+	// Load base configuration from environment
+	baseConfig := &promexporter_config.BaseConfig{}
+
+	// Server configuration
+	if host := os.Getenv("GHCR_EXPORTER_SERVER_HOST"); host != "" {
+		baseConfig.Server.Host = host
+	} else {
+		baseConfig.Server.Host = "0.0.0.0"
+	}
+
+	if portStr := os.Getenv("GHCR_EXPORTER_SERVER_PORT"); portStr != "" {
+		if port, err := strconv.Atoi(portStr); err != nil {
+			return nil, fmt.Errorf("invalid server port: %w", err)
+		} else {
+			baseConfig.Server.Port = port
+		}
+	} else {
+		baseConfig.Server.Port = 8080
+	}
+
+	// Logging configuration
+	if level := os.Getenv("GHCR_EXPORTER_LOG_LEVEL"); level != "" {
+		baseConfig.Logging.Level = level
+	} else {
+		baseConfig.Logging.Level = "info"
+	}
+
+	if format := os.Getenv("GHCR_EXPORTER_LOG_FORMAT"); format != "" {
+		baseConfig.Logging.Format = format
+	} else {
+		baseConfig.Logging.Format = "json"
+	}
+
+	// Metrics configuration
+	if intervalStr := os.Getenv("GHCR_EXPORTER_METRICS_COLLECTION_DEFAULT_INTERVAL"); intervalStr != "" {
+		if interval, err := time.ParseDuration(intervalStr); err != nil {
+			return nil, fmt.Errorf("invalid metrics default interval: %w", err)
+		} else {
+			baseConfig.Metrics.Collection.DefaultInterval = promexporter_config.Duration{interval}
+			baseConfig.Metrics.Collection.DefaultIntervalSet = true
+		}
+	} else {
+		baseConfig.Metrics.Collection.DefaultInterval = promexporter_config.Duration{time.Second * 30}
+	}
+
+	config.BaseConfig = *baseConfig
+
+	// GitHub configuration
+	if token := os.Getenv("GHCR_EXPORTER_GITHUB_TOKEN"); token != "" {
+		config.GitHub.Token = token
+	}
+
+	// Set defaults for any missing values
+	setDefaults(config)
+
+	// Validate configuration
+	if err := config.Validate(); err != nil {
+		return nil, fmt.Errorf("configuration validation failed: %w", err)
+	}
+
+	return config, nil
 }
 
 // setDefaults sets default values for configuration
@@ -88,6 +160,34 @@ func setDefaults(config *Config) {
 	if len(config.Packages) == 0 {
 		config.Packages = []PackageGroup{}
 	}
+
+	// Load packages from environment variables
+	config.loadPackagesFromEnv()
+}
+
+// loadPackagesFromEnv loads package configuration from environment variables
+func (c *Config) loadPackagesFromEnv() {
+	// Look for package environment variables in the format GHCR_EXPORTER_PACKAGES_N_OWNER and GHCR_EXPORTER_PACKAGES_N_REPO
+	for i := 0; i < 10; i++ { // Support up to 10 packages
+		ownerKey := fmt.Sprintf("GHCR_EXPORTER_PACKAGES_%d_OWNER", i)
+		repoKey := fmt.Sprintf("GHCR_EXPORTER_PACKAGES_%d_REPO", i)
+		
+		owner := os.Getenv(ownerKey)
+		if owner == "" {
+			continue // No more packages
+		}
+		
+		repo := os.Getenv(repoKey)
+		
+		packageGroup := PackageGroup{
+			Owner: owner,
+			Repo:  repo,
+		}
+		
+		c.Packages = append(c.Packages, packageGroup)
+		fmt.Printf("Loaded package from env: owner=%s, repo=%s\n", owner, repo)
+	}
+	fmt.Printf("Total packages loaded: %d\n", len(c.Packages))
 }
 
 // Validate performs comprehensive validation of the configuration

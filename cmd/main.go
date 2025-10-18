@@ -36,17 +36,25 @@ func main() {
 		os.Exit(0)
 	}
 
-	// Use environment variable if config flag is not provided
-	if configPath == "" {
-		if envConfig := os.Getenv("CONFIG_PATH"); envConfig != "" {
-			configPath = envConfig
-		} else {
-			configPath = "config.yaml"
-		}
-	}
+	// Check if we should use environment variables
+	configFromEnv := os.Getenv("GHCR_EXPORTER_CONFIG_FROM_ENV") == "true"
 
 	// Load configuration
-	cfg, err := config.LoadConfig(configPath)
+	var cfg *config.Config
+	var err error
+	if configFromEnv {
+		cfg, err = config.LoadConfig("", true)
+	} else {
+		// Use environment variable if config flag is not provided
+		if configPath == "" {
+			if envConfig := os.Getenv("CONFIG_PATH"); envConfig != "" {
+				configPath = envConfig
+			} else {
+				configPath = "config.yaml"
+			}
+		}
+		cfg, err = config.LoadConfig(configPath, false)
+	}
 	if err != nil {
 		slog.Error("Failed to load configuration", "error", err, "path", configPath)
 		os.Exit(1)
@@ -59,7 +67,7 @@ func main() {
 	})
 
 	// Initialize metrics registry using promexporter
-	metricsRegistry := promexporter_metrics.NewRegistry()
+	metricsRegistry := promexporter_metrics.NewRegistry("ghcr_exporter_info")
 
 	// Add custom metrics to the registry
 	ghcrRegistry := metrics.NewGHCRRegistry(metricsRegistry)
@@ -68,7 +76,7 @@ func main() {
 	ghcrCollector := collectors.NewGHCRCollector(cfg, ghcrRegistry)
 
 	// Create and run application using promexporter
-	application := app.New("ghcr-exporter").
+	application := app.New("GHCR Exporter").
 		WithConfig(&cfg.BaseConfig).
 		WithMetrics(metricsRegistry).
 		WithCollector(ghcrCollector).

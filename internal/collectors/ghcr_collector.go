@@ -263,6 +263,7 @@ func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packag
 func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) (*http.Response, error) {
 	// Try user endpoint first
 	userURL := fmt.Sprintf("https://api.github.com%s", path)
+	slog.Debug("Making GitHub API request", "url", userURL, "path", path)
 
 	userReq, err := http.NewRequestWithContext(ctx, http.MethodGet, userURL, nil)
 	if err != nil {
@@ -280,6 +281,8 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 		return nil, err
 	}
 
+	slog.Debug("GitHub API response", "url", userURL, "status_code", userResp.StatusCode)
+
 	// If user endpoint succeeds, return the response
 	if userResp.StatusCode == http.StatusOK {
 		return userResp, nil
@@ -294,6 +297,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 		// Replace /users/ with /orgs/ in the path
 		orgPath := strings.Replace(path, "/users/", "/orgs/", 1)
 		orgURL := fmt.Sprintf("https://api.github.com%s", orgPath)
+		slog.Debug("Trying org endpoint", "url", orgURL, "path", orgPath)
 
 		orgReq, err := http.NewRequestWithContext(ctx, http.MethodGet, orgURL, nil)
 		if err != nil {
@@ -310,6 +314,8 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 		if err != nil {
 			return nil, err
 		}
+
+		slog.Debug("GitHub org API response", "url", orgURL, "status_code", orgResp.StatusCode)
 
 		if orgResp.StatusCode == http.StatusOK {
 			return orgResp, nil
