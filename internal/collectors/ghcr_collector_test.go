@@ -13,11 +13,14 @@ import (
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
 	"github.com/prometheus/client_golang/prometheus"
+	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
 )
 
 func TestNewGHCRCollector(t *testing.T) {
 	cfg := &config.Config{}
-	registry := metrics.NewRegistry()
+	// Create a mock base registry for testing
+	baseRegistry := promexporter_metrics.NewRegistry("test_exporter_info")
+	registry := metrics.NewGHCRRegistry(baseRegistry)
 
 	collector := NewGHCRCollector(cfg, registry)
 
@@ -46,7 +49,9 @@ func TestGHCRCollectorStart(t *testing.T) {
 
 	// Create a fresh registry for this test
 	prometheus.DefaultRegisterer = prometheus.NewRegistry()
-	registry := metrics.NewRegistry()
+	// Create a mock base registry for testing
+	baseRegistry := promexporter_metrics.NewRegistry("test_exporter_info")
+	registry := metrics.NewGHCRRegistry(baseRegistry)
 
 	collector := NewGHCRCollector(cfg, registry)
 
@@ -83,7 +88,9 @@ func TestGetPackageDownloadStats(t *testing.T) {
 	// Create a fresh registry for this test to avoid conflicts
 	prometheus.DefaultRegisterer = prometheus.NewRegistry()
 	cfg := &config.Config{}
-	registry := metrics.NewRegistry()
+	// Create a mock base registry for testing
+	baseRegistry := promexporter_metrics.NewRegistry("test_exporter_info")
+	registry := metrics.NewGHCRRegistry(baseRegistry)
 	collector := NewGHCRCollector(cfg, registry)
 
 	// Override the client to use our test server
@@ -182,7 +189,9 @@ func TestGetPackageDownloadStatsHTTPError(t *testing.T) {
 	// Create a fresh registry for this test
 	prometheus.DefaultRegisterer = prometheus.NewRegistry()
 	cfg := &config.Config{}
-	registry := metrics.NewRegistry()
+	// Create a mock base registry for testing
+	baseRegistry := promexporter_metrics.NewRegistry("test_exporter_info")
+	registry := metrics.NewGHCRRegistry(baseRegistry)
 	collector := NewGHCRCollector(cfg, registry)
 	collector.client = server.Client()
 
