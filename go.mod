@@ -5,6 +5,7 @@ go 1.25
 toolchain go1.25.3
 
 require (
+	github.com/d0ugal/promexporter v1.0.0
 	github.com/gin-gonic/gin v1.11.0
 	github.com/prometheus/client_golang v1.23.2
 	gopkg.in/yaml.v3 v3.0.1
@@ -53,3 +54,4 @@ require (
 	golang.org/x/tools v0.38.0 // indirect
 	google.golang.org/protobuf v1.36.10 // indirect
 )
+
