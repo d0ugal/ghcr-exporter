@@ -85,27 +85,27 @@ func NewGHCRRegistry(baseRegistry *promexporter_metrics.Registry) *GHCRRegistry 
 			Name: "ghcr_collection_interval_seconds",
 			Help: "Collection interval in seconds for GHCR data",
 		},
-		[]string{"repo"},
+		[]string{"repo", "interval"},
 	)
-	baseRegistry.AddMetricInfo("ghcr_collection_interval_seconds", "Collection interval in seconds for GHCR data", []string{"repo"})
+	baseRegistry.AddMetricInfo("ghcr_collection_interval_seconds", "Collection interval in seconds for GHCR data", []string{"repo", "interval"})
 
 	ghcr.CollectionDurationGauge = factory.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "ghcr_collection_duration_seconds",
 			Help: "Duration of the last GHCR data collection in seconds",
 		},
-		[]string{"repo"},
+		[]string{"repo", "interval"},
 	)
-	baseRegistry.AddMetricInfo("ghcr_collection_duration_seconds", "Duration of the last GHCR data collection in seconds", []string{"repo"})
+	baseRegistry.AddMetricInfo("ghcr_collection_duration_seconds", "Duration of the last GHCR data collection in seconds", []string{"repo", "interval"})
 
 	ghcr.CollectionTimestampGauge = factory.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "ghcr_collection_timestamp",
 			Help: "Unix timestamp of the last GHCR data collection",
 		},
-		[]string{"repo"},
+		[]string{"repo", "interval"},
 	)
-	baseRegistry.AddMetricInfo("ghcr_collection_timestamp", "Unix timestamp of the last GHCR data collection", []string{"repo"})
+	baseRegistry.AddMetricInfo("ghcr_collection_timestamp", "Unix timestamp of the last GHCR data collection", []string{"repo", "interval"})
 
 	return ghcr
 }
