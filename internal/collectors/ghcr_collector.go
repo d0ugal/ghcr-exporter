@@ -145,7 +145,7 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 
 	gc.metrics.CollectionSuccessCounter.WithLabelValues(name, strconv.Itoa(interval)).Inc()
 	// Expose configured interval as a numeric gauge for PromQL arithmetic
-	gc.metrics.CollectionIntervalGauge.WithLabelValues(name).Set(float64(interval))
+	gc.metrics.CollectionIntervalGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(float64(interval))
 
 	duration := time.Since(startTime).Seconds()
 	gc.metrics.CollectionDurationGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(duration)
