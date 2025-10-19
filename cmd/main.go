@@ -9,7 +9,6 @@ import (
 	"ghcr-exporter/internal/collectors"
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
-
 	"github.com/d0ugal/promexporter/app"
 	"github.com/d0ugal/promexporter/logging"
 	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
@@ -40,8 +39,11 @@ func main() {
 	configFromEnv := os.Getenv("GHCR_EXPORTER_CONFIG_FROM_ENV") == "true"
 
 	// Load configuration
-	var cfg *config.Config
-	var err error
+	var (
+		cfg *config.Config
+		err error
+	)
+
 	if configFromEnv {
 		cfg, err = config.LoadConfig("", true)
 	} else {
@@ -53,8 +55,10 @@ func main() {
 				configPath = "config.yaml"
 			}
 		}
+
 		cfg, err = config.LoadConfig(configPath, false)
 	}
+
 	if err != nil {
 		slog.Error("Failed to load configuration", "error", err, "path", configPath)
 		os.Exit(1)
