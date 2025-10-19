@@ -10,11 +10,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// Use promexporter Duration type
+// Duration uses promexporter Duration type
 type Duration = promexporter_config.Duration
 
 type Config struct {
 	promexporter_config.BaseConfig
+
 	GitHub   GitHubConfig   `yaml:"github"`
 	Packages []PackageGroup `yaml:"packages"`
 }
@@ -106,11 +107,11 @@ func loadFromEnv() (*Config, error) {
 		if interval, err := time.ParseDuration(intervalStr); err != nil {
 			return nil, fmt.Errorf("invalid metrics default interval: %w", err)
 		} else {
-			baseConfig.Metrics.Collection.DefaultInterval = promexporter_config.Duration{interval}
+			baseConfig.Metrics.Collection.DefaultInterval = promexporter_config.Duration{Duration: interval}
 			baseConfig.Metrics.Collection.DefaultIntervalSet = true
 		}
 	} else {
-		baseConfig.Metrics.Collection.DefaultInterval = promexporter_config.Duration{time.Second * 30}
+		baseConfig.Metrics.Collection.DefaultInterval = promexporter_config.Duration{Duration: time.Second * 30}
 	}
 
 	config.BaseConfig = *baseConfig
@@ -150,7 +151,7 @@ func setDefaults(config *Config) {
 	}
 
 	if !config.Metrics.Collection.DefaultIntervalSet {
-		config.Metrics.Collection.DefaultInterval = promexporter_config.Duration{time.Second * 30}
+		config.Metrics.Collection.DefaultInterval = promexporter_config.Duration{Duration: time.Second * 30}
 	}
 
 	if config.GitHub.Token == "" {
@@ -171,22 +172,24 @@ func (c *Config) loadPackagesFromEnv() {
 	for i := 0; i < 10; i++ { // Support up to 10 packages
 		ownerKey := fmt.Sprintf("GHCR_EXPORTER_PACKAGES_%d_OWNER", i)
 		repoKey := fmt.Sprintf("GHCR_EXPORTER_PACKAGES_%d_REPO", i)
-		
+
 		owner := os.Getenv(ownerKey)
 		if owner == "" {
 			continue // No more packages
 		}
-		
+
 		repo := os.Getenv(repoKey)
-		
+
 		packageGroup := PackageGroup{
 			Owner: owner,
 			Repo:  repo,
 		}
-		
+
 		c.Packages = append(c.Packages, packageGroup)
+
 		fmt.Printf("Loaded package from env: owner=%s, repo=%s\n", owner, repo)
 	}
+
 	fmt.Printf("Total packages loaded: %d\n", len(c.Packages))
 }
 

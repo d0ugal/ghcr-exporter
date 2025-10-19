@@ -12,8 +12,8 @@ import (
 
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
-	"github.com/prometheus/client_golang/prometheus"
 	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 func TestNewGHCRCollector(t *testing.T) {
