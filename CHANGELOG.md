@@ -5,6 +5,28 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.0](https://github.com/d0ugal/ghcr-exporter/compare/v2.7.0...v2.8.0) (2025-10-22)
+
+
+### Features
+
+* migrate ghcr-exporter to promexporter library ([e3fff53](https://github.com/d0ugal/ghcr-exporter/commit/e3fff5381087d26fa529c341a71569cfaa2fca88))
+* update to promexporter v1.0.0 ([a973961](https://github.com/d0ugal/ghcr-exporter/commit/a9739616d78445ef7bb577c55a7901afc3a26edf))
+
+
+### Bug Fixes
+
+* add missing interval label to CollectionIntervalGauge call ([6c58503](https://github.com/d0ugal/ghcr-exporter/commit/6c58503728eda0669a738b83723723eb99804a10))
+* add missing interval label to CollectionIntervalGauge in collectOwnerPackages ([8533d8c](https://github.com/d0ugal/ghcr-exporter/commit/8533d8ca0729748b712f05e5939066bdcf8bdbb1))
+* correct label cardinality for GHCR collection metrics ([8b7a6f7](https://github.com/d0ugal/ghcr-exporter/commit/8b7a6f71e35bd3096cdfa9935431b7306b219040))
+* resolve godoc linting issue ([8fc6291](https://github.com/d0ugal/ghcr-exporter/commit/8fc6291f9493896c8eaaebba915f1aab8277b75a))
+* update go.sum for promexporter v1.0.0 ([581b910](https://github.com/d0ugal/ghcr-exporter/commit/581b910accaa3ef6e0deb9d2fb52786422b19bec))
+* Update module github.com/d0ugal/promexporter to v1 ([8cfc4dd](https://github.com/d0ugal/ghcr-exporter/commit/8cfc4dd9629873ad13dbdc6216824ccc8a846de8))
+* Update module github.com/d0ugal/promexporter to v1.0.1 ([6d8e613](https://github.com/d0ugal/ghcr-exporter/commit/6d8e61375e28461688b5596f5d03f72ace42d8d5))
+* Update module github.com/prometheus/procfs to v0.18.0 ([704fecc](https://github.com/d0ugal/ghcr-exporter/commit/704feccb9819b1f71593db7ea7c43fe6ca6b08cd))
+* update tests to use new promexporter metrics registry ([d062a24](https://github.com/d0ugal/ghcr-exporter/commit/d062a242be9d678440a605ccf46a7552150a9bc7))
+* update to latest promexporter changes ([c6fb800](https://github.com/d0ugal/ghcr-exporter/commit/c6fb800906378a37a48da0eb0b7e29966ff530b0))
+
 ## [2.7.0](https://github.com/d0ugal/ghcr-exporter/compare/v2.6.1...v2.7.0) (2025-10-14)
 
 
