@@ -75,7 +75,7 @@ func NewGHCRCollector(cfg *config.Config, registry *metrics.GHCRRegistry) *GHCRC
 		client: &http.Client{
 			Timeout: 30 * time.Second,
 		},
-		token: cfg.GitHub.Token,
+		token: cfg.GitHub.Token.Value(),
 	}
 }
 

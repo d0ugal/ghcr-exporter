@@ -21,7 +21,7 @@ type Config struct {
 }
 
 type GitHubConfig struct {
-	Token string `yaml:"token"`
+	Token promexporter_config.SensitiveString `yaml:"token"`
 }
 
 type PackageGroup struct {
@@ -118,7 +118,7 @@ func loadFromEnv() (*Config, error) {
 
 	// GitHub configuration
 	if token := os.Getenv("GHCR_EXPORTER_GITHUB_TOKEN"); token != "" {
-		config.GitHub.Token = token
+		config.GitHub.Token = promexporter_config.NewSensitiveString(token)
 	}
 
 	// Set defaults for any missing values
@@ -154,8 +154,8 @@ func setDefaults(config *Config) {
 		config.Metrics.Collection.DefaultInterval = promexporter_config.Duration{Duration: time.Second * 30}
 	}
 
-	if config.GitHub.Token == "" {
-		config.GitHub.Token = os.Getenv("GITHUB_TOKEN")
+	if config.GitHub.Token.IsEmpty() {
+		config.GitHub.Token = promexporter_config.NewSensitiveString(os.Getenv("GITHUB_TOKEN"))
 	}
 
 	if len(config.Packages) == 0 {
@@ -261,7 +261,7 @@ func (c *Config) validateMetricsConfig() error {
 }
 
 func (c *Config) validateGitHubConfig() error {
-	if c.GitHub.Token == "" {
+	if c.GitHub.Token.IsEmpty() {
 		return fmt.Errorf("github token is required")
 	}
 
@@ -275,6 +275,18 @@ func (c *Config) GetPackageInterval(group PackageGroup) int {
 	}
 
 	return 60 // Default to 60 seconds
+}
+
+// GetDisplayConfig returns configuration data safe for display
+// Overrides BaseConfig to include GitHub configuration
+func (c *Config) GetDisplayConfig() map[string]interface{} {
+	// Get base configuration
+	config := c.BaseConfig.GetDisplayConfig()
+	
+	// Add GitHub configuration (token will be redacted)
+	config["GitHub Token"] = c.GitHub.Token
+	
+	return config
 }
 
 // GetDefaultInterval returns the default collection interval
