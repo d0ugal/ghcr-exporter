@@ -282,10 +282,10 @@ func (c *Config) GetPackageInterval(group PackageGroup) int {
 func (c *Config) GetDisplayConfig() map[string]interface{} {
 	// Get base configuration
 	config := c.BaseConfig.GetDisplayConfig()
-	
+
 	// Add GitHub configuration (token will be redacted)
 	config["GitHub Token"] = c.GitHub.Token
-	
+
 	return config
 }
 
