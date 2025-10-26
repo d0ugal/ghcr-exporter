@@ -5,6 +5,17 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.2](https://github.com/d0ugal/ghcr-exporter/compare/v2.9.1...v2.9.2) (2025-10-26)
+
+
+### Bug Fixes
+
+* add internal version package and update version handling ([e036e60](https://github.com/d0ugal/ghcr-exporter/commit/e036e605182c7bd00f1abdb8ed42e4b41c10d3bb))
+* Update module github.com/d0ugal/promexporter to v1.5.0 ([7e20596](https://github.com/d0ugal/ghcr-exporter/commit/7e2059691ad2e3141535d551dec753374a8ee5bc))
+* Update module github.com/prometheus/procfs to v0.19.1 ([2073eb4](https://github.com/d0ugal/ghcr-exporter/commit/2073eb4a072b8413712a4b8009eb73124b0f0e02))
+* use WithVersionInfo to pass version info to promexporter ([6556dd3](https://github.com/d0ugal/ghcr-exporter/commit/6556dd3d761e259861014bd3794f2372abeba95f))
+* use WithVersionInfo to pass version info to promexporter ([a180e05](https://github.com/d0ugal/ghcr-exporter/commit/a180e054722ccf6a0ef01e9a3972daf9eb32f38f))
+
 ## [2.9.1](https://github.com/d0ugal/ghcr-exporter/compare/v2.9.0...v2.9.1) (2025-10-25)
 
 
