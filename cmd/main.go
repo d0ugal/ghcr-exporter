@@ -10,7 +10,6 @@ import (
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
 	"ghcr-exporter/internal/version"
-
 	"github.com/d0ugal/promexporter/app"
 	"github.com/d0ugal/promexporter/logging"
 	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
