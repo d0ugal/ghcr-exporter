@@ -71,9 +71,6 @@ func main() {
 	// Initialize metrics registry using promexporter
 	metricsRegistry := promexporter_metrics.NewRegistry("ghcr_exporter_info")
 
-	// Set version info metric with ghcr-exporter version information
-	metricsRegistry.VersionInfo.WithLabelValues(version.Version, version.Commit, version.BuildDate).Set(1)
-
 	// Add custom metrics to the registry
 	ghcrRegistry := metrics.NewGHCRRegistry(metricsRegistry)
 
@@ -85,6 +82,7 @@ func main() {
 		WithConfig(&cfg.BaseConfig).
 		WithMetrics(metricsRegistry).
 		WithCollector(ghcrCollector).
+		WithVersionInfo(version.Version, version.Commit, version.BuildDate).
 		Build()
 
 	if err := application.Run(); err != nil {
