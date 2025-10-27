@@ -7,13 +7,13 @@ import (
 	"testing"
 	"time"
 
-	"ghcr-exporter/internal/config"
-	"ghcr-exporter/internal/metrics"
-
-	promexporter_config "github.com/d0ugal/promexporter/config"
-	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/testutil"
+
+	"ghcr-exporter/internal/config"
+	"ghcr-exporter/internal/metrics"
+	promexporter_config "github.com/d0ugal/promexporter/config"
+	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
 )
 
 // TestGHCRCollectorIntegration tests the full collection flow to catch label mapping issues
@@ -24,7 +24,7 @@ func TestGHCRCollectorIntegration(t *testing.T) {
 		case "/v2/d0ugal/filesystem-exporter/tags/list":
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{
+			_, _ = w.Write([]byte(`{
 				"name": "d0ugal/filesystem-exporter",
 				"tags": [
 					"v1.22.4",
@@ -35,7 +35,7 @@ func TestGHCRCollectorIntegration(t *testing.T) {
 		case "/v2/d0ugal/filesystem-exporter/manifests/latest":
 			w.Header().Set("Content-Type", "application/vnd.docker.distribution.manifest.v2+json")
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{
+			_, _ = w.Write([]byte(`{
 				"schemaVersion": 2,
 				"mediaType": "application/vnd.docker.distribution.manifest.v2+json",
 				"config": {
@@ -48,7 +48,7 @@ func TestGHCRCollectorIntegration(t *testing.T) {
 		case "/v2/d0ugal/filesystem-exporter/manifests/sha256:abc123":
 			w.Header().Set("Content-Type", "application/vnd.docker.container.image.v1+json")
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{
+			_, _ = w.Write([]byte(`{
 				"created": "2025-10-27T20:00:00Z",
 				"config": {
 					"Labels": {
