@@ -5,6 +5,18 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.4](https://github.com/d0ugal/ghcr-exporter/compare/v2.9.3...v2.9.4) (2025-10-27)
+
+
+### Bug Fixes
+
+* correct import order with goimports ([3f43718](https://github.com/d0ugal/ghcr-exporter/commit/3f43718091faeb267fa5d26b716e8f00b7b9ed71))
+* correct label mapping for collection metrics ([3386914](https://github.com/d0ugal/ghcr-exporter/commit/3386914f842786b83fccdbd60e47b360a1c411b2))
+* fmt ([b9514fd](https://github.com/d0ugal/ghcr-exporter/commit/b9514fd1ca8ef03cf48aa7b9cbac47e038eb3721))
+* format code and fix linting issues ([ed30c91](https://github.com/d0ugal/ghcr-exporter/commit/ed30c910964a35d151d00289b329c5d49a3377b9))
+* lint ([31a2c94](https://github.com/d0ugal/ghcr-exporter/commit/31a2c94f120eb67f7c3ae555a46d23029828d773))
+* resolve linting issues - import order and errcheck ([0f49a64](https://github.com/d0ugal/ghcr-exporter/commit/0f49a64ada546ed10682b3a3d105274aeb43cf28))
+
 ## [2.9.3](https://github.com/d0ugal/ghcr-exporter/compare/v2.9.2...v2.9.3) (2025-10-27)
 
 
