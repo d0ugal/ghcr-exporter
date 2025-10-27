@@ -5,6 +5,14 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.4](https://github.com/d0ugal/ghcr-exporter/compare/v2.9.3...v2.9.4) (2025-10-27)
+
+
+### Bug Fixes
+
+* correct label mapping for collection metrics ([3386914](https://github.com/d0ugal/ghcr-exporter/commit/3386914f842786b83fccdbd60e47b360a1c411b2))
+* lint ([31a2c94](https://github.com/d0ugal/ghcr-exporter/commit/31a2c94f120eb67f7c3ae555a46d23029828d773))
+
 ## [2.9.3](https://github.com/d0ugal/ghcr-exporter/compare/v2.9.2...v2.9.3) (2025-10-27)
 
 
