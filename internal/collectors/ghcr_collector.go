@@ -14,6 +14,7 @@ import (
 
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 type GHCRCollector struct {
@@ -138,18 +139,33 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 	}, 3, 2*time.Second)
 	if err != nil {
 		slog.Error("Failed to collect package metrics after retries", "name", name, "error", err)
-		gc.metrics.CollectionFailedCounter.WithLabelValues(name, strconv.Itoa(interval)).Inc()
+		gc.metrics.CollectionFailedCounter.With(prometheus.Labels{
+			"name":     name,
+			"interval": strconv.Itoa(interval),
+		}).Inc()
 
 		return
 	}
 
-	gc.metrics.CollectionSuccessCounter.WithLabelValues(name, strconv.Itoa(interval)).Inc()
+	gc.metrics.CollectionSuccessCounter.With(prometheus.Labels{
+		"name":     name,
+		"interval": strconv.Itoa(interval),
+	}).Inc()
 	// Expose configured interval as a numeric gauge for PromQL arithmetic
-	gc.metrics.CollectionIntervalGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(float64(interval))
+	gc.metrics.CollectionIntervalGauge.With(prometheus.Labels{
+		"name":     name,
+		"interval": strconv.Itoa(interval),
+	}).Set(float64(interval))
 
 	duration := time.Since(startTime).Seconds()
-	gc.metrics.CollectionDurationGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(duration)
-	gc.metrics.CollectionTimestampGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(float64(time.Now().Unix()))
+	gc.metrics.CollectionDurationGauge.With(prometheus.Labels{
+		"name":     name,
+		"interval": strconv.Itoa(interval),
+	}).Set(duration)
+	gc.metrics.CollectionTimestampGauge.With(prometheus.Labels{
+		"name":     name,
+		"interval": strconv.Itoa(interval),
+	}).Set(float64(time.Now().Unix()))
 
 	slog.Info("GHCR package metrics collection completed", "name", name, "duration", duration)
 }
@@ -165,7 +181,10 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 	packages, err := gc.getOwnerPackages(ctx, pkg.Owner)
 	if err != nil {
 		slog.Error("Failed to get owner packages", "name", name, "owner", pkg.Owner, "error", err)
-		gc.metrics.CollectionFailedCounter.WithLabelValues(name, strconv.Itoa(interval)).Inc()
+		gc.metrics.CollectionFailedCounter.With(prometheus.Labels{
+			"name":     name,
+			"interval": strconv.Itoa(interval),
+		}).Inc()
 
 		return
 	}
@@ -194,12 +213,24 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 		}
 	}
 
-	gc.metrics.CollectionSuccessCounter.WithLabelValues(name, strconv.Itoa(interval)).Inc()
-	gc.metrics.CollectionIntervalGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(float64(interval))
+	gc.metrics.CollectionSuccessCounter.With(prometheus.Labels{
+		"name":     name,
+		"interval": strconv.Itoa(interval),
+	}).Inc()
+	gc.metrics.CollectionIntervalGauge.With(prometheus.Labels{
+		"name":     name,
+		"interval": strconv.Itoa(interval),
+	}).Set(float64(interval))
 
 	duration := time.Since(startTime).Seconds()
-	gc.metrics.CollectionDurationGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(duration)
-	gc.metrics.CollectionTimestampGauge.WithLabelValues(name, strconv.Itoa(interval)).Set(float64(time.Now().Unix()))
+	gc.metrics.CollectionDurationGauge.With(prometheus.Labels{
+		"name":     name,
+		"interval": strconv.Itoa(interval),
+	}).Set(duration)
+	gc.metrics.CollectionTimestampGauge.With(prometheus.Labels{
+		"name":     name,
+		"interval": strconv.Itoa(interval),
+	}).Set(float64(time.Now().Unix()))
 
 	slog.Info("GHCR owner package discovery completed",
 		"name", name,
@@ -375,20 +406,32 @@ func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.Pa
 
 	// Update package-level metrics
 	// Use version count as a proxy for activity (more versions = more activity)
-	gc.metrics.PackageDownloadsGauge.WithLabelValues(pkg.Owner, pkg.Repo).Set(float64(packageInfo.VersionCount))
+	gc.metrics.PackageDownloadsGauge.With(prometheus.Labels{
+		"owner": pkg.Owner,
+		"repo":  pkg.Repo,
+	}).Set(float64(packageInfo.VersionCount))
 
 	// Try to get actual download statistics from the package page
 	downloadCount, err := gc.getPackageDownloadStats(ctx, pkg.Owner, pkg.Repo)
 	if err != nil {
 		slog.Warn("Failed to get download statistics", "package", pkg.Repo, "error", err)
 		// Set to -1 to indicate no data available
-		gc.metrics.PackageDownloadStatsGauge.WithLabelValues(pkg.Owner, pkg.Repo).Set(-1)
+		gc.metrics.PackageDownloadStatsGauge.With(prometheus.Labels{
+			"owner": pkg.Owner,
+			"repo":  pkg.Repo,
+		}).Set(-1)
 	} else {
-		gc.metrics.PackageDownloadStatsGauge.WithLabelValues(pkg.Owner, pkg.Repo).Set(float64(downloadCount))
+		gc.metrics.PackageDownloadStatsGauge.With(prometheus.Labels{
+			"owner": pkg.Owner,
+			"repo":  pkg.Repo,
+		}).Set(float64(downloadCount))
 	}
 
 	if !lastPublished.IsZero() {
-		gc.metrics.PackageLastPublishedGauge.WithLabelValues(pkg.Owner, pkg.Repo).Set(float64(lastPublished.Unix()))
+		gc.metrics.PackageLastPublishedGauge.With(prometheus.Labels{
+			"owner": pkg.Owner,
+			"repo":  pkg.Repo,
+		}).Set(float64(lastPublished.Unix()))
 	}
 
 	slog.Info("Updated package metrics",
