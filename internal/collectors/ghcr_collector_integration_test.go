@@ -9,6 +9,7 @@ import (
 
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
+
 	promexporter_config "github.com/d0ugal/promexporter/config"
 	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
 	"github.com/prometheus/client_golang/prometheus"
@@ -111,7 +112,7 @@ func TestGHCRCollectorIntegration(t *testing.T) {
 	t.Logf("Collection failed metric: %f", collectionFailedMetric)
 
 	collectionSuccessMetric := testutil.ToFloat64(registry.CollectionSuccessCounter.With(prometheus.Labels{
-		"repo":     "d0ugal-filesystem-exporter", 
+		"repo":     "d0ugal-filesystem-exporter",
 		"interval": "30",
 	}))
 	t.Logf("Collection success metric: %f", collectionSuccessMetric)
@@ -154,7 +155,7 @@ func TestGHCRCollectorLabelConsistency(t *testing.T) {
 			description: "Should accept 'repo' and 'interval' labels",
 		},
 		{
-			name:        "CollectionSuccessCounter", 
+			name:        "CollectionSuccessCounter",
 			metric:      registry.CollectionSuccessCounter,
 			labels:      prometheus.Labels{"repo": "test-repo", "interval": "30"},
 			description: "Should accept 'repo' and 'interval' labels",
@@ -166,13 +167,13 @@ func TestGHCRCollectorLabelConsistency(t *testing.T) {
 			// This will panic if labels don't match the metric definition
 			counter := tc.metric.With(tc.labels)
 			counter.Inc()
-			
+
 			// Verify the metric was created successfully
 			value := testutil.ToFloat64(counter)
 			if value != 1.0 {
 				t.Errorf("Expected metric value 1.0, got %f", value)
 			}
-			
+
 			t.Logf("✅ %s: %s", tc.name, tc.description)
 		})
 	}
@@ -227,13 +228,13 @@ func TestGHCRCollectorLabelConsistency(t *testing.T) {
 			// This will panic if labels don't match the metric definition
 			gauge := tc.metric.With(tc.labels)
 			gauge.Set(42.0)
-			
+
 			// Verify the metric was created successfully
 			value := testutil.ToFloat64(gauge)
 			if value != 42.0 {
 				t.Errorf("Expected metric value 42.0, got %f", value)
 			}
-			
+
 			t.Logf("✅ %s: %s", tc.name, tc.description)
 		})
 	}
