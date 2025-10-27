@@ -140,7 +140,7 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 	if err != nil {
 		slog.Error("Failed to collect package metrics after retries", "name", name, "error", err)
 		gc.metrics.CollectionFailedCounter.With(prometheus.Labels{
-			"name":     name,
+			"repo":     name,
 			"interval": strconv.Itoa(interval),
 		}).Inc()
 
@@ -148,22 +148,22 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 	}
 
 	gc.metrics.CollectionSuccessCounter.With(prometheus.Labels{
-		"name":     name,
+		"repo":     name,
 		"interval": strconv.Itoa(interval),
 	}).Inc()
 	// Expose configured interval as a numeric gauge for PromQL arithmetic
 	gc.metrics.CollectionIntervalGauge.With(prometheus.Labels{
-		"name":     name,
+		"repo":     name,
 		"interval": strconv.Itoa(interval),
 	}).Set(float64(interval))
 
 	duration := time.Since(startTime).Seconds()
 	gc.metrics.CollectionDurationGauge.With(prometheus.Labels{
-		"name":     name,
+		"repo":     name,
 		"interval": strconv.Itoa(interval),
 	}).Set(duration)
 	gc.metrics.CollectionTimestampGauge.With(prometheus.Labels{
-		"name":     name,
+		"repo":     name,
 		"interval": strconv.Itoa(interval),
 	}).Set(float64(time.Now().Unix()))
 
@@ -182,7 +182,7 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 	if err != nil {
 		slog.Error("Failed to get owner packages", "name", name, "owner", pkg.Owner, "error", err)
 		gc.metrics.CollectionFailedCounter.With(prometheus.Labels{
-			"name":     name,
+			"repo":     name,
 			"interval": strconv.Itoa(interval),
 		}).Inc()
 
@@ -214,21 +214,21 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 	}
 
 	gc.metrics.CollectionSuccessCounter.With(prometheus.Labels{
-		"name":     name,
+		"repo":     name,
 		"interval": strconv.Itoa(interval),
 	}).Inc()
 	gc.metrics.CollectionIntervalGauge.With(prometheus.Labels{
-		"name":     name,
+		"repo":     name,
 		"interval": strconv.Itoa(interval),
 	}).Set(float64(interval))
 
 	duration := time.Since(startTime).Seconds()
 	gc.metrics.CollectionDurationGauge.With(prometheus.Labels{
-		"name":     name,
+		"repo":     name,
 		"interval": strconv.Itoa(interval),
 	}).Set(duration)
 	gc.metrics.CollectionTimestampGauge.With(prometheus.Labels{
-		"name":     name,
+		"repo":     name,
 		"interval": strconv.Itoa(interval),
 	}).Set(float64(time.Now().Unix()))
 
