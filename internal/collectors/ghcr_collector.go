@@ -14,7 +14,6 @@ import (
 
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
-
 	"github.com/d0ugal/promexporter/app"
 	"github.com/d0ugal/promexporter/tracing"
 	"github.com/prometheus/client_golang/prometheus"
@@ -138,6 +137,7 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 
 	if tracer != nil && tracer.IsEnabled() {
 		collectorSpan = tracer.NewCollectorSpan(ctx, "ghcr-collector", "collect-package")
+
 		collectorSpan.SetAttributes(
 			attribute.String("package.name", name),
 			attribute.String("package.owner", pkg.Owner),
