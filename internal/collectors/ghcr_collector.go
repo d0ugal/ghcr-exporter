@@ -14,12 +14,17 @@ import (
 
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
+
+	"github.com/d0ugal/promexporter/app"
+	"github.com/d0ugal/promexporter/tracing"
 	"github.com/prometheus/client_golang/prometheus"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 type GHCRCollector struct {
 	config  *config.Config
 	metrics *metrics.GHCRRegistry
+	app     *app.App
 	client  *http.Client
 	token   string
 }
@@ -69,10 +74,11 @@ type GHCRVersionResponse struct {
 	} `json:"package_files"`
 }
 
-func NewGHCRCollector(cfg *config.Config, registry *metrics.GHCRRegistry) *GHCRCollector {
+func NewGHCRCollector(cfg *config.Config, registry *metrics.GHCRRegistry, app *app.App) *GHCRCollector {
 	return &GHCRCollector{
 		config:  cfg,
 		metrics: registry,
+		app:     app,
 		client: &http.Client{
 			Timeout: 30 * time.Second,
 		},
@@ -125,6 +131,22 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 	startTime := time.Now()
 	interval := gc.config.GetPackageInterval(pkg)
 
+	// Create span for collection cycle
+	tracer := gc.app.GetTracer()
+
+	var collectorSpan *tracing.CollectorSpan
+
+	if tracer != nil && tracer.IsEnabled() {
+		collectorSpan = tracer.NewCollectorSpan(ctx, "ghcr-collector", "collect-package")
+		collectorSpan.SetAttributes(
+			attribute.String("package.name", name),
+			attribute.String("package.owner", pkg.Owner),
+			attribute.String("package.repo", pkg.Repo),
+			attribute.Int("package.interval", interval),
+		)
+		defer collectorSpan.End()
+	}
+
 	// If repo is not specified, discover all repos for the owner
 	if pkg.Repo == "" {
 		gc.collectOwnerPackages(ctx, name, pkg)
@@ -139,6 +161,11 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 	}, 3, 2*time.Second)
 	if err != nil {
 		slog.Error("Failed to collect package metrics after retries", "name", name, "error", err)
+
+		if collectorSpan != nil {
+			collectorSpan.RecordError(err, attribute.String("package.name", name))
+		}
+
 		gc.metrics.CollectionFailedCounter.With(prometheus.Labels{
 			"repo":     name,
 			"interval": strconv.Itoa(interval),
@@ -166,6 +193,16 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 		"repo":     name,
 		"interval": strconv.Itoa(interval),
 	}).Set(float64(time.Now().Unix()))
+
+	if collectorSpan != nil {
+		collectorSpan.SetAttributes(
+			attribute.Float64("collection.duration_seconds", duration),
+		)
+		collectorSpan.AddEvent("collection_completed",
+			attribute.String("package.name", name),
+			attribute.Float64("duration_seconds", duration),
+		)
+	}
 
 	slog.Info("GHCR package metrics collection completed", "name", name, "duration", duration)
 }

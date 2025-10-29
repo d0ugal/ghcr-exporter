@@ -12,6 +12,7 @@ import (
 
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
+	"github.com/d0ugal/promexporter/app"
 	promexporter_metrics "github.com/d0ugal/promexporter/metrics"
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -22,7 +23,13 @@ func TestNewGHCRCollector(t *testing.T) {
 	baseRegistry := promexporter_metrics.NewRegistry("test_exporter_info")
 	registry := metrics.NewGHCRRegistry(baseRegistry)
 
-	collector := NewGHCRCollector(cfg, registry)
+	// Create a minimal app instance for testing
+	testApp := app.New("Test Exporter").
+		WithConfig(&cfg.BaseConfig).
+		WithMetrics(baseRegistry).
+		Build()
+
+	collector := NewGHCRCollector(cfg, registry, testApp)
 
 	if collector == nil {
 		t.Fatal("Expected collector to be created, got nil")
@@ -53,7 +60,13 @@ func TestGHCRCollectorStart(t *testing.T) {
 	baseRegistry := promexporter_metrics.NewRegistry("test_exporter_info")
 	registry := metrics.NewGHCRRegistry(baseRegistry)
 
-	collector := NewGHCRCollector(cfg, registry)
+	// Create a minimal app instance for testing
+	testApp := app.New("Test Exporter").
+		WithConfig(&cfg.BaseConfig).
+		WithMetrics(baseRegistry).
+		Build()
+
+	collector := NewGHCRCollector(cfg, registry, testApp)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 	defer cancel()

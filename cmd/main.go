@@ -74,16 +74,16 @@ func main() {
 	// Add custom metrics to the registry
 	ghcrRegistry := metrics.NewGHCRRegistry(metricsRegistry)
 
-	// Create collector
-	ghcrCollector := collectors.NewGHCRCollector(cfg, ghcrRegistry)
-
-	// Create and run application using promexporter
+	// Create and build application using promexporter
 	application := app.New("GHCR Exporter").
 		WithConfig(&cfg.BaseConfig).
 		WithMetrics(metricsRegistry).
-		WithCollector(ghcrCollector).
 		WithVersionInfo(version.Version, version.Commit, version.BuildDate).
 		Build()
+
+	// Create collector with app reference for tracing
+	ghcrCollector := collectors.NewGHCRCollector(cfg, ghcrRegistry, application)
+	application.WithCollector(ghcrCollector)
 
 	if err := application.Run(); err != nil {
 		slog.Error("Application failed", "error", err)
