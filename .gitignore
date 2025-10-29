@@ -19,7 +19,11 @@ go.work
 
 # Build artifacts
 ghcr-exporter
+main
 coverage.txt
+
+# Linter cache
+.golangci-lint-cache/
 
 # IDE files
 .vscode/
