@@ -104,7 +104,14 @@ func TestGetPackageDownloadStats(t *testing.T) {
 	// Create a mock base registry for testing
 	baseRegistry := promexporter_metrics.NewRegistry("test_exporter_info")
 	registry := metrics.NewGHCRRegistry(baseRegistry)
-	collector := NewGHCRCollector(cfg, registry)
+
+	// Create a minimal app instance for testing
+	testApp := app.New("Test Exporter").
+		WithConfig(&cfg.BaseConfig).
+		WithMetrics(baseRegistry).
+		Build()
+
+	collector := NewGHCRCollector(cfg, registry, testApp)
 
 	// Override the client to use our test server
 	collector.client = server.Client()
@@ -205,7 +212,14 @@ func TestGetPackageDownloadStatsHTTPError(t *testing.T) {
 	// Create a mock base registry for testing
 	baseRegistry := promexporter_metrics.NewRegistry("test_exporter_info")
 	registry := metrics.NewGHCRRegistry(baseRegistry)
-	collector := NewGHCRCollector(cfg, registry)
+
+	// Create a minimal app instance for testing
+	testApp := app.New("Test Exporter").
+		WithConfig(&cfg.BaseConfig).
+		WithMetrics(baseRegistry).
+		Build()
+
+	collector := NewGHCRCollector(cfg, registry, testApp)
 	collector.client = server.Client()
 
 	// Test that we get an error when the HTTP request fails
