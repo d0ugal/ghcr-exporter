@@ -41,6 +41,7 @@ func NewGHCRRegistry(baseRegistry *promexporter_metrics.Registry) *GHCRRegistry 
 		},
 		[]string{"owner", "repo"},
 	)
+
 	baseRegistry.AddMetricInfo("ghcr_package_versions", "Total number of versions for a GHCR package", []string{"owner", "repo"})
 
 	ghcr.PackageDownloadStatsGauge = factory.NewGaugeVec(
@@ -50,6 +51,7 @@ func NewGHCRRegistry(baseRegistry *promexporter_metrics.Registry) *GHCRRegistry 
 		},
 		[]string{"owner", "repo"},
 	)
+
 	baseRegistry.AddMetricInfo("ghcr_package_downloads", "Total downloads for a package from GitHub Container Registry", []string{"owner", "repo"})
 
 	ghcr.PackageLastPublishedGauge = factory.NewGaugeVec(
@@ -59,6 +61,7 @@ func NewGHCRRegistry(baseRegistry *promexporter_metrics.Registry) *GHCRRegistry 
 		},
 		[]string{"owner", "repo"},
 	)
+
 	baseRegistry.AddMetricInfo("ghcr_package_last_published_timestamp", "Timestamp of the last published version for a GHCR package", []string{"owner", "repo"})
 
 	// Collection statistics
@@ -69,6 +72,7 @@ func NewGHCRRegistry(baseRegistry *promexporter_metrics.Registry) *GHCRRegistry 
 		},
 		[]string{"repo", "interval"},
 	)
+
 	baseRegistry.AddMetricInfo("ghcr_collection_failed_total", "Total number of failed GHCR data collection attempts", []string{"repo", "interval"})
 
 	ghcr.CollectionSuccessCounter = factory.NewCounterVec(
@@ -78,6 +82,7 @@ func NewGHCRRegistry(baseRegistry *promexporter_metrics.Registry) *GHCRRegistry 
 		},
 		[]string{"repo", "interval"},
 	)
+
 	baseRegistry.AddMetricInfo("ghcr_collection_success_total", "Total number of successful GHCR data collection attempts", []string{"repo", "interval"})
 
 	ghcr.CollectionIntervalGauge = factory.NewGaugeVec(
@@ -87,6 +92,7 @@ func NewGHCRRegistry(baseRegistry *promexporter_metrics.Registry) *GHCRRegistry 
 		},
 		[]string{"repo", "interval"},
 	)
+
 	baseRegistry.AddMetricInfo("ghcr_collection_interval_seconds", "Collection interval in seconds for GHCR data", []string{"repo", "interval"})
 
 	ghcr.CollectionDurationGauge = factory.NewGaugeVec(
@@ -96,6 +102,7 @@ func NewGHCRRegistry(baseRegistry *promexporter_metrics.Registry) *GHCRRegistry 
 		},
 		[]string{"repo", "interval"},
 	)
+
 	baseRegistry.AddMetricInfo("ghcr_collection_duration_seconds", "Duration of the last GHCR data collection in seconds", []string{"repo", "interval"})
 
 	ghcr.CollectionTimestampGauge = factory.NewGaugeVec(
@@ -105,6 +112,7 @@ func NewGHCRRegistry(baseRegistry *promexporter_metrics.Registry) *GHCRRegistry 
 		},
 		[]string{"repo", "interval"},
 	)
+
 	baseRegistry.AddMetricInfo("ghcr_collection_timestamp", "Unix timestamp of the last GHCR data collection", []string{"repo", "interval"})
 
 	return ghcr
