@@ -133,8 +133,10 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 	// Create span for collection cycle
 	tracer := gc.app.GetTracer()
 
-	var collectorSpan *tracing.CollectorSpan
-	var spanCtx context.Context
+	var (
+		collectorSpan *tracing.CollectorSpan
+		spanCtx       context.Context //nolint:contextcheck // Extracting context from span for child operations
+	)
 
 	if tracer != nil && tracer.IsEnabled() {
 		collectorSpan = tracer.NewCollectorSpan(ctx, "ghcr-collector", "collect-package")
@@ -145,7 +147,8 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 			attribute.String("package.repo", pkg.Repo),
 			attribute.Int("package.interval", interval),
 		)
-		spanCtx = collectorSpan.Context()
+
+		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -246,8 +249,10 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 
 	tracer := gc.app.GetTracer()
 
-	var collectorSpan *tracing.CollectorSpan
-	var spanCtx context.Context
+	var (
+		collectorSpan *tracing.CollectorSpan
+		spanCtx       context.Context //nolint:contextcheck // Extracting context from span for child operations
+	)
 
 	if tracer != nil && tracer.IsEnabled() {
 		collectorSpan = tracer.NewCollectorSpan(ctx, "ghcr-collector", "collect-owner-packages")
@@ -255,7 +260,8 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 			attribute.String("package.name", name),
 			attribute.String("package.owner", pkg.Owner),
 		)
-		spanCtx = collectorSpan.Context()
+
+		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -363,8 +369,10 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 func (gc *GHCRCollector) collectPackageMetrics(ctx context.Context, repo string, pkg config.PackageGroup) error {
 	tracer := gc.app.GetTracer()
 
-	var collectorSpan *tracing.CollectorSpan
-	var spanCtx context.Context
+	var (
+		collectorSpan *tracing.CollectorSpan
+		spanCtx       context.Context //nolint:contextcheck // Extracting context from span for child operations
+	)
 
 	if tracer != nil && tracer.IsEnabled() {
 		collectorSpan = tracer.NewCollectorSpan(ctx, "ghcr-collector", "collect-package-metrics")
@@ -372,7 +380,8 @@ func (gc *GHCRCollector) collectPackageMetrics(ctx context.Context, repo string,
 			attribute.String("package.owner", pkg.Owner),
 			attribute.String("package.repo", pkg.Repo),
 		)
-		spanCtx = collectorSpan.Context()
+
+		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -389,6 +398,7 @@ func (gc *GHCRCollector) collectPackageMetrics(ctx context.Context, repo string,
 		if collectorSpan != nil {
 			collectorSpan.RecordError(err)
 		}
+
 		return err
 	}
 
@@ -404,6 +414,7 @@ func (gc *GHCRCollector) collectPackageMetrics(ctx context.Context, repo string,
 			)
 			collectorSpan.RecordError(err, attribute.String("operation", "get-package-info"))
 		}
+
 		return fmt.Errorf("failed to get package info: %w", err)
 	}
 
@@ -424,6 +435,7 @@ func (gc *GHCRCollector) collectPackageMetrics(ctx context.Context, repo string,
 
 	if err != nil {
 		slog.Warn("Failed to get package versions", "error", err)
+
 		if collectorSpan != nil {
 			collectorSpan.SetAttributes(
 				attribute.Float64("package_versions.duration_seconds", versionsDuration),
@@ -449,7 +461,9 @@ func (gc *GHCRCollector) collectPackageMetrics(ctx context.Context, repo string,
 
 	// Update metrics
 	updateStart := time.Now()
+
 	gc.updatePackageMetrics(spanCtx, pkg, packageInfo, versions)
+
 	updateDuration := time.Since(updateStart).Seconds()
 
 	if collectorSpan != nil {
@@ -467,8 +481,10 @@ func (gc *GHCRCollector) collectPackageMetrics(ctx context.Context, repo string,
 func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packageName string) (*GHCRPackageResponse, error) {
 	tracer := gc.app.GetTracer()
 
-	var collectorSpan *tracing.CollectorSpan
-	var spanCtx context.Context
+	var (
+		collectorSpan *tracing.CollectorSpan
+		spanCtx       context.Context //nolint:contextcheck // Extracting context from span for child operations
+	)
 
 	if tracer != nil && tracer.IsEnabled() {
 		collectorSpan = tracer.NewCollectorSpan(ctx, "ghcr-collector", "get-package-info")
@@ -476,7 +492,8 @@ func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packag
 			attribute.String("package.owner", owner),
 			attribute.String("package.name", packageName),
 		)
-		spanCtx = collectorSpan.Context()
+
+		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -493,6 +510,7 @@ func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packag
 			)
 			collectorSpan.RecordError(err, attribute.String("operation", "api-request"))
 		}
+
 		return nil, err
 	}
 
@@ -503,13 +521,16 @@ func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packag
 	}()
 
 	decodeStart := time.Now()
+
 	var packageInfo GHCRPackageResponse
 	if err := json.NewDecoder(resp.Body).Decode(&packageInfo); err != nil {
 		if collectorSpan != nil {
 			collectorSpan.RecordError(err, attribute.String("operation", "json-decode"))
 		}
+
 		return nil, err
 	}
+
 	decodeDuration := time.Since(decodeStart).Seconds()
 
 	if collectorSpan != nil {
@@ -530,15 +551,18 @@ func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packag
 func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) (*http.Response, error) {
 	tracer := gc.app.GetTracer()
 
-	var collectorSpan *tracing.CollectorSpan
-	var spanCtx context.Context
+	var (
+		collectorSpan *tracing.CollectorSpan
+		spanCtx       context.Context //nolint:contextcheck // Extracting context from span for child operations
+	)
 
 	if tracer != nil && tracer.IsEnabled() {
 		collectorSpan = tracer.NewCollectorSpan(ctx, "ghcr-collector", "make-github-api-request")
 		collectorSpan.SetAttributes(
 			attribute.String("api.path", path),
 		)
-		spanCtx = collectorSpan.Context()
+
+		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -555,11 +579,13 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 	}
 
 	userReqStart := time.Now()
+
 	userReq, err := http.NewRequestWithContext(spanCtx, http.MethodGet, userURL, nil)
 	if err != nil {
 		if collectorSpan != nil {
 			collectorSpan.RecordError(err, attribute.String("operation", "create-request"))
 		}
+
 		return nil, err
 	}
 
@@ -579,6 +605,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 			)
 			collectorSpan.RecordError(err, attribute.String("operation", "user-endpoint-request"))
 		}
+
 		return nil, err
 	}
 
@@ -598,6 +625,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 				attribute.Int("status_code", userResp.StatusCode),
 			)
 		}
+
 		return userResp, nil
 	}
 
@@ -619,11 +647,13 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 		slog.Debug("Trying org endpoint", "url", orgURL, "path", orgPath)
 
 		orgReqStart := time.Now()
+
 		orgReq, err := http.NewRequestWithContext(spanCtx, http.MethodGet, orgURL, nil)
 		if err != nil {
 			if collectorSpan != nil {
 				collectorSpan.RecordError(err, attribute.String("operation", "create-org-request"))
 			}
+
 			return nil, err
 		}
 
@@ -643,6 +673,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 				)
 				collectorSpan.RecordError(err, attribute.String("operation", "org-endpoint-request"))
 			}
+
 			return nil, err
 		}
 
@@ -661,6 +692,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 					attribute.Int("status_code", orgResp.StatusCode),
 				)
 			}
+
 			return orgResp, nil
 		}
 
@@ -673,6 +705,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 		if collectorSpan != nil {
 			collectorSpan.RecordError(err, attribute.Int("status_code", orgResp.StatusCode))
 		}
+
 		return nil, err
 	}
 
@@ -685,14 +718,17 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 	if collectorSpan != nil {
 		collectorSpan.RecordError(err, attribute.Int("status_code", userResp.StatusCode))
 	}
+
 	return nil, err
 }
 
 func (gc *GHCRCollector) getPackageVersions(ctx context.Context, owner, repo, packageName string) ([]GHCRVersionResponse, error) {
 	tracer := gc.app.GetTracer()
 
-	var collectorSpan *tracing.CollectorSpan
-	var spanCtx context.Context
+	var (
+		collectorSpan *tracing.CollectorSpan
+		spanCtx       context.Context //nolint:contextcheck // Extracting context from span for child operations
+	)
 
 	if tracer != nil && tracer.IsEnabled() {
 		collectorSpan = tracer.NewCollectorSpan(ctx, "ghcr-collector", "get-package-versions")
@@ -700,7 +736,8 @@ func (gc *GHCRCollector) getPackageVersions(ctx context.Context, owner, repo, pa
 			attribute.String("package.owner", owner),
 			attribute.String("package.name", packageName),
 		)
-		spanCtx = collectorSpan.Context()
+
+		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -717,6 +754,7 @@ func (gc *GHCRCollector) getPackageVersions(ctx context.Context, owner, repo, pa
 			)
 			collectorSpan.RecordError(err, attribute.String("operation", "api-request"))
 		}
+
 		return nil, err
 	}
 
@@ -727,13 +765,16 @@ func (gc *GHCRCollector) getPackageVersions(ctx context.Context, owner, repo, pa
 	}()
 
 	decodeStart := time.Now()
+
 	var versions []GHCRVersionResponse
 	if err := json.NewDecoder(resp.Body).Decode(&versions); err != nil {
 		if collectorSpan != nil {
 			collectorSpan.RecordError(err, attribute.String("operation", "json-decode"))
 		}
+
 		return nil, err
 	}
+
 	decodeDuration := time.Since(decodeStart).Seconds()
 
 	if collectorSpan != nil {
@@ -753,8 +794,10 @@ func (gc *GHCRCollector) getPackageVersions(ctx context.Context, owner, repo, pa
 func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.PackageGroup, packageInfo *GHCRPackageResponse, versions []GHCRVersionResponse) {
 	tracer := gc.app.GetTracer()
 
-	var collectorSpan *tracing.CollectorSpan
-	var spanCtx context.Context
+	var (
+		collectorSpan *tracing.CollectorSpan
+		spanCtx       context.Context //nolint:contextcheck // Extracting context from span for child operations
+	)
 
 	if tracer != nil && tracer.IsEnabled() {
 		collectorSpan = tracer.NewCollectorSpan(ctx, "ghcr-collector", "update-package-metrics")
@@ -763,7 +806,8 @@ func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.Pa
 			attribute.String("package.repo", pkg.Repo),
 			attribute.Int("versions.count", len(versions)),
 		)
-		spanCtx = collectorSpan.Context()
+
+		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -773,6 +817,7 @@ func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.Pa
 	// Note: GitHub API doesn't provide download statistics for packages
 	// We'll use version count as a proxy metric and track last published time
 	lastPublishedStart := time.Now()
+
 	var lastPublished time.Time
 
 	// Find the most recent version
@@ -784,6 +829,7 @@ func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.Pa
 			}
 		}
 	}
+
 	lastPublishedDuration := time.Since(lastPublishedStart).Seconds()
 
 	// Update package-level metrics
@@ -800,6 +846,7 @@ func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.Pa
 
 	if err != nil {
 		slog.Warn("Failed to get download statistics", "package", pkg.Repo, "error", err)
+
 		if collectorSpan != nil {
 			collectorSpan.SetAttributes(
 				attribute.Float64("download_stats.duration_seconds", downloadStatsDuration),
@@ -821,6 +868,7 @@ func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.Pa
 				attribute.Int64("count", downloadCount),
 			)
 		}
+
 		gc.metrics.PackageDownloadStatsGauge.With(prometheus.Labels{
 			"owner": pkg.Owner,
 			"repo":  pkg.Repo,
