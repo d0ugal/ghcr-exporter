@@ -135,7 +135,7 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 
 	var (
 		collectorSpan *tracing.CollectorSpan
-		spanCtx       context.Context //nolint:contextcheck // Extracting context from span for child operations
+		spanCtx       context.Context
 	)
 
 	if tracer != nil && tracer.IsEnabled() {
@@ -261,7 +261,7 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 			attribute.String("package.owner", pkg.Owner),
 		)
 
-		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
+		spanCtx = collectorSpan.Context()
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -381,7 +381,7 @@ func (gc *GHCRCollector) collectPackageMetrics(ctx context.Context, repo string,
 			attribute.String("package.repo", pkg.Repo),
 		)
 
-		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
+		spanCtx = collectorSpan.Context()
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -493,7 +493,7 @@ func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packag
 			attribute.String("package.name", packageName),
 		)
 
-		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
+		spanCtx = collectorSpan.Context()
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -562,7 +562,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 			attribute.String("api.path", path),
 		)
 
-		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
+		spanCtx = collectorSpan.Context()
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -737,7 +737,7 @@ func (gc *GHCRCollector) getPackageVersions(ctx context.Context, owner, repo, pa
 			attribute.String("package.name", packageName),
 		)
 
-		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
+		spanCtx = collectorSpan.Context()
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -807,7 +807,7 @@ func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.Pa
 			attribute.Int("versions.count", len(versions)),
 		)
 
-		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
+		spanCtx = collectorSpan.Context()
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
