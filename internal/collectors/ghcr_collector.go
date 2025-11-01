@@ -17,6 +17,7 @@ import (
 	"github.com/d0ugal/promexporter/app"
 	"github.com/d0ugal/promexporter/tracing"
 	"github.com/prometheus/client_golang/prometheus"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel/attribute"
 )
 
@@ -79,7 +80,8 @@ func NewGHCRCollector(cfg *config.Config, registry *metrics.GHCRRegistry, app *a
 		metrics: registry,
 		app:     app,
 		client: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout:   30 * time.Second,
+			Transport: otelhttp.NewTransport(http.DefaultTransport),
 		},
 		token: cfg.GitHub.Token.Value(),
 	}
