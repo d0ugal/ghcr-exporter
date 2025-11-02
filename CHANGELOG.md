@@ -5,6 +5,41 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.0](https://github.com/d0ugal/ghcr-exporter/compare/v2.9.3...v2.10.0) (2025-11-02)
+
+
+### Features
+
+* add dev-tag Makefile target ([a0a6dfc](https://github.com/d0ugal/ghcr-exporter/commit/a0a6dfc8f90cc3892b6c01d479f9cdcff91e2c41))
+* add duplication linter (dupl) to golangci configuration ([221d8b4](https://github.com/d0ugal/ghcr-exporter/commit/221d8b4a881c1a23a628e8428f334097106ff57b))
+* add OpenTelemetry HTTP client instrumentation ([f8c898d](https://github.com/d0ugal/ghcr-exporter/commit/f8c898d2e2bb19ff6f1c4c083da4a0a9e6243cf3))
+* add tracing configuration support ([915551e](https://github.com/d0ugal/ghcr-exporter/commit/915551eb399a963d10441d98fc7a63f68a3c86a3))
+* **ci:** add auto-format workflow ([06dabd2](https://github.com/d0ugal/ghcr-exporter/commit/06dabd2075c1c215bb98d9568d9caff562fa6879))
+* enhance tracing support with detailed spans ([9e718f8](https://github.com/d0ugal/ghcr-exporter/commit/9e718f886a5f65083778dfa1487291fed212d46a))
+* integrate OpenTelemetry tracing into collector ([c70503e](https://github.com/d0ugal/ghcr-exporter/commit/c70503e3ac9c5eaf1845edc12584170eb24b7cf9))
+* trigger CI after auto-format workflow completes ([2d5544a](https://github.com/d0ugal/ghcr-exporter/commit/2d5544a5939bda7193ca25af9ec7d6d2d90e3200))
+
+
+### Bug Fixes
+
+* add nolint comments for contextcheck linter on span context extraction ([8c190fc](https://github.com/d0ugal/ghcr-exporter/commit/8c190fcfe07d4f8e3dc380030c7119af5cbb6e8f))
+* correct import order with goimports ([3f43718](https://github.com/d0ugal/ghcr-exporter/commit/3f43718091faeb267fa5d26b716e8f00b7b9ed71))
+* correct label mapping for collection metrics ([3386914](https://github.com/d0ugal/ghcr-exporter/commit/3386914f842786b83fccdbd60e47b360a1c411b2))
+* fmt ([b9514fd](https://github.com/d0ugal/ghcr-exporter/commit/b9514fd1ca8ef03cf48aa7b9cbac47e038eb3721))
+* format code and fix linting issues ([ed30c91](https://github.com/d0ugal/ghcr-exporter/commit/ed30c910964a35d151d00289b329c5d49a3377b9))
+* lint ([31a2c94](https://github.com/d0ugal/ghcr-exporter/commit/31a2c94f120eb67f7c3ae555a46d23029828d773))
+* resolve linting issues - import order and errcheck ([0f49a64](https://github.com/d0ugal/ghcr-exporter/commit/0f49a64ada546ed10682b3a3d105274aeb43cf28))
+* Update google.golang.org/genproto/googleapis/api digest to ab9386a ([17dba8a](https://github.com/d0ugal/ghcr-exporter/commit/17dba8adb415e03c0bf11852582f1dcb14ca0402))
+* Update google.golang.org/genproto/googleapis/rpc digest to ab9386a ([a52e9d9](https://github.com/d0ugal/ghcr-exporter/commit/a52e9d97366b8f8951b6fe67370c889561655c22))
+* Update module github.com/bytedance/sonic to v1.14.2 ([34aeeeb](https://github.com/d0ugal/ghcr-exporter/commit/34aeeeba85a2523ce798777fde6f79d3fe0f4d13))
+* Update module github.com/d0ugal/promexporter to v1.6.1 ([8ea3a62](https://github.com/d0ugal/ghcr-exporter/commit/8ea3a62a2686513675c731f0d7b3489dc718a1f9))
+* Update module github.com/d0ugal/promexporter to v1.7.1 ([e291f0e](https://github.com/d0ugal/ghcr-exporter/commit/e291f0e6f48c4b1c96c1fe4506c7079f891ac6f9))
+* Update module github.com/d0ugal/promexporter to v1.8.0 ([1a0dea9](https://github.com/d0ugal/ghcr-exporter/commit/1a0dea9311389a9c8f5fd206dd75f1d20332f0de))
+* Update module github.com/gabriel-vasile/mimetype to v1.4.11 ([1578e3d](https://github.com/d0ugal/ghcr-exporter/commit/1578e3da05a07c644b9c3d371e30e6ae325e0861))
+* Update module github.com/prometheus/common to v0.67.2 ([f525e2c](https://github.com/d0ugal/ghcr-exporter/commit/f525e2cd8b2dbb79be104b9c903087db3ee38c70))
+* Update module github.com/prometheus/procfs to v0.19.2 ([5ee5c43](https://github.com/d0ugal/ghcr-exporter/commit/5ee5c4349b7cabb9bedbee9fc8b457c8c80dd5be))
+* Update module github.com/ugorji/go/codec to v1.3.1 ([4a61dbf](https://github.com/d0ugal/ghcr-exporter/commit/4a61dbf89ba50cff45dffa47fc0f9510b166c7c2))
+
 ## [2.9.3](https://github.com/d0ugal/ghcr-exporter/compare/v2.9.2...v2.9.3) (2025-10-27)
 
 
