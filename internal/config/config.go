@@ -114,21 +114,13 @@ func loadFromEnv() (*Config, error) {
 		baseConfig.Metrics.Collection.DefaultInterval = promexporter_config.Duration{Duration: time.Second * 30}
 	}
 
-	// Tracing configuration
-	if enabledStr := os.Getenv("TRACING_ENABLED"); enabledStr != "" {
-		enabled := enabledStr == "true"
-		baseConfig.Tracing.Enabled = &enabled
-	}
-
-	if serviceName := os.Getenv("TRACING_SERVICE_NAME"); serviceName != "" {
-		baseConfig.Tracing.ServiceName = serviceName
-	}
-
-	if endpoint := os.Getenv("TRACING_ENDPOINT"); endpoint != "" {
-		baseConfig.Tracing.Endpoint = endpoint
-	}
-
 	config.BaseConfig = *baseConfig
+
+	// Apply generic environment variables (TRACING_ENABLED, PROFILING_ENABLED, etc.)
+	// These are handled by promexporter and are shared across all exporters
+	if err := promexporter_config.ApplyGenericEnvVars(&config.BaseConfig); err != nil {
+		return nil, fmt.Errorf("failed to apply generic environment variables: %w", err)
+	}
 
 	// GitHub configuration
 	if token := os.Getenv("GHCR_EXPORTER_GITHUB_TOKEN"); token != "" {
