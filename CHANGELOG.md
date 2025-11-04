@@ -5,6 +5,16 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.1](https://github.com/d0ugal/ghcr-exporter/compare/v2.10.0...v2.10.1) (2025-11-04)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/api digest to f26f940 ([ac0f216](https://github.com/d0ugal/ghcr-exporter/commit/ac0f2162123c25bb5cb989a867550ae7377bdc03))
+* Update google.golang.org/genproto/googleapis/rpc digest to f26f940 ([6db005a](https://github.com/d0ugal/ghcr-exporter/commit/6db005a18f3e90844cad5febc7c6c8b39d0a32e0))
+* Update module github.com/d0ugal/promexporter to v1.9.0 ([5183678](https://github.com/d0ugal/ghcr-exporter/commit/51836783ccd7ae6f09fd9d2428ec25056deeb7b1))
+* Update module go.opentelemetry.io/proto/otlp to v1.9.0 ([2536a47](https://github.com/d0ugal/ghcr-exporter/commit/2536a47c11425cc1da3345384a231b715995d210))
+
 ## [2.10.0](https://github.com/d0ugal/ghcr-exporter/compare/v2.9.3...v2.10.0) (2025-11-02)
 
 
