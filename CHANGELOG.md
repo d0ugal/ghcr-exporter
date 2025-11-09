@@ -5,6 +5,16 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.5](https://github.com/d0ugal/ghcr-exporter/compare/v2.10.4...v2.10.5) (2025-11-09)
+
+
+### Bug Fixes
+
+* Update module github.com/d0ugal/promexporter to v1.11.2 ([38e8c21](https://github.com/d0ugal/ghcr-exporter/commit/38e8c213829c74ad54f45ef12f1658402f15b003))
+* Update module github.com/quic-go/quic-go to v0.56.0 ([97dd0cd](https://github.com/d0ugal/ghcr-exporter/commit/97dd0cdeb02404ed352cc8e68f020fc7bb0002fc))
+* Update module golang.org/x/arch to v0.23.0 ([ba84b6a](https://github.com/d0ugal/ghcr-exporter/commit/ba84b6a37218287a60604470119566831bbeef97))
+* Update module golang.org/x/sys to v0.38.0 ([8ad916b](https://github.com/d0ugal/ghcr-exporter/commit/8ad916b2083e234625204444f5e122cdb53cf0e7))
+
 ## [2.10.4](https://github.com/d0ugal/ghcr-exporter/compare/v2.10.3...v2.10.4) (2025-11-06)
 
 
