@@ -5,6 +5,22 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0](https://github.com/d0ugal/ghcr-exporter/compare/v2.10.7...v2.11.0) (2025-11-12)
+
+
+### Features
+
+* **ci:** ensure CI runs for release-please branches and PRs ([ef08436](https://github.com/d0ugal/ghcr-exporter/commit/ef084365cef4a676ed65e3f969b62cff21ab98bb))
+* **ci:** use RELEASE_TOKEN secret for release-please ([eb66d1b](https://github.com/d0ugal/ghcr-exporter/commit/eb66d1b86fd934b737bd49539ba8b0342367926c))
+
+
+### Bug Fixes
+
+* **ci:** check github.head_ref for release-please PR detection ([181c8e5](https://github.com/d0ugal/ghcr-exporter/commit/181c8e52c776844d42f6fc73397007cfed9369a6))
+* Update google.golang.org/genproto/googleapis/api digest to 95abcf5 ([96e73b1](https://github.com/d0ugal/ghcr-exporter/commit/96e73b15a603e23d0969635c6fe53a22feb6dbb2))
+* Update module github.com/d0ugal/promexporter to v1.12.2 ([192a053](https://github.com/d0ugal/ghcr-exporter/commit/192a053aa712d2f072708a04de9efe3ec5e6a4cd))
+* Update module golang.org/x/net to v0.47.0 ([9bfab06](https://github.com/d0ugal/ghcr-exporter/commit/9bfab06923b1d88c9639d11af7e132fe95c70f82))
+
 ## [2.10.7](https://github.com/d0ugal/ghcr-exporter/compare/v2.10.6...v2.10.7) (2025-11-11)
 
 
