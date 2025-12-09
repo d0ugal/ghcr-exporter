@@ -5,6 +5,19 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.12](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.11...v2.11.12) (2025-12-09)
+
+
+### Bug Fixes
+
+* **ci:** add GOMODCACHE env var to fix permission denied error ([93c271c](https://github.com/d0ugal/ghcr-exporter/commit/93c271c163e8fcdc9428a6e0f700608eae8401d2))
+* Update module golang.org/x/crypto to v0.46.0 ([252c002](https://github.com/d0ugal/ghcr-exporter/commit/252c0026c166c23a79096e90c411bba697c468c7))
+* Update module golang.org/x/net to v0.48.0 ([029a90d](https://github.com/d0ugal/ghcr-exporter/commit/029a90ddfc3c85df371495e58a3c19de587eecd8))
+* Update module golang.org/x/sys to v0.39.0 ([8208471](https://github.com/d0ugal/ghcr-exporter/commit/8208471a629c199307357ffa0ccf64fa1b2a8d19))
+* Update module golang.org/x/text to v0.32.0 ([a6e74b7](https://github.com/d0ugal/ghcr-exporter/commit/a6e74b70bece2be17e406a2006b93843318af858))
+* Update opentelemetry-go monorepo to v1.39.0 ([9e50abf](https://github.com/d0ugal/ghcr-exporter/commit/9e50abf0cda33c815cf6b54280dc92d2f3ee02bc))
+* Update opentelemetry-go-contrib monorepo to v0.64.0 ([2004dfe](https://github.com/d0ugal/ghcr-exporter/commit/2004dfe04d24df73f516e0f99ce6706f272c0f03))
+
 ## [2.11.11](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.10...v2.11.11) (2025-12-04)
 
 
