@@ -5,6 +5,19 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.14](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.13...v2.11.14) (2025-12-14)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/api digest to 97cd9d5 ([517a55a](https://github.com/d0ugal/ghcr-exporter/commit/517a55a4f42227ab2a28d195506f11fa0febc4d3))
+* Update google.golang.org/genproto/googleapis/rpc digest to 97cd9d5 ([a9874e9](https://github.com/d0ugal/ghcr-exporter/commit/a9874e9ee895c6780a30b02419705999f6df4ce3))
+* Update module github.com/d0ugal/promexporter to v1.14.5 ([877b587](https://github.com/d0ugal/ghcr-exporter/commit/877b587882632eba46f3071a6c613e89a6735d6e))
+* Update module github.com/d0ugal/promexporter to v1.14.6 ([f600549](https://github.com/d0ugal/ghcr-exporter/commit/f600549856b587a9162bdeb25a873ad5f922d380))
+* Update module github.com/gabriel-vasile/mimetype to v1.4.12 ([4f64e0f](https://github.com/d0ugal/ghcr-exporter/commit/4f64e0f59d21d9a24d0ad736565aa1ba7a710501))
+* Update module github.com/go-playground/validator/v10 to v10.29.0 ([59687ed](https://github.com/d0ugal/ghcr-exporter/commit/59687ed5e369608796df6988e53542ba11969522))
+* Update module google.golang.org/protobuf to v1.36.11 ([999bea4](https://github.com/d0ugal/ghcr-exporter/commit/999bea4bb6c243d3e8001d1637c739263746dcb0))
+
 ## [2.11.13](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.12...v2.11.13) (2025-12-10)
 
 
