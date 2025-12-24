@@ -5,6 +5,14 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.21](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.20...v2.11.21) (2025-12-24)
+
+
+### Bug Fixes
+
+* Update module github.com/d0ugal/promexporter to v1.14.11 ([5190eea](https://github.com/d0ugal/ghcr-exporter/commit/5190eea62a0c3c3660244af7e8314487c38b2f3f))
+* Update module github.com/go-playground/validator/v10 to v10.30.1 ([656aaed](https://github.com/d0ugal/ghcr-exporter/commit/656aaed23afe527c769b7296cab705871bc07130))
+
 ## [2.11.20](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.19...v2.11.20) (2025-12-23)
 
 
