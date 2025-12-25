@@ -2,7 +2,7 @@
 
 A Prometheus exporter for GitHub Container Registry (GHCR) metrics.
 
-**Image**: `ghcr.io/d0ugal/ghcr-exporter:v2.11.20`
+**Image**: `ghcr.io/d0ugal/ghcr-exporter:v2.11.21`
 
 ## Metrics
 
@@ -30,7 +30,7 @@ A Prometheus exporter for GitHub Container Registry (GHCR) metrics.
 version: '3.8'
 services:
   ghcr-exporter:
-    image: ghcr.io/d0ugal/ghcr-exporter:v2.11.20
+    image: ghcr.io/d0ugal/ghcr-exporter:v2.11.21
     ports:
       - "8080:8080"
     volumes:
@@ -85,7 +85,7 @@ packages:
 version: '3.8'
 services:
   ghcr-exporter:
-    image: ghcr.io/d0ugal/ghcr-exporter:v2.11.20
+    image: ghcr.io/d0ugal/ghcr-exporter:v2.11.21
     ports:
       - "8080:8080"
     environment:
@@ -113,7 +113,7 @@ spec:
     spec:
       containers:
       - name: ghcr-exporter
-        image: ghcr.io/d0ugal/ghcr-exporter:v2.11.20
+        image: ghcr.io/d0ugal/ghcr-exporter:v2.11.21
         ports:
         - containerPort: 8080
         env:
