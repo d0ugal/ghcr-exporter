@@ -5,6 +5,14 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.29](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.28...v2.11.29) (2026-01-16)
+
+
+### Bug Fixes
+
+* Update dependency go to v1.25.6 ([8dd2bec](https://github.com/d0ugal/ghcr-exporter/commit/8dd2bec81c341232ee49bd13ae8498386da508e3))
+* Update module github.com/klauspost/compress to v1.18.3 ([2a35710](https://github.com/d0ugal/ghcr-exporter/commit/2a35710574553a1d904b270cd664adba92ff95d0))
+
 ## [2.11.28](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.27...v2.11.28) (2026-01-14)
 
 
