@@ -5,6 +5,27 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.33](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.32...v2.11.33) (2026-02-06)
+
+
+### Bug Fixes
+
+* Update dependency go to v1.25.7 ([727c4eb](https://github.com/d0ugal/ghcr-exporter/commit/727c4ebb1c4a2ca60af19a155a7d59c18a36de80))
+* Update google.golang.org/genproto/googleapis/api digest to 546029d ([2f6fc37](https://github.com/d0ugal/ghcr-exporter/commit/2f6fc372978e3792b4368c075b214b3540128f5e))
+* Update google.golang.org/genproto/googleapis/api digest to 8636f87 ([e8fa974](https://github.com/d0ugal/ghcr-exporter/commit/e8fa974a8e6d7f466d477954c74fe347bbd2aa7d))
+* Update google.golang.org/genproto/googleapis/api digest to d11affd ([61c2ee6](https://github.com/d0ugal/ghcr-exporter/commit/61c2ee6ca702dba283d221d9457171831261f0f4))
+* Update google.golang.org/genproto/googleapis/rpc digest to 546029d ([d942711](https://github.com/d0ugal/ghcr-exporter/commit/d942711f49a25c72409d6c2d4224865b2d4ac018))
+* Update google.golang.org/genproto/googleapis/rpc digest to 8636f87 ([505f1f9](https://github.com/d0ugal/ghcr-exporter/commit/505f1f9f156d1c0a17925c86e14e7e707bea056d))
+* Update google.golang.org/genproto/googleapis/rpc digest to d11affd ([b45676d](https://github.com/d0ugal/ghcr-exporter/commit/b45676d8a54c6746b3d165e70264a1ad27b7ac84))
+* Update module github.com/d0ugal/promexporter to v1.14.25 ([6115cf1](https://github.com/d0ugal/ghcr-exporter/commit/6115cf19727d5ff77c09cf43ed465e61b486b46c))
+* Update module github.com/d0ugal/promexporter to v1.14.26 ([7bde7f3](https://github.com/d0ugal/ghcr-exporter/commit/7bde7f33173811d2df767a5194590a68c9840f25))
+* Update module github.com/d0ugal/promexporter to v2 ([a496cd3](https://github.com/d0ugal/ghcr-exporter/commit/a496cd3f14b0ff2852f35fb8e589d324ed978d68))
+* Update module github.com/gabriel-vasile/mimetype to v1.4.13 ([9cb9035](https://github.com/d0ugal/ghcr-exporter/commit/9cb90354806d0bce01daaa516384a353bf2a4d6e))
+* Update module github.com/grpc-ecosystem/grpc-gateway/v2 to v2.27.6 ([d5d2d21](https://github.com/d0ugal/ghcr-exporter/commit/d5d2d21ee0a7734bd0178aa707c2ecd447ba4174))
+* Update module github.com/grpc-ecosystem/grpc-gateway/v2 to v2.27.7 ([760700a](https://github.com/d0ugal/ghcr-exporter/commit/760700a9f3d110ba6a8b4e9be397914bc0cd1610))
+* Update opentelemetry-go monorepo to v1.40.0 ([6fc25e7](https://github.com/d0ugal/ghcr-exporter/commit/6fc25e7c79d80ee186242f2ae138552a0d8f6efc))
+* Update opentelemetry-go-contrib monorepo to v0.65.0 ([1fb9295](https://github.com/d0ugal/ghcr-exporter/commit/1fb92952f6671b353801640e8def8acc0922e8db))
+
 ## [2.11.32](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.31...v2.11.32) (2026-01-24)
 
 
