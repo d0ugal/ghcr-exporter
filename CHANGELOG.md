@@ -5,6 +5,35 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.34](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.33...v2.11.34) (2026-02-28)
+
+
+### Bug Fixes
+
+* Update dependency go to v1.26.0 ([5ef3be1](https://github.com/d0ugal/ghcr-exporter/commit/5ef3be13d7f7e682fb001e0a84e59908b61435ff))
+* Update google.golang.org/genproto/googleapis/api digest to 2f722ef ([dca9ac3](https://github.com/d0ugal/ghcr-exporter/commit/dca9ac3b8b9373329961eb94c2635f906a7188b6))
+* Update google.golang.org/genproto/googleapis/api digest to 42d3e9b ([bf8af96](https://github.com/d0ugal/ghcr-exporter/commit/bf8af96938ef1a2c93c1904134897779f8a3bbd5))
+* Update google.golang.org/genproto/googleapis/api digest to 4cfbd41 ([e489ed8](https://github.com/d0ugal/ghcr-exporter/commit/e489ed81db6ea1a883add9a541b93e8502c8dd03))
+* Update google.golang.org/genproto/googleapis/api digest to a2cb227 ([d9dde0d](https://github.com/d0ugal/ghcr-exporter/commit/d9dde0d1c681961aa971af05f52a7d2177aba668))
+* Update google.golang.org/genproto/googleapis/api digest to a57be14 ([4abae27](https://github.com/d0ugal/ghcr-exporter/commit/4abae278f6201e1b365acfae4c47666a7f9dc1e8))
+* Update google.golang.org/genproto/googleapis/rpc digest to 2f722ef ([73d3500](https://github.com/d0ugal/ghcr-exporter/commit/73d3500f3d1e63b01dda9ff12c795621dff42cc6))
+* Update google.golang.org/genproto/googleapis/rpc digest to 42d3e9b ([7b6c56a](https://github.com/d0ugal/ghcr-exporter/commit/7b6c56a3aa8c6123abd0a4186009931c253fe29e))
+* Update google.golang.org/genproto/googleapis/rpc digest to 4cfbd41 ([33bbc90](https://github.com/d0ugal/ghcr-exporter/commit/33bbc90cf92e3382f26c4ba4ecc2590c05f476c0))
+* Update google.golang.org/genproto/googleapis/rpc digest to a57be14 ([945665e](https://github.com/d0ugal/ghcr-exporter/commit/945665e1e93f67e4405fd5ee5733a83ab6277527))
+* Update module github.com/gin-gonic/gin to v1.12.0 ([0ef3c38](https://github.com/d0ugal/ghcr-exporter/commit/0ef3c38d6d473b30a4ec2ab0f50b50b1cf993d10))
+* Update module github.com/grpc-ecosystem/grpc-gateway/v2 to v2.27.8 ([2b386ff](https://github.com/d0ugal/ghcr-exporter/commit/2b386ffc71ff42352598c341414ac2d05cca0855))
+* Update module github.com/grpc-ecosystem/grpc-gateway/v2 to v2.28.0 ([141a2ad](https://github.com/d0ugal/ghcr-exporter/commit/141a2ad4d9c8da699ebe6e44ac96db588ef2b9a8))
+* Update module github.com/klauspost/compress to v1.18.4 ([c78efa9](https://github.com/d0ugal/ghcr-exporter/commit/c78efa99db324356646d34f0e3fce45871d0c80d))
+* Update module github.com/prometheus/procfs to v0.20.0 ([7deb09e](https://github.com/d0ugal/ghcr-exporter/commit/7deb09e0be4e3d0fd9c9a1376f8fccf11844b430))
+* Update module github.com/prometheus/procfs to v0.20.1 ([efd53aa](https://github.com/d0ugal/ghcr-exporter/commit/efd53aaa9d0e75e37fa7782c3efbbff0fe3f72b0))
+* Update module golang.org/x/arch to v0.24.0 ([c790858](https://github.com/d0ugal/ghcr-exporter/commit/c79085878a421aa90099b0d157f268222341c93b))
+* Update module golang.org/x/crypto to v0.48.0 ([1f4388b](https://github.com/d0ugal/ghcr-exporter/commit/1f4388bdae88e47e578e679bdb2718c5a58d2f09))
+* Update module golang.org/x/net to v0.50.0 ([f20dd78](https://github.com/d0ugal/ghcr-exporter/commit/f20dd780d5817465357982aab7cd03b037c5386d))
+* Update module golang.org/x/net to v0.51.0 ([772dd35](https://github.com/d0ugal/ghcr-exporter/commit/772dd3554f664472041e0f245230b7ef52d9731a))
+* Update module golang.org/x/sys to v0.41.0 ([e24627a](https://github.com/d0ugal/ghcr-exporter/commit/e24627a78738dd6c4415f926b51cfc6da0413551))
+* Update module google.golang.org/grpc to v1.79.0 ([5886424](https://github.com/d0ugal/ghcr-exporter/commit/5886424c7e809d70d61d30ba29014931b4c2ca18))
+* Update module google.golang.org/grpc to v1.79.1 ([79e34ca](https://github.com/d0ugal/ghcr-exporter/commit/79e34ca2eead1b35c5367128b3075bd691fce443))
+
 ## [2.11.33](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.32...v2.11.33) (2026-02-06)
 
 
