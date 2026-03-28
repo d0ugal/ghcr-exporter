@@ -5,6 +5,15 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.38](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.37...v2.11.38) (2026-03-28)
+
+
+### Bug Fixes
+
+* Update module github.com/bytedance/sonic/loader to v0.5.1 ([26e85d1](https://github.com/d0ugal/ghcr-exporter/commit/26e85d1c575b295f580d3052ed3db0ed1d393e74))
+* Update module github.com/d0ugal/promexporter to v1.14.29 ([18e3984](https://github.com/d0ugal/ghcr-exporter/commit/18e398440f83f4a14326b1b7928efb924d0b6d85))
+* Update module github.com/gin-contrib/sse to v1.1.1 ([a9405fa](https://github.com/d0ugal/ghcr-exporter/commit/a9405faa2ce5be280f1a95adb8e18b448a428ccd))
+
 ## [2.11.37](https://github.com/d0ugal/ghcr-exporter/compare/v2.11.36...v2.11.37) (2026-03-26)
 
 
