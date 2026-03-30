@@ -6,7 +6,7 @@ Get ghcr-exporter running in minutes!
 
 ### 1. Pull the image
 ```bash
-docker pull ghcr.io/d0ugal/ghcr-exporter:v2.11.37
+docker pull ghcr.io/d0ugal/ghcr-exporter:v2.11.38
 ```
 
 ### 2. Create a configuration file
@@ -24,7 +24,7 @@ docker run -d \
   --name ghcr-exporter \
   -p 8080:8080 \
   -v $(pwd)/config.yaml:/app/config.yaml:ro \
-  ghcr.io/d0ugal/ghcr-exporter:v2.11.37
+  ghcr.io/d0ugal/ghcr-exporter:v2.11.38
 ```
 
 ### 4. Verify it's working
@@ -60,7 +60,7 @@ make build
 version: '3.8'
 services:
   ghcr-exporter:
-    image: ghcr.io/d0ugal/ghcr-exporter:v2.11.37
+    image: ghcr.io/d0ugal/ghcr-exporter:v2.11.38
     ports:
       - "8080:8080"
     volumes:
