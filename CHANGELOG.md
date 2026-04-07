@@ -5,6 +5,14 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.1](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.0...v2.13.1) (2026-04-07)
+
+
+### Bug Fixes
+
+* Update module github.com/d0ugal/promexporter to v1.14.34 ([ca6cf49](https://github.com/d0ugal/ghcr-exporter/commit/ca6cf49120819110d4d2bb37c582bc560216cc6b))
+* Update opentelemetry-go-contrib monorepo to v0.68.0 ([8f453a7](https://github.com/d0ugal/ghcr-exporter/commit/8f453a704f53a3c01b826b865e0ffe3acbcdf4ce))
+
 ## [2.13.0](https://github.com/d0ugal/ghcr-exporter/compare/v2.12.0...v2.13.0) (2026-04-07)
 
 
