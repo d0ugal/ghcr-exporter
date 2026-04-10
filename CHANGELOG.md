@@ -5,6 +5,13 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.8](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.7...v2.13.8) (2026-04-10)
+
+
+### Bug Fixes
+
+* Update module golang.org/x/arch to v0.26.0 ([8c7ac75](https://github.com/d0ugal/ghcr-exporter/commit/8c7ac75da0051a27ca3e5ea2ed884a244877c117))
+
 ## [2.13.7](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.6...v2.13.7) (2026-04-10)
 
 
