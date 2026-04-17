@@ -5,6 +5,13 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.11](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.10...v2.13.11) (2026-04-17)
+
+
+### Bug Fixes
+
+* Update module github.com/d0ugal/promexporter to v1.14.41 ([bf8e0b0](https://github.com/d0ugal/ghcr-exporter/commit/bf8e0b08f367b453a49b7d5de906873339576181))
+
 ## [2.13.10](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.9...v2.13.10) (2026-04-16)
 
 
