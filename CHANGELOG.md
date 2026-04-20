@@ -5,6 +5,13 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.12](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.11...v2.13.12) (2026-04-20)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/api digest to e10c466 ([5476883](https://github.com/d0ugal/ghcr-exporter/commit/5476883c429cf53a9253f9b3305f6f7e23585983))
+
 ## [2.13.11](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.10...v2.13.11) (2026-04-17)
 
 
