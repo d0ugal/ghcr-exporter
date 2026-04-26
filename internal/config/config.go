@@ -75,23 +75,28 @@ func applyEnvVars(cfg *Config) {
 	if host := os.Getenv("GHCR_EXPORTER_SERVER_HOST"); host != "" {
 		cfg.Server.Host = host
 	}
+
 	if portStr := os.Getenv("GHCR_EXPORTER_SERVER_PORT"); portStr != "" {
 		if port, err := strconv.Atoi(portStr); err == nil {
 			cfg.Server.Port = port
 		}
 	}
+
 	if level := os.Getenv("GHCR_EXPORTER_LOG_LEVEL"); level != "" {
 		cfg.Logging.Level = level
 	}
+
 	if format := os.Getenv("GHCR_EXPORTER_LOG_FORMAT"); format != "" {
 		cfg.Logging.Format = format
 	}
+
 	if intervalStr := os.Getenv("GHCR_EXPORTER_METRICS_COLLECTION_DEFAULT_INTERVAL"); intervalStr != "" {
 		if interval, err := time.ParseDuration(intervalStr); err == nil {
 			cfg.Metrics.Collection.DefaultInterval = promexporter_config.Duration{Duration: interval}
 			cfg.Metrics.Collection.DefaultIntervalSet = true
 		}
 	}
+
 	if token := os.Getenv("GHCR_EXPORTER_GITHUB_TOKEN"); token != "" {
 		cfg.GitHub.Token = promexporter_config.NewSensitiveString(token)
 	}
