@@ -5,6 +5,16 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.14](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.13...v2.13.14) (2026-04-26)
+
+
+### Bug Fixes
+
+* make yaml optional and always overlay env vars on config ([a3accf5](https://github.com/d0ugal/ghcr-exporter/commit/a3accf5caaec9a59801f426670749981f1d999e5))
+* remove trailing blank line in commits.yml ([8b47234](https://github.com/d0ugal/ghcr-exporter/commit/8b47234e00086bb244067c16057399b43c635e0a))
+* Update module github.com/d0ugal/promexporter to v1.14.43 ([bf98659](https://github.com/d0ugal/ghcr-exporter/commit/bf9865926a04794cc0766cd84b047c92790c04dc))
+* use RELEASE_TOKEN in auto-format workflow to trigger CI ([8395653](https://github.com/d0ugal/ghcr-exporter/commit/839565312ef4d7a8cad3c0d4b5881d3121fe4abe))
+
 ## [2.13.13](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.12...v2.13.13) (2026-04-21)
 
 
