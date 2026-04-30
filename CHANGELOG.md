@@ -5,6 +5,15 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.18](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.17...v2.13.18) (2026-04-30)
+
+
+### Bug Fixes
+
+* Update module github.com/cloudwego/base64x to v0.1.7 ([75a1dcc](https://github.com/d0ugal/ghcr-exporter/commit/75a1dcc1ab1b30c714a1e211c38c1a6be792e789))
+* Update module github.com/d0ugal/promexporter to v1.14.46 ([550793c](https://github.com/d0ugal/ghcr-exporter/commit/550793c6d2975838e4cb46f5c8960e62aaef0938))
+* Update module github.com/klauspost/compress to v1.18.6 ([d24db13](https://github.com/d0ugal/ghcr-exporter/commit/d24db139ad336c3bc13dba518b514f2b972f7f55))
+
 ## [2.13.17](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.16...v2.13.17) (2026-04-28)
 
 
