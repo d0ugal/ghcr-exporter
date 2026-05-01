@@ -47,7 +47,7 @@ func main() {
 
 	cfg, err := config.LoadConfig(configPath)
 	if err != nil {
-		slog.Error("Failed to load configuration", "error", err, "path", configPath) //nolint:gosec // G706: configPath is from CLI/env, not HTTP input; slog structures the value safely
+		slog.Error("Failed to load configuration", "error", err, "path", configPath)
 		os.Exit(1)
 	}
 
