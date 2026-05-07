@@ -1,6 +1,7 @@
 package collectors
 
 import (
+	"bytes"
 	"compress/gzip"
 	"context"
 	"encoding/json"
@@ -987,11 +988,13 @@ func (gc *GHCRCollector) getPackageDownloadStats(ctx context.Context, owner, pac
 		return 0, fmt.Errorf("failed to read response body: %w", err)
 	}
 
-	// Handle gzip decompression if needed
+	// Handle gzip decompression if needed.
+	// We explicitly request gzip via Accept-Encoding so Go's transport doesn't
+	// auto-decode for us; we have to do it ourselves here.
 	if resp.Header.Get("Content-Encoding") == "gzip" {
-		slog.Debug("Decompressing gzipped response")
+		slog.Debug("Decompressing gzipped response", "compressed_size", len(body))
 
-		gzReader, err := gzip.NewReader(strings.NewReader(string(body)))
+		gzReader, err := gzip.NewReader(bytes.NewReader(body))
 		if err != nil {
 			slog.Error("Failed to create gzip reader", "owner", owner, "package", packageName, "error", err)
 			return 0, fmt.Errorf("failed to create gzip reader: %w", err)
@@ -1003,15 +1006,14 @@ func (gc *GHCRCollector) getPackageDownloadStats(ctx context.Context, owner, pac
 			}
 		}()
 
-		// Read the decompressed content
 		decompressedBody, err := io.ReadAll(gzReader)
 		if err != nil {
 			slog.Error("Failed to read decompressed body", "owner", owner, "package", packageName, "error", err)
 			return 0, fmt.Errorf("failed to read decompressed body: %w", err)
 		}
 
+		slog.Debug("Gzip decompression successful", "compressed_size", len(body), "decompressed_size", len(decompressedBody))
 		body = decompressedBody
-		slog.Debug("Gzip decompression successful", "original_size", len(body), "decompressed_size", len(decompressedBody))
 	}
 
 	bodySize := len(body)
