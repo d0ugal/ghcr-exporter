@@ -1,7 +1,10 @@
 package collectors
 
 import (
+	"bytes"
+	"compress/gzip"
 	"context"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"regexp"
@@ -196,6 +199,46 @@ func TestGetPackageDownloadStatsNotFound(t *testing.T) {
 
 	if len(matches) >= 2 {
 		t.Fatal("Expected not to find download statistics in HTML")
+	}
+}
+
+// TestGzipDecode_PreservesBinaryBytes locks in the fix that swapped
+// gzip.NewReader(strings.NewReader(string(body))) for
+// gzip.NewReader(bytes.NewReader(body)). The previous version round-tripped
+// raw gzip bytes through a Go string, which is lossy for non-UTF-8 bytes —
+// and gzip output is binary by definition. We verify that bytes outside the
+// ASCII range survive a gzip-decode cycle.
+func TestGzipDecode_PreservesBinaryBytes(t *testing.T) {
+	// Construct a payload containing bytes that are not valid UTF-8 sequences
+	// when interpreted standalone, plus a trailing ASCII string for sanity.
+	plaintext := []byte{0xC0, 0xC1, 0xF5, 0xF6, 0xFF, 0x00}
+	plaintext = append(plaintext, []byte("Total downloads 12345")...)
+
+	var buf bytes.Buffer
+
+	gz := gzip.NewWriter(&buf)
+	if _, err := gz.Write(plaintext); err != nil {
+		t.Fatalf("gzip.Write: %v", err)
+	}
+
+	if err := gz.Close(); err != nil {
+		t.Fatalf("gzip.Close: %v", err)
+	}
+
+	// Replicate the (fixed) decompression path used in getPackageDownloadStats.
+	gzReader, err := gzip.NewReader(bytes.NewReader(buf.Bytes()))
+	if err != nil {
+		t.Fatalf("gzip.NewReader: %v", err)
+	}
+	defer gzReader.Close()
+
+	decompressed, err := io.ReadAll(gzReader)
+	if err != nil {
+		t.Fatalf("io.ReadAll: %v", err)
+	}
+
+	if !bytes.Equal(decompressed, plaintext) {
+		t.Fatalf("gzip round-trip corrupted bytes:\n  want: %x\n   got: %x", plaintext, decompressed)
 	}
 }
 
