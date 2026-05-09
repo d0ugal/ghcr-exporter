@@ -41,10 +41,6 @@ func main() {
 		}
 	}
 
-	if os.Getenv("GHCR_EXPORTER_CONFIG_FROM_ENV") == "true" {
-		fmt.Fprintln(os.Stderr, "Warning: GHCR_EXPORTER_CONFIG_FROM_ENV is deprecated and has no effect. Env vars are always applied on top of yaml config.")
-	}
-
 	cfg, err := config.LoadConfig(configPath)
 	if err != nil {
 		slog.Error("Failed to load configuration", "error", err, "path", configPath)
