@@ -5,6 +5,24 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.27](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.26...v2.13.27) (2026-05-11)
+
+
+### Bug Fixes
+
+* gzip-decode response body via bytes.Reader ([9424cff](https://github.com/d0ugal/ghcr-exporter/commit/9424cff8067be297a23fd6198e8b323f45f18e5b))
+* Update go toolchain directive to v1.26.3 ([36fc7ac](https://github.com/d0ugal/ghcr-exporter/commit/36fc7acc889b4132db97fb0026f120b673d11ef7))
+* Update google.golang.org/genproto/googleapis/api digest to 3700d41 ([ba57688](https://github.com/d0ugal/ghcr-exporter/commit/ba576889142359b4df0904b72fd047f4bd38f652))
+* Update google.golang.org/genproto/googleapis/rpc digest to 3700d41 ([6be5e1e](https://github.com/d0ugal/ghcr-exporter/commit/6be5e1e6dd98d9373fcea0b1f784282cf921fade))
+* Update module github.com/d0ugal/promexporter to v1.14.53 ([14f6b77](https://github.com/d0ugal/ghcr-exporter/commit/14f6b776e0b7fc682ef1ad7bc73d663eebf05e7f))
+* Update module github.com/d0ugal/promexporter to v1.14.54 ([07aa49a](https://github.com/d0ugal/ghcr-exporter/commit/07aa49aced6e36751af50766f4d61f9a5455b5c4))
+* Update module github.com/quic-go/quic-go to v0.59.1 ([bacfac5](https://github.com/d0ugal/ghcr-exporter/commit/bacfac5c9ef7455d97b17db6ba70576e8662a128))
+* Update module golang.org/x/arch to v0.27.0 ([416c34d](https://github.com/d0ugal/ghcr-exporter/commit/416c34db637d1538395c9cfded8e13bce5f00187))
+* Update module golang.org/x/crypto to v0.51.0 ([cea60a5](https://github.com/d0ugal/ghcr-exporter/commit/cea60a5197463e633e5e5d8eea97b138f5ec18fc))
+* Update module golang.org/x/net to v0.54.0 ([dcabda9](https://github.com/d0ugal/ghcr-exporter/commit/dcabda90806c2020295e34ecb10587518c093609))
+* Update module golang.org/x/sys to v0.44.0 ([db7ca38](https://github.com/d0ugal/ghcr-exporter/commit/db7ca3808a13fcfb8e63f034b8e27386861961ef))
+* Update module golang.org/x/text to v0.37.0 ([f93f203](https://github.com/d0ugal/ghcr-exporter/commit/f93f203627ba28c989ac65d1a8175b4a20800965))
+
 ## [2.13.26](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.25...v2.13.26) (2026-05-07)
 
 
