@@ -5,6 +5,15 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.31](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.30...v2.13.31) (2026-05-22)
+
+
+### Bug Fixes
+
+* Update module github.com/d0ugal/promexporter to v1.14.57 ([330dce7](https://github.com/d0ugal/ghcr-exporter/commit/330dce7cf825813c0dbeb4cd640d283042a8ba3a))
+* Update module golang.org/x/crypto to v0.52.0 ([114c3b8](https://github.com/d0ugal/ghcr-exporter/commit/114c3b8e108889031627921ea33cd26c032d5fb9))
+* Update module golang.org/x/sys to v0.45.0 ([2b256cc](https://github.com/d0ugal/ghcr-exporter/commit/2b256cca60144a5d8f1944d9d66718b767db66ad))
+
 ## [2.13.30](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.29...v2.13.30) (2026-05-19)
 
 
