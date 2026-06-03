@@ -5,6 +5,16 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.37](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.36...v2.13.37) (2026-06-03)
+
+
+### Bug Fixes
+
+* Update go toolchain directive to v1.26.4 ([8bb9da0](https://github.com/d0ugal/ghcr-exporter/commit/8bb9da018c455f44c80d80e3e5978f17b79cf4ee))
+* Update module github.com/d0ugal/promexporter to v1.14.62 ([9e1cc00](https://github.com/d0ugal/ghcr-exporter/commit/9e1cc001e99a0af5535ebc779d581b58663c6c1b))
+* Update module github.com/go-playground/validator/v10 to v10.30.3 ([88fffba](https://github.com/d0ugal/ghcr-exporter/commit/88fffbae98f0d3cfec6bd97ac0f647f8ea58c4b9))
+* Update module github.com/prometheus/common to v0.68.1 ([ddc2610](https://github.com/d0ugal/ghcr-exporter/commit/ddc2610243dda668d7b64926bc851049141f7fa6))
+
 ## [2.13.36](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.35...v2.13.36) (2026-05-29)
 
 
