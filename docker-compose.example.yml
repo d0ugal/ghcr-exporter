@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   ghcr-exporter:
-    image: ghcr.io/d0ugal/ghcr-exporter:v2.13.40@sha256:82cc07980fdf89bf04ea1a9310e1044d8b46db078a73c5486eca6aa524ec0056
+    image: ghcr.io/d0ugal/ghcr-exporter:v2.13.41@sha256:3678bc5de3d0cebd7c5e441ecf4ffd9e232b15c67a43aed02182e0d713b32930
     container_name: ghcr-exporter
     ports:
       - "8080:8080"
