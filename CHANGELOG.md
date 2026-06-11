@@ -5,6 +5,21 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.42](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.41...v2.13.42) (2026-06-11)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/api digest to 4308a22 ([624e5b9](https://github.com/d0ugal/ghcr-exporter/commit/624e5b90c68af161e02c17e77efb8c5f25f336ff))
+* Update google.golang.org/genproto/googleapis/api digest to 6235662 ([d7b4046](https://github.com/d0ugal/ghcr-exporter/commit/d7b404664cc34d932b36b936646d47fe2b77b46f))
+* Update google.golang.org/genproto/googleapis/api digest to 7ab31c2 ([28b9a79](https://github.com/d0ugal/ghcr-exporter/commit/28b9a7905e0f294e3e6da611b442233bc97d741f))
+* Update google.golang.org/genproto/googleapis/rpc digest to 4308a22 ([39a1e74](https://github.com/d0ugal/ghcr-exporter/commit/39a1e74de4fffdfe5916c03c231795de37de166d))
+* Update google.golang.org/genproto/googleapis/rpc digest to 7ab31c2 ([4eacfd1](https://github.com/d0ugal/ghcr-exporter/commit/4eacfd111b70b79f6d120fe6bc119e18fd99b2dc))
+* Update module github.com/felixge/httpsnoop to v1.1.0 ([fcb1c6b](https://github.com/d0ugal/ghcr-exporter/commit/fcb1c6b8d7ced6ccf62e8d3628d3a4a2cce216af))
+* Update module golang.org/x/arch to v0.28.0 ([89aad09](https://github.com/d0ugal/ghcr-exporter/commit/89aad09c8a44c1d1a10179c6a7d1ea635128224d))
+* Update module golang.org/x/crypto to v0.53.0 ([b7dc035](https://github.com/d0ugal/ghcr-exporter/commit/b7dc03520b9d9451b923e55ad46cc71aacdcfc16))
+* Update module golang.org/x/net to v0.56.0 ([3bbf502](https://github.com/d0ugal/ghcr-exporter/commit/3bbf50260c1a16b84924f48a3412f23aad3cc29d))
+
 ## [2.13.41](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.40...v2.13.41) (2026-06-07)
 
 
