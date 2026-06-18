@@ -5,6 +5,18 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.44](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.43...v2.13.44) (2026-06-18)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/rpc digest to 62b3387 ([e265754](https://github.com/d0ugal/ghcr-exporter/commit/e265754b3541fe6fee4ec4f4d218c05134d6c9ad))
+* Update module github.com/cenkalti/backoff/v5 to v6 ([6e201c3](https://github.com/d0ugal/ghcr-exporter/commit/6e201c3259022665ee78e8391e127ea1a1b73557))
+* Update module github.com/pelletier/go-toml/v2 to v2.4.0 ([fe3a5fe](https://github.com/d0ugal/ghcr-exporter/commit/fe3a5fe0d14d0e87631785d5358880ccc4665f52))
+* Update module github.com/prometheus/common to v0.69.0 ([4554f8c](https://github.com/d0ugal/ghcr-exporter/commit/4554f8ce15639cd24e08e40bc29cb479423dff3b))
+* Update module go.mongodb.org/mongo-driver/v2 to v2.6.1 ([94c0946](https://github.com/d0ugal/ghcr-exporter/commit/94c0946b62391740a36b859446a5cf2701c3181f))
+* Update module go.mongodb.org/mongo-driver/v2 to v2.7.0 ([8c8d7b7](https://github.com/d0ugal/ghcr-exporter/commit/8c8d7b796c1d6aafd4d1434e0abcf91e5755e018))
+
 ## [2.13.43](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.42...v2.13.43) (2026-06-16)
 
 
