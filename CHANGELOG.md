@@ -5,6 +5,16 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.46](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.45...v2.13.46) (2026-06-24)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/api digest to b703f56 ([dc5b2fc](https://github.com/d0ugal/ghcr-exporter/commit/dc5b2fcf9ebf8f5d45b99436bc394e3f56d7bf90))
+* Update google.golang.org/genproto/googleapis/rpc digest to b703f56 ([54c8e38](https://github.com/d0ugal/ghcr-exporter/commit/54c8e3899ec29c8d83a3324e23d1eaea79d806d9))
+* Update module github.com/pelletier/go-toml/v2 to v2.4.1 ([3a98d8e](https://github.com/d0ugal/ghcr-exporter/commit/3a98d8e997644299cd2131264b999505d71223da))
+* Update module github.com/pelletier/go-toml/v2 to v2.4.2 ([c9fb822](https://github.com/d0ugal/ghcr-exporter/commit/c9fb8226e928df793bbaf373b797637765395e7f))
+
 ## [2.13.45](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.44...v2.13.45) (2026-06-19)
 
 
