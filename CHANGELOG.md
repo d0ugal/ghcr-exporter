@@ -5,6 +5,20 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.48](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.47...v2.13.48) (2026-07-01)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/api digest to 925bb5d ([f53a4ad](https://github.com/d0ugal/ghcr-exporter/commit/f53a4ad2af44587422f86175afe34a1c66ce0ad5))
+* Update google.golang.org/genproto/googleapis/rpc digest to 925bb5d ([d654f82](https://github.com/d0ugal/ghcr-exporter/commit/d654f82121b64f557dd135a63cbe9ca4c966a746))
+* Update module github.com/cenkalti/backoff/v5 to v7 ([2864c3a](https://github.com/d0ugal/ghcr-exporter/commit/2864c3a1e5b8faf64f45d956f34cad712fb8698c))
+* Update module github.com/klauspost/compress to v1.18.7 ([65e43a7](https://github.com/d0ugal/ghcr-exporter/commit/65e43a7c374b314d90c5bcb556c473bf0dbcce3c))
+* Update module github.com/klauspost/compress to v1.19.0 ([1dd82ca](https://github.com/d0ugal/ghcr-exporter/commit/1dd82cae971e5224c3c41fa9536a5da5b877613e))
+* Update module github.com/klauspost/cpuid/v2 to v2.4.0 ([5b3aa44](https://github.com/d0ugal/ghcr-exporter/commit/5b3aa44d672d29c0d261d661266db2866d6418d2))
+* Update module github.com/prometheus/procfs to v0.21.1 ([06225b3](https://github.com/d0ugal/ghcr-exporter/commit/06225b310999c1cf7416b6dc028663d3877f3b86))
+* Update module google.golang.org/grpc to v1.82.0 ([8118416](https://github.com/d0ugal/ghcr-exporter/commit/811841679062a21ff8a6c51ee96ab891acb489d9))
+
 ## [2.13.47](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.46...v2.13.47) (2026-06-27)
 
 
