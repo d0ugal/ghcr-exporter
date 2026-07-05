@@ -5,6 +5,14 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.49](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.48...v2.13.49) (2026-07-05)
+
+
+### Bug Fixes
+
+* Update module github.com/grafana/pyroscope-go to v1.4.0 ([4f64a12](https://github.com/d0ugal/ghcr-exporter/commit/4f64a12d8f77c9e202f57874286a9d017e7ddeae))
+* Update module github.com/pelletier/go-toml/v2 to v2.4.3 ([ae66fda](https://github.com/d0ugal/ghcr-exporter/commit/ae66fda94bed0bd6caf3e6311fc80abde969c988))
+
 ## [2.13.48](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.47...v2.13.48) (2026-07-01)
 
 
