@@ -5,6 +5,16 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.53](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.52...v2.13.53) (2026-07-10)
+
+
+### Bug Fixes
+
+* Update module github.com/grafana/pyroscope-go to v1.4.1 ([9da5fb4](https://github.com/d0ugal/ghcr-exporter/commit/9da5fb4b2de8f615757f4111cffa0f04479b1f4d))
+* Update module github.com/grafana/pyroscope-go/godeltaprof to v0.1.12 ([fc18587](https://github.com/d0ugal/ghcr-exporter/commit/fc1858721d3bd8d077d2127bc9c1af5b3a0eda72))
+* Update module github.com/prometheus/common to v0.70.0 ([e4f68f3](https://github.com/d0ugal/ghcr-exporter/commit/e4f68f35d6d499d2c4192e40748e38633311714f))
+* Update module go.mongodb.org/mongo-driver/v2 to v2.8.0 ([799bc1a](https://github.com/d0ugal/ghcr-exporter/commit/799bc1a5f205b560ee5fbc770a4168f6633a3706))
+
 ## [2.13.52](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.51...v2.13.52) (2026-07-09)
 
 
