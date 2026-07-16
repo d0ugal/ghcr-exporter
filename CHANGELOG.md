@@ -5,6 +5,13 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.56](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.55...v2.13.56) (2026-07-16)
+
+
+### Bug Fixes
+
+* Update module google.golang.org/grpc to v1.82.1 ([7e838e1](https://github.com/d0ugal/ghcr-exporter/commit/7e838e19ad467ec69c82d10df343987d705ede80))
+
 ## [2.13.55](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.54...v2.13.55) (2026-07-16)
 
 
