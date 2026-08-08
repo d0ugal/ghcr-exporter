@@ -5,6 +5,23 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.58](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.57...v2.13.58) (2026-08-08)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/api digest to 6ac0973 ([35e609c](https://github.com/d0ugal/ghcr-exporter/commit/35e609cb970aa95ec7ea7e0c943d1183a3a96ac9))
+* Update google.golang.org/genproto/googleapis/api digest to c8921c7 ([2f490cd](https://github.com/d0ugal/ghcr-exporter/commit/2f490cd478ffa64543b51026b15a560773e300af))
+* Update google.golang.org/genproto/googleapis/rpc digest to 6ac0973 ([cde8b37](https://github.com/d0ugal/ghcr-exporter/commit/cde8b371a09eca0bc49ab6961cbea67fb5ed73f5))
+* Update google.golang.org/genproto/googleapis/rpc digest to c8921c7 ([b4244e2](https://github.com/d0ugal/ghcr-exporter/commit/b4244e2b7a2cbe303a8916ed105a2ab29e1098bb))
+* Update module github.com/d0ugal/promexporter to v1.14.68 ([ee84af8](https://github.com/d0ugal/ghcr-exporter/commit/ee84af8a991c3085cfa24072385c29007dcd73c7))
+* Update module github.com/grpc-ecosystem/grpc-gateway/v2 to v2.30.0 ([4f72b38](https://github.com/d0ugal/ghcr-exporter/commit/4f72b38e0f5b11107e3f683d2113b72bf845c4af))
+* Update module github.com/klauspost/compress to v1.19.2 ([d425b42](https://github.com/d0ugal/ghcr-exporter/commit/d425b42404a953939e8dbe86da85cdce11bd0935))
+* Update module github.com/ugorji/go/codec to v1.3.2 ([2ab3acf](https://github.com/d0ugal/ghcr-exporter/commit/2ab3acfa6063d8a2effb81ba857c007d39bacb63))
+* Update module golang.org/x/arch to v0.30.0 ([7d7ac57](https://github.com/d0ugal/ghcr-exporter/commit/7d7ac576421db6f9fbff9bd7ddb48843d1338f63))
+* Update opentelemetry-go monorepo to v1.45.0 ([9362af9](https://github.com/d0ugal/ghcr-exporter/commit/9362af996a2ef92f737f95faba037f4f53636356))
+* Update opentelemetry-go-contrib monorepo to v0.70.0 ([033b932](https://github.com/d0ugal/ghcr-exporter/commit/033b932e0cba90799d676c03db3e56aaea3087b2))
+
 ## [2.13.57](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.56...v2.13.57) (2026-07-30)
 
 
