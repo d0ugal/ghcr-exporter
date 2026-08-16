@@ -2,7 +2,7 @@ module ghcr-exporter
 
 go 1.25.0
 
-toolchain go1.26.5
+toolchain go1.26.6
 
 require (
 	github.com/d0ugal/promexporter v1.14.68
