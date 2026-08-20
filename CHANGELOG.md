@@ -5,6 +5,24 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.59](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.58...v2.13.59) (2026-08-20)
+
+
+### Bug Fixes
+
+* Update go toolchain directive to v1.26.6 ([a9dece1](https://github.com/d0ugal/ghcr-exporter/commit/a9dece1d10b2607bba8ca3132cd3939065ebc9b9))
+* Update go toolchain directive to v1.27.0 ([6cfc803](https://github.com/d0ugal/ghcr-exporter/commit/6cfc80354a2609ec454992d7260babf7e06f42eb))
+* Update google.golang.org/genproto/googleapis/api digest to 08b0e42 ([e0d138b](https://github.com/d0ugal/ghcr-exporter/commit/e0d138b98ea1282dbc863381b4a35d047a0ff486))
+* Update google.golang.org/genproto/googleapis/api digest to 1b09341 ([81be3ec](https://github.com/d0ugal/ghcr-exporter/commit/81be3ec3d428e556d5de3b99734485ce4353c509))
+* Update google.golang.org/genproto/googleapis/api digest to ac3dfec ([7e7b76a](https://github.com/d0ugal/ghcr-exporter/commit/7e7b76a8df1ffe66d01cb9f147d0546c3184aac4))
+* Update google.golang.org/genproto/googleapis/rpc digest to 08b0e42 ([f273e32](https://github.com/d0ugal/ghcr-exporter/commit/f273e323693c25ce9cb7b5aeca932f72d3193f9f))
+* Update google.golang.org/genproto/googleapis/rpc digest to 1b09341 ([9b0584b](https://github.com/d0ugal/ghcr-exporter/commit/9b0584bbe05d75d8bc5112d2f90155f45ebb3c67))
+* Update google.golang.org/genproto/googleapis/rpc digest to ac3dfec ([2bac7c3](https://github.com/d0ugal/ghcr-exporter/commit/2bac7c3e26b2e2330d82ed6f9ebc36344877c70c))
+* Update module github.com/d0ugal/promexporter to v1.14.69 ([9a2373a](https://github.com/d0ugal/ghcr-exporter/commit/9a2373ae3f6374160de6a7325628cc4057dd2a09))
+* Update module golang.org/x/crypto to v0.55.0 ([5e9d173](https://github.com/d0ugal/ghcr-exporter/commit/5e9d173ddef2320edea09f05104e682a9c3d87ef))
+* Update module golang.org/x/net to v0.58.0 ([a8f8bd0](https://github.com/d0ugal/ghcr-exporter/commit/a8f8bd0804aaa3bb69f054973a7a8b0b35fa3753))
+* Update module google.golang.org/grpc to v1.83.1 ([d1324c9](https://github.com/d0ugal/ghcr-exporter/commit/d1324c9803d67c0564fab5901ead372d060a9bee))
+
 ## [2.13.58](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.57...v2.13.58) (2026-08-12)
 
 
