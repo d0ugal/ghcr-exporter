@@ -5,6 +5,46 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.59](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.58...v2.13.59) (2026-09-05)
+
+
+### Bug Fixes
+
+* Update go toolchain directive to v1.26.6 ([a9dece1](https://github.com/d0ugal/ghcr-exporter/commit/a9dece1d10b2607bba8ca3132cd3939065ebc9b9))
+* Update go toolchain directive to v1.27.0 ([6cfc803](https://github.com/d0ugal/ghcr-exporter/commit/6cfc80354a2609ec454992d7260babf7e06f42eb))
+* Update go toolchain directive to v1.27.1 ([7fd4cc9](https://github.com/d0ugal/ghcr-exporter/commit/7fd4cc99b81f835e41d028c7353914c9ce54fbf3))
+* Update google.golang.org/genproto/googleapis/api digest to 08b0e42 ([e0d138b](https://github.com/d0ugal/ghcr-exporter/commit/e0d138b98ea1282dbc863381b4a35d047a0ff486))
+* Update google.golang.org/genproto/googleapis/api digest to 18b4a75 ([a0feb64](https://github.com/d0ugal/ghcr-exporter/commit/a0feb64818c623b28efd5c92bda7fb3682a681ec))
+* Update google.golang.org/genproto/googleapis/api digest to 1b09341 ([81be3ec](https://github.com/d0ugal/ghcr-exporter/commit/81be3ec3d428e556d5de3b99734485ce4353c509))
+* Update google.golang.org/genproto/googleapis/api digest to ac3dfec ([7e7b76a](https://github.com/d0ugal/ghcr-exporter/commit/7e7b76a8df1ffe66d01cb9f147d0546c3184aac4))
+* Update google.golang.org/genproto/googleapis/api digest to d0f1323 ([d211182](https://github.com/d0ugal/ghcr-exporter/commit/d211182c65179cf68c8474f89b56036dfde2d534))
+* Update google.golang.org/genproto/googleapis/api digest to da73d73 ([4d73ee6](https://github.com/d0ugal/ghcr-exporter/commit/4d73ee60af8afbbc9d3326faaf4820205db53408))
+* Update google.golang.org/genproto/googleapis/rpc digest to 08b0e42 ([f273e32](https://github.com/d0ugal/ghcr-exporter/commit/f273e323693c25ce9cb7b5aeca932f72d3193f9f))
+* Update google.golang.org/genproto/googleapis/rpc digest to 18b4a75 ([9cf338f](https://github.com/d0ugal/ghcr-exporter/commit/9cf338feaa457b03bb0c113e1b26ee87eedbb777))
+* Update google.golang.org/genproto/googleapis/rpc digest to 1b09341 ([9b0584b](https://github.com/d0ugal/ghcr-exporter/commit/9b0584bbe05d75d8bc5112d2f90155f45ebb3c67))
+* Update google.golang.org/genproto/googleapis/rpc digest to ac3dfec ([2bac7c3](https://github.com/d0ugal/ghcr-exporter/commit/2bac7c3e26b2e2330d82ed6f9ebc36344877c70c))
+* Update google.golang.org/genproto/googleapis/rpc digest to d0f1323 ([dc97191](https://github.com/d0ugal/ghcr-exporter/commit/dc97191fc98a7eb5dd4ac626e5df898874d83d66))
+* Update google.golang.org/genproto/googleapis/rpc digest to da73d73 ([0073ca0](https://github.com/d0ugal/ghcr-exporter/commit/0073ca09df0fac66556ee790ab9e9cfd4c216318))
+* Update module github.com/bytedance/sonic to v1.15.3 ([56cf278](https://github.com/d0ugal/ghcr-exporter/commit/56cf27828f11051b3463561165747d751a8b6b6f))
+* Update module github.com/d0ugal/promexporter to v1.14.69 ([9a2373a](https://github.com/d0ugal/ghcr-exporter/commit/9a2373ae3f6374160de6a7325628cc4057dd2a09))
+* Update module github.com/gin-contrib/sse to v1.1.2 ([dba508d](https://github.com/d0ugal/ghcr-exporter/commit/dba508da5790a57cc48c3ce03b6e62171546f9a9))
+* Update module github.com/go-playground/validator/v10 to v10.30.4 ([f4df0d0](https://github.com/d0ugal/ghcr-exporter/commit/f4df0d03c79adfff4d2eb0c4a8082afc04ce7240))
+* Update module github.com/klauspost/compress to v1.20.0 ([b71d63e](https://github.com/d0ugal/ghcr-exporter/commit/b71d63e51f9fea825134fa23a74b5439f691daa2))
+* Update module github.com/prometheus/client_model to v0.6.3 ([da25a17](https://github.com/d0ugal/ghcr-exporter/commit/da25a17416f56321345e20e10ed404fd38760696))
+* Update module github.com/prometheus/common to v0.71.0 ([7f0dc0d](https://github.com/d0ugal/ghcr-exporter/commit/7f0dc0da4e76ef5f1ca5c2446fb7b9b93e111435))
+* Update module github.com/prometheus/procfs to v0.22.0 ([346e6af](https://github.com/d0ugal/ghcr-exporter/commit/346e6af5ee7fdc139e57030394f79cd8acd94627))
+* Update module github.com/quic-go/quic-go to v0.62.0 ([0b5f97e](https://github.com/d0ugal/ghcr-exporter/commit/0b5f97e6cee3ac3668e199045c2be0deba0fbc7a))
+* Update module go.mongodb.org/mongo-driver/v2 to v2.8.1 ([948d27a](https://github.com/d0ugal/ghcr-exporter/commit/948d27add987706f0d736cf131e03b716ef96433))
+* Update module go.mongodb.org/mongo-driver/v2 to v2.8.2 ([38ee464](https://github.com/d0ugal/ghcr-exporter/commit/38ee4649d73bcd2ac39907cd6de8bbf89944c917))
+* Update module go.mongodb.org/mongo-driver/v2 to v2.9.0 ([56294de](https://github.com/d0ugal/ghcr-exporter/commit/56294ded291d05ee98ff125aae8edd696e9f249d))
+* Update module golang.org/x/crypto to v0.55.0 ([5e9d173](https://github.com/d0ugal/ghcr-exporter/commit/5e9d173ddef2320edea09f05104e682a9c3d87ef))
+* Update module golang.org/x/crypto to v0.56.0 ([b21db12](https://github.com/d0ugal/ghcr-exporter/commit/b21db1258c66dd5286516cca8f317918214d59cf))
+* Update module golang.org/x/net to v0.58.0 ([a8f8bd0](https://github.com/d0ugal/ghcr-exporter/commit/a8f8bd0804aaa3bb69f054973a7a8b0b35fa3753))
+* Update module google.golang.org/grpc to v1.83.1 ([d1324c9](https://github.com/d0ugal/ghcr-exporter/commit/d1324c9803d67c0564fab5901ead372d060a9bee))
+* Update module google.golang.org/grpc to v1.83.2 ([5791cac](https://github.com/d0ugal/ghcr-exporter/commit/5791cac117568718edbce59e0e4b0821b578f11d))
+* Update opentelemetry-go monorepo to v1.46.0 ([044db8e](https://github.com/d0ugal/ghcr-exporter/commit/044db8e41e5c609a4829bf33ba8c3fdb332c0783))
+* Update opentelemetry-go-contrib monorepo to v0.71.0 ([451bfc1](https://github.com/d0ugal/ghcr-exporter/commit/451bfc1af8683238473938eac4e99924612cbb7f))
+
 ## [2.13.58](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.57...v2.13.58) (2026-08-12)
 
 
