@@ -5,6 +5,21 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.60](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.59...v2.13.60) (2026-09-12)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/api digest to f61a6ca ([fa111de](https://github.com/d0ugal/ghcr-exporter/commit/fa111deaeed4181ac31b5a985fb3090cbfd27098))
+* Update google.golang.org/genproto/googleapis/api digest to f8649dd ([dbb7a45](https://github.com/d0ugal/ghcr-exporter/commit/dbb7a4526438de5e174c475a2b3940232d2400e6))
+* Update google.golang.org/genproto/googleapis/rpc digest to f61a6ca ([17eb825](https://github.com/d0ugal/ghcr-exporter/commit/17eb8252f74e5b3f9b67f57f093fdfaaf6180aa3))
+* Update google.golang.org/genproto/googleapis/rpc digest to f8649dd ([25d95e0](https://github.com/d0ugal/ghcr-exporter/commit/25d95e01c9c08beeeffa778de3113eecb81191b9))
+* Update module github.com/bytedance/sonic to v1.15.4 ([20f98a3](https://github.com/d0ugal/ghcr-exporter/commit/20f98a3fce04f16df671c9a5cb392fb7f8f53b64))
+* Update module go.mongodb.org/mongo-driver/v2 to v2.9.1 ([160b0bc](https://github.com/d0ugal/ghcr-exporter/commit/160b0bce927afb3b9167e4fc24d72f1de157bdfd))
+* Update module golang.org/x/arch to v0.31.0 ([3958d21](https://github.com/d0ugal/ghcr-exporter/commit/3958d2162a8024b880d9e6f662242f92ae87dd5f))
+* Update module golang.org/x/crypto to v0.57.0 ([12fdcc2](https://github.com/d0ugal/ghcr-exporter/commit/12fdcc2bba270db375555b20e4397948c95243a3))
+* Update module golang.org/x/net to v0.59.0 ([1fbcf00](https://github.com/d0ugal/ghcr-exporter/commit/1fbcf0018a33a6c9ec36c5b9282a2b4bd591d3c4))
+
 ## [2.13.59](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.58...v2.13.59) (2026-09-05)
 
 
