@@ -5,6 +5,22 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.63](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.62...v2.13.63) (2026-10-02)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/api digest to 8a89bd6 ([2c3fa06](https://github.com/d0ugal/ghcr-exporter/commit/2c3fa06cbb26248554667c1a6111cee7ee7c153a))
+* Update google.golang.org/genproto/googleapis/rpc digest to 8a89bd6 ([0d3c74b](https://github.com/d0ugal/ghcr-exporter/commit/0d3c74b47e2ffe6fe2e17dd7761ee86c9f245fac))
+* Update module github.com/d0ugal/promexporter to v1.14.70 ([3f571ef](https://github.com/d0ugal/ghcr-exporter/commit/3f571ef11f9a96a88a18e7a0c4cf3082fa382012))
+* Update module github.com/d0ugal/promexporter to v1.14.71 ([441466a](https://github.com/d0ugal/ghcr-exporter/commit/441466ab0432e73ac98ded8f13a02f12543b0a3a))
+* Update module github.com/goccy/go-json to v0.11.2 ([01e3ee9](https://github.com/d0ugal/ghcr-exporter/commit/01e3ee973c63f35530160a72fbce2adf5e46cb46))
+* Update module github.com/grafana/pyroscope-go to v1.4.3 ([07c8cf8](https://github.com/d0ugal/ghcr-exporter/commit/07c8cf826ca764ee683ac0141c1843ef8943691c))
+* Update module github.com/prometheus/common to v0.72.0 ([3c03211](https://github.com/d0ugal/ghcr-exporter/commit/3c03211574f50d1367c039e3d44a8b876fee38ab))
+* Update module go.opentelemetry.io/proto/otlp to v1.11.1 ([7a1f103](https://github.com/d0ugal/ghcr-exporter/commit/7a1f103c6e5e2fc912fe70f19af683dc89249ec8))
+* Update opentelemetry-go monorepo to v1.47.0 ([b855f27](https://github.com/d0ugal/ghcr-exporter/commit/b855f271c31521b139b6dd036bdcb8596f8019e3))
+* Update opentelemetry-go-contrib monorepo to v0.72.0 ([e061080](https://github.com/d0ugal/ghcr-exporter/commit/e0610807858366d503a45152ee28649229b63192))
+
 ## [2.13.62](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.61...v2.13.62) (2026-09-29)
 
 
