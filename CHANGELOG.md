@@ -5,6 +5,19 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.65](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.64...v2.13.65) (2026-10-10)
+
+
+### Bug Fixes
+
+* Update go toolchain directive to v1.27.2 ([027c171](https://github.com/d0ugal/ghcr-exporter/commit/027c171e11363ed2e617bbb8e8a4c4afaeebbf7f))
+* Update module github.com/prometheus/client_golang to v1.25.0 ([b6a08a5](https://github.com/d0ugal/ghcr-exporter/commit/b6a08a55723d9ee31a18ec3b5edd432b03659ad8))
+* Update module golang.org/x/arch to v0.32.0 ([597c065](https://github.com/d0ugal/ghcr-exporter/commit/597c0650b84fad6e153ce1e958183e43376ebe3b))
+* Update module golang.org/x/crypto to v0.58.0 ([e40b5c6](https://github.com/d0ugal/ghcr-exporter/commit/e40b5c60e0728d665218627e9246025c31785865))
+* Update module golang.org/x/net to v0.60.0 ([255b738](https://github.com/d0ugal/ghcr-exporter/commit/255b7380acd3a0aa30a25796531957ad3776ddd9))
+* Update module golang.org/x/net to v0.61.0 ([00196ae](https://github.com/d0ugal/ghcr-exporter/commit/00196ae8954e5ec2d481349d9e990276e4bbd940))
+* Update module golang.org/x/sys to v0.49.0 ([ab430e1](https://github.com/d0ugal/ghcr-exporter/commit/ab430e1b7b13198f22831ce79c4fc5c06f9cff6e))
+
 ## [2.13.64](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.63...v2.13.64) (2026-10-07)
 
 
