@@ -5,6 +5,18 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.66](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.65...v2.13.66) (2026-10-19)
+
+
+### Bug Fixes
+
+* Update module github.com/d0ugal/promexporter to v1.14.72 ([b36f270](https://github.com/d0ugal/ghcr-exporter/commit/b36f270d02c5cc0bbb91edd169c08c4a6bf37da1))
+* Update module github.com/gabriel-vasile/mimetype to v1.4.16 ([01797b0](https://github.com/d0ugal/ghcr-exporter/commit/01797b01b05fb936e3ed91b695cb303e787e5e84))
+* Update module github.com/grpc-ecosystem/grpc-gateway/v2 to v2.32.0 ([0d43ad3](https://github.com/d0ugal/ghcr-exporter/commit/0d43ad37d052c60763a7b07c87c1b8570f76e899))
+* Update module github.com/klauspost/cpuid/v2 to v2.4.1 ([c738064](https://github.com/d0ugal/ghcr-exporter/commit/c7380640e6fb8919caae20b680b0430a06bc0f9e))
+* Update module github.com/quic-go/quic-go to v0.64.0 ([c3705ea](https://github.com/d0ugal/ghcr-exporter/commit/c3705eae918c110e911ff5dd7c743cefe5528b90))
+* Update module github.com/quic-go/quic-go to v0.64.1 ([547b86c](https://github.com/d0ugal/ghcr-exporter/commit/547b86c9efa1933dc2cc67b4300e318cc9ab2fac))
+
 ## [2.13.65](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.64...v2.13.65) (2026-10-13)
 
 
