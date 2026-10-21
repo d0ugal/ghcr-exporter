@@ -266,7 +266,7 @@ func TestGetPackageDownloadStatsHTTPError(t *testing.T) {
 	collector.client = server.Client()
 
 	// Test that we get an error when the HTTP request fails
-	_, err := collector.getPackageDownloadStats(context.Background(), "test-owner", "test-package")
+	_, err := collector.getPackageDownloadStats(context.Background(), "test-owner", "test-package", server.URL)
 	if err == nil {
 		t.Fatal("Expected error when HTTP request fails, got nil")
 	}
