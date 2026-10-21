@@ -2,6 +2,8 @@ package collectors
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -33,6 +35,43 @@ func newFakeGitHubCollector(t *testing.T, handler http.Handler) (*GHCRCollector,
 	collector.apiBaseURL = server.URL
 
 	return collector, registry
+}
+
+// Owners with more packages than one page holds are discovered in full.
+func TestGetOwnerPackagesPaginates(t *testing.T) {
+	const total = ownerPackagesPerPage + 50
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/users/acme/packages", func(w http.ResponseWriter, r *http.Request) {
+		perPage := ownerPackagesPerPage
+		if got := r.URL.Query().Get("per_page"); got != fmt.Sprint(perPage) {
+			t.Errorf("per_page = %q, want %d", got, perPage)
+		}
+
+		var page int
+		if _, err := fmt.Sscan(r.URL.Query().Get("page"), &page); err != nil || page < 1 {
+			t.Errorf("page = %q, want a positive number", r.URL.Query().Get("page"))
+			return
+		}
+
+		packages := []GHCRPackageResponse{}
+		for i := (page - 1) * perPage; i < min(page*perPage, total); i++ {
+			packages = append(packages, GHCRPackageResponse{Name: fmt.Sprintf("images/app-%d", i)})
+		}
+
+		_ = json.NewEncoder(w).Encode(packages)
+	})
+
+	collector, _ := newFakeGitHubCollector(t, mux)
+
+	packages, err := collector.getOwnerPackages(context.Background(), "acme")
+	if err != nil {
+		t.Fatalf("getOwnerPackages: %v", err)
+	}
+
+	if len(packages) != total {
+		t.Errorf("got %d packages, want %d", len(packages), total)
+	}
 }
 
 // A nested package name ("charts/app") is one escaped path segment in the API,

@@ -1112,17 +1112,44 @@ func (gc *GHCRCollector) getPackageDownloadStats(ctx context.Context, owner, pac
 	return downloadCount, nil
 }
 
-// getOwnerPackages retrieves all packages for a given owner
+// ownerPackagesPerPage is the API maximum page size. A shorter page is the last one.
+const ownerPackagesPerPage = 100
+
+// getOwnerPackages retrieves all packages for a given owner, every page of them
 func (gc *GHCRCollector) getOwnerPackages(ctx context.Context, owner string) ([]GHCRPackageResponse, error) {
 	slog.Info("Getting packages for owner", "owner", owner)
 
+	var packages []GHCRPackageResponse
+
+	for page := 1; ; page++ {
+		pagePackages, err := gc.getOwnerPackagesPage(ctx, owner, page)
+		if err != nil {
+			return nil, err
+		}
+
+		packages = append(packages, pagePackages...)
+
+		if len(pagePackages) < ownerPackagesPerPage {
+			break
+		}
+	}
+
+	slog.Info("Retrieved packages for owner", "owner", owner, "package_count", len(packages))
+
+	return packages, nil
+}
+
+// getOwnerPackagesPage retrieves one page of an owner's packages
+func (gc *GHCRCollector) getOwnerPackagesPage(ctx context.Context, owner string, page int) ([]GHCRPackageResponse, error) {
+	query := fmt.Sprintf("packages?package_type=container&per_page=%d&page=%d", ownerPackagesPerPage, page)
+
 	// Try user endpoint first
-	resp, err := gc.makeGitHubAPIRequest(ctx, fmt.Sprintf("/users/%s/packages?package_type=container", owner))
+	resp, err := gc.makeGitHubAPIRequest(ctx, fmt.Sprintf("/users/%s/%s", owner, query))
 	if err != nil {
 		// If user endpoint fails, try org endpoint
 		slog.Debug("User endpoint failed, trying org endpoint", "owner", owner, "error", err)
 
-		resp, err = gc.makeGitHubAPIRequest(ctx, fmt.Sprintf("/orgs/%s/packages?package_type=container", owner))
+		resp, err = gc.makeGitHubAPIRequest(ctx, fmt.Sprintf("/orgs/%s/%s", owner, query))
 		if err != nil {
 			return nil, fmt.Errorf("failed to get packages for owner %s: %w", owner, err)
 		}
@@ -1138,8 +1165,6 @@ func (gc *GHCRCollector) getOwnerPackages(ctx context.Context, owner string) ([]
 	if err := json.NewDecoder(resp.Body).Decode(&packages); err != nil {
 		return nil, fmt.Errorf("failed to decode packages response: %w", err)
 	}
-
-	slog.Info("Retrieved packages for owner", "owner", owner, "package_count", len(packages))
 
 	return packages, nil
 }
