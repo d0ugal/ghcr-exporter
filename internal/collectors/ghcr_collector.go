@@ -9,6 +9,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -22,12 +23,16 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// githubAPIBaseURL is the GitHub REST API root. Tests point a collector at a fake server instead.
+const githubAPIBaseURL = "https://api.github.com"
+
 type GHCRCollector struct {
-	config  *config.Config
-	metrics *metrics.GHCRRegistry
-	app     *app.App
-	client  *http.Client
-	token   string
+	config     *config.Config
+	metrics    *metrics.GHCRRegistry
+	app        *app.App
+	client     *http.Client
+	token      string
+	apiBaseURL string
 }
 
 // GHCRPackageResponse represents the response from GHCR API
@@ -84,7 +89,8 @@ func NewGHCRCollector(cfg *config.Config, registry *metrics.GHCRRegistry, app *a
 			Timeout:   30 * time.Second,
 			Transport: otelhttp.NewTransport(http.DefaultTransport),
 		},
-		token: cfg.GitHub.Token.Value(),
+		token:      cfg.GitHub.Token.Value(),
+		apiBaseURL: githubAPIBaseURL,
 	}
 }
 
@@ -503,7 +509,7 @@ func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packag
 	}
 
 	apiStart := time.Now()
-	resp, err := gc.makeGitHubAPIRequest(spanCtx, fmt.Sprintf("/users/%s/packages/container/%s", owner, packageName))
+	resp, err := gc.makeGitHubAPIRequest(spanCtx, packagePath(owner, packageName))
 	apiDuration := time.Since(apiStart).Seconds()
 
 	if err != nil {
@@ -550,6 +556,13 @@ func (gc *GHCRCollector) getPackageInfo(ctx context.Context, owner, repo, packag
 	return &packageInfo, nil
 }
 
+// packagePath returns the API path of a container package. Names can be nested
+// ("charts/app"): the API takes the name as one path segment, so the slash is
+// escaped ("charts%2Fapp"), or GitHub answers 404.
+func packagePath(owner, packageName string) string {
+	return fmt.Sprintf("/users/%s/packages/container/%s", owner, url.PathEscape(packageName))
+}
+
 // makeGitHubAPIRequest makes a request to GitHub API, trying user endpoint first, then org endpoint
 func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) (*http.Response, error) {
 	tracer := gc.app.GetTracer()
@@ -572,7 +585,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 	}
 
 	// Try user endpoint first
-	userURL := fmt.Sprintf("https://api.github.com%s", path)
+	userURL := gc.apiBaseURL + path
 	slog.Debug("Making GitHub API request", "url", userURL, "path", path)
 
 	if collectorSpan != nil {
@@ -646,7 +659,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 
 		// Replace /users/ with /orgs/ in the path
 		orgPath := strings.Replace(path, "/users/", "/orgs/", 1)
-		orgURL := fmt.Sprintf("https://api.github.com%s", orgPath)
+		orgURL := gc.apiBaseURL + orgPath
 		slog.Debug("Trying org endpoint", "url", orgURL, "path", orgPath)
 
 		orgReqStart := time.Now()
@@ -747,7 +760,7 @@ func (gc *GHCRCollector) getPackageVersions(ctx context.Context, owner, repo, pa
 	}
 
 	apiStart := time.Now()
-	resp, err := gc.makeGitHubAPIRequest(spanCtx, fmt.Sprintf("/users/%s/packages/container/%s/versions", owner, packageName))
+	resp, err := gc.makeGitHubAPIRequest(spanCtx, packagePath(owner, packageName)+"/versions")
 	apiDuration := time.Since(apiStart).Seconds()
 
 	if err != nil {
