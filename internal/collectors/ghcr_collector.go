@@ -53,6 +53,8 @@ type GHCRPackageResponse struct {
 	VersionCount int    `json:"version_count"`
 	Visibility   string `json:"visibility"`
 	URL          string `json:"url"`
+	// HTMLURL is the package page, where the download count is scraped from.
+	HTMLURL string `json:"html_url"`
 }
 
 // GHCRVersionResponse represents the response for package versions
@@ -857,7 +859,7 @@ func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.Pa
 
 	// Try to get actual download statistics from the package page
 	downloadStatsStart := time.Now()
-	downloadCount, err := gc.getPackageDownloadStats(spanCtx, pkg.Owner, pkg.Repo)
+	downloadCount, err := gc.getPackageDownloadStats(spanCtx, pkg.Owner, pkg.Repo, packageInfo.HTMLURL)
 	downloadStatsDuration := time.Since(downloadStatsStart).Seconds()
 
 	if err != nil {
@@ -938,13 +940,16 @@ func (gc *GHCRCollector) retryWithBackoff(operation func() error, maxRetries int
 	return fmt.Errorf("operation failed after %d retries: %w", maxRetries, lastErr)
 }
 
-// getPackageDownloadStats scrapes the package page to get actual download statistics
-func (gc *GHCRCollector) getPackageDownloadStats(ctx context.Context, owner, packageName string) (int64, error) {
+// getPackageDownloadStats scrapes the package page (packageURL, the API's
+// html_url) to get actual download statistics. GitHub builds that URL itself,
+// so it holds for nested names and for packages linked to a repository named
+// differently, or to none.
+func (gc *GHCRCollector) getPackageDownloadStats(ctx context.Context, owner, packageName, packageURL string) (int64, error) {
 	slog.Info("Starting download statistics collection", "owner", owner, "package", packageName)
 
-	// Construct the package page URL
-	packageURL := fmt.Sprintf("https://github.com/%s/%s/pkgs/container/%s", owner, packageName, packageName)
-	slog.Debug("Constructed package URL", "url", packageURL)
+	if packageURL == "" {
+		return 0, fmt.Errorf("package has no html_url")
+	}
 
 	// Create request to the package page
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, packageURL, nil)

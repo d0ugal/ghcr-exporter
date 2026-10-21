@@ -35,21 +35,27 @@ func newFakeGitHubCollector(t *testing.T, handler http.Handler) (*GHCRCollector,
 	return collector, registry
 }
 
-// A nested package name ("charts/app") is one escaped path segment in the API.
+// A nested package name ("charts/app") is one escaped path segment in the API,
+// and its page is the html_url GitHub returns, not a URL built from the name.
 func TestCollectPackageMetricsNestedName(t *testing.T) {
+	var baseURL string // the fake server, known once it runs
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.EscapedPath() {
 		case "/users/acme/packages/container/charts%2Fapp":
-			_, _ = w.Write([]byte(`{"name": "charts/app", "version_count": 7}`))
+			_, _ = w.Write([]byte(`{"name": "charts/app", "version_count": 7, "html_url": "` + baseURL + `/users/acme/packages/container/package/charts%2Fapp"}`))
 		case "/users/acme/packages/container/charts%2Fapp/versions":
 			_, _ = w.Write([]byte(`[{"created_at": "2026-01-02T03:04:05Z"}]`))
+		case "/users/acme/packages/container/package/charts%2Fapp":
+			_, _ = w.Write([]byte("<span>Total downloads</span>\n<h3 title=\"1234\">1.2K</h3>\n"))
 		default:
 			http.NotFound(w, r)
 		}
 	})
 
 	collector, registry := newFakeGitHubCollector(t, mux)
+	baseURL = collector.apiBaseURL
 
 	pkg := config.PackageGroup{Owner: "acme", Repo: "charts/app"}
 	if err := collector.collectPackageMetrics(context.Background(), pkg.Repo, pkg); err != nil {
@@ -58,6 +64,10 @@ func TestCollectPackageMetricsNestedName(t *testing.T) {
 
 	if got := testutil.ToFloat64(registry.PackageDownloadsGauge.WithLabelValues("acme", "charts/app")); got != 7 {
 		t.Errorf("ghcr_package_versions = %v, want 7", got)
+	}
+
+	if got := testutil.ToFloat64(registry.PackageDownloadStatsGauge.WithLabelValues("acme", "charts/app")); got != 1234 {
+		t.Errorf("ghcr_package_downloads = %v, want 1234", got)
 	}
 
 	if got := testutil.ToFloat64(registry.PackageLastPublishedGauge.WithLabelValues("acme", "charts/app")); got != 1767323045 {
