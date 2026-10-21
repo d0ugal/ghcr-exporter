@@ -33,6 +33,7 @@ func newFakeGitHubCollector(t *testing.T, handler http.Handler) (*GHCRCollector,
 	collector := NewGHCRCollector(cfg, registry, testApp)
 	collector.client = server.Client()
 	collector.apiBaseURL = server.URL
+	collector.retryDelay = 0
 
 	return collector, registry
 }
@@ -71,6 +72,55 @@ func TestGetOwnerPackagesPaginates(t *testing.T) {
 
 	if len(packages) != total {
 		t.Errorf("got %d packages, want %d", len(packages), total)
+	}
+}
+
+// A discovered package that fails to collect, after retries, fails the owner collection.
+func TestCollectOwnerPackagesCountsFailedPackages(t *testing.T) {
+	for _, tc := range []struct {
+		name                  string
+		brokenFailures        int // requests answered 500 before the package is served
+		wantFailed, wantSuccs float64
+	}{
+		{name: "all packages collected", brokenFailures: 0, wantSuccs: 1},
+		{name: "one package failing once", brokenFailures: 1, wantSuccs: 1},
+		{name: "one package always failing", brokenFailures: packageRetries + 1, wantFailed: 1},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			brokenRequests := 0
+
+			mux := http.NewServeMux()
+			mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+				switch r.URL.EscapedPath() {
+				case "/users/acme/packages":
+					_, _ = w.Write([]byte(`[{"name": "images/ok"}, {"name": "images/broken"}]`))
+				case "/users/acme/packages/container/images%2Fok":
+					_, _ = w.Write([]byte(`{"name": "images/ok"}`))
+				case "/users/acme/packages/container/images%2Fbroken":
+					if brokenRequests++; brokenRequests <= tc.brokenFailures {
+						w.WriteHeader(http.StatusInternalServerError)
+					}
+
+					_, _ = w.Write([]byte(`{"name": "images/broken"}`))
+				default:
+					_, _ = w.Write([]byte(`[]`))
+				}
+			})
+
+			collector, registry := newFakeGitHubCollector(t, mux)
+			pkg := config.PackageGroup{Owner: "acme"}
+			interval := fmt.Sprint(collector.config.GetPackageInterval(pkg))
+
+			collector.collectOwnerPackages(context.Background(), pkg.GetName(), pkg)
+
+			if got := testutil.ToFloat64(registry.CollectionFailedCounter.WithLabelValues(pkg.GetName(), interval)); got != tc.wantFailed {
+				t.Errorf("ghcr_collection_failed_total = %v, want %v", got, tc.wantFailed)
+			}
+
+			if got := testutil.ToFloat64(registry.CollectionSuccessCounter.WithLabelValues(pkg.GetName(), interval)); got != tc.wantSuccs {
+				t.Errorf("ghcr_collection_success_total = %v, want %v", got, tc.wantSuccs)
+			}
+		})
 	}
 }
 
