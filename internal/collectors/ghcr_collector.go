@@ -1169,18 +1169,11 @@ func (gc *GHCRCollector) getOwnerPackages(ctx context.Context, owner string) ([]
 
 // getOwnerPackagesPage retrieves one page of an owner's packages
 func (gc *GHCRCollector) getOwnerPackagesPage(ctx context.Context, owner string, page int) ([]GHCRPackageResponse, error) {
-	query := fmt.Sprintf("packages?package_type=container&per_page=%d&page=%d", ownerPackagesPerPage, page)
-
-	// Try user endpoint first
-	resp, err := gc.makeGitHubAPIRequest(ctx, fmt.Sprintf("/users/%s/%s", owner, query))
+	// makeGitHubAPIRequest falls back to the /orgs/ endpoint itself
+	resp, err := gc.makeGitHubAPIRequest(ctx, fmt.Sprintf("/users/%s/packages?package_type=container&per_page=%d&page=%d",
+		owner, ownerPackagesPerPage, page))
 	if err != nil {
-		// If user endpoint fails, try org endpoint
-		slog.Debug("User endpoint failed, trying org endpoint", "owner", owner, "error", err)
-
-		resp, err = gc.makeGitHubAPIRequest(ctx, fmt.Sprintf("/orgs/%s/%s", owner, query))
-		if err != nil {
-			return nil, fmt.Errorf("failed to get packages for owner %s: %w", owner, err)
-		}
+		return nil, fmt.Errorf("failed to get packages for owner %s: %w", owner, err)
 	}
 
 	defer func() {

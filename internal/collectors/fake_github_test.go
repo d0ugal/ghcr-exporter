@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"slices"
 	"testing"
 
 	"ghcr-exporter/internal/config"
@@ -72,6 +73,24 @@ func TestGetOwnerPackagesPaginates(t *testing.T) {
 
 	if len(packages) != total {
 		t.Errorf("got %d packages, want %d", len(packages), total)
+	}
+}
+
+// Discovery asks the user endpoint, then the org endpoint, once each.
+func TestGetOwnerPackagesUnknownOwner(t *testing.T) {
+	var requests []string
+
+	collector, _ := newFakeGitHubCollector(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests = append(requests, r.URL.Path)
+		http.NotFound(w, r)
+	}))
+
+	if _, err := collector.getOwnerPackages(context.Background(), "acme"); err == nil {
+		t.Fatal("getOwnerPackages: want an error for an unknown owner")
+	}
+
+	if want := []string{"/users/acme/packages", "/orgs/acme/packages"}; !slices.Equal(requests, want) {
+		t.Errorf("requests = %q, want %q", requests, want)
 	}
 }
 
