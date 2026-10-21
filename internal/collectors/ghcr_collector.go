@@ -26,6 +26,13 @@ import (
 // githubAPIBaseURL is the GitHub REST API root. Tests point a collector at a fake server instead.
 const githubAPIBaseURL = "https://api.github.com"
 
+// A package collection is retried packageRetries times, waiting packageRetryDelay,
+// then twice as long each time, so a transient API error does not fail it.
+const (
+	packageRetries    = 3
+	packageRetryDelay = 2 * time.Second
+)
+
 type GHCRCollector struct {
 	config     *config.Config
 	metrics    *metrics.GHCRRegistry
@@ -33,6 +40,7 @@ type GHCRCollector struct {
 	client     *http.Client
 	token      string
 	apiBaseURL string
+	retryDelay time.Duration
 }
 
 // GHCRPackageResponse represents the response from GHCR API
@@ -93,6 +101,7 @@ func NewGHCRCollector(cfg *config.Config, registry *metrics.GHCRRegistry, app *a
 		},
 		token:      cfg.GitHub.Token.Value(),
 		apiBaseURL: githubAPIBaseURL,
+		retryDelay: packageRetryDelay,
 	}
 }
 
@@ -185,7 +194,7 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 	retryStart := time.Now()
 	err := gc.retryWithBackoff(func() error {
 		return gc.collectPackageMetrics(spanCtx, pkg.Repo, pkg)
-	}, 3, 2*time.Second)
+	}, packageRetries, gc.retryDelay)
 	retryDuration := time.Since(retryStart).Seconds()
 
 	if err != nil {
@@ -262,7 +271,7 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 
 	var (
 		collectorSpan *tracing.CollectorSpan
-		spanCtx       context.Context //nolint:contextcheck // Extracting context from span for child operations
+		spanCtx       context.Context
 	)
 
 	if tracer != nil && tracer.IsEnabled() {
@@ -272,7 +281,7 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 			attribute.String("package.owner", pkg.Owner),
 		)
 
-		spanCtx = collectorSpan.Context()
+		spanCtx = collectorSpan.Context() //nolint:contextcheck // Standard OpenTelemetry pattern: extract context from span
 		defer collectorSpan.End()
 	} else {
 		spanCtx = ctx
@@ -327,7 +336,9 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 			Repo:  discoveredPkg.Name,
 		}
 
-		err := gc.collectPackageMetrics(spanCtx, discoveredPkg.Name, discoveredGroup)
+		err := gc.retryWithBackoff(func() error {
+			return gc.collectPackageMetrics(spanCtx, discoveredPkg.Name, discoveredGroup)
+		}, packageRetries, gc.retryDelay)
 		if err != nil {
 			slog.Warn("Failed to collect metrics for discovered package",
 				"name", name,
@@ -348,6 +359,23 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 			attribute.Int("successful", successCount),
 			attribute.Int("total", len(packages)),
 		)
+	}
+
+	// One failed package makes the whole collection a failure, as for a single
+	// package: counted as a success, a package that never collects goes unnoticed.
+	if failedCount := len(packages) - successCount; failedCount > 0 {
+		slog.Error("Failed to collect some discovered packages",
+			"name", name,
+			"owner", pkg.Owner,
+			"failed", failedCount,
+			"total", len(packages))
+
+		gc.metrics.CollectionFailedCounter.With(prometheus.Labels{
+			"repo":     name,
+			"interval": strconv.Itoa(interval),
+		}).Inc()
+
+		return
 	}
 
 	gc.metrics.CollectionSuccessCounter.With(prometheus.Labels{
