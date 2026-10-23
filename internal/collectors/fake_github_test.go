@@ -3,11 +3,13 @@ package collectors
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"slices"
 	"testing"
+	"time"
 
 	"ghcr-exporter/internal/config"
 	"ghcr-exporter/internal/metrics"
@@ -180,5 +182,100 @@ func TestCollectPackageMetricsNestedName(t *testing.T) {
 
 	if got := testutil.ToFloat64(registry.PackageLastPublishedGauge.WithLabelValues("acme", "charts/app")); got != 1767323045 {
 		t.Errorf("ghcr_package_last_published_timestamp = %v, want 1767323045", got)
+	}
+}
+
+// A 4xx answer repeats on every attempt, so it is not retried; a 5xx or a
+// rate limit is.
+func TestRetryWithBackoffSkipsClientErrors(t *testing.T) {
+	for _, tc := range []struct {
+		name         string
+		err          error
+		wantAttempts int
+	}{
+		{name: "not found", err: &APIStatusError{StatusCode: http.StatusNotFound}, wantAttempts: 1},
+		{name: "wrapped forbidden", err: fmt.Errorf("failed: %w", &APIStatusError{StatusCode: http.StatusForbidden}), wantAttempts: 1},
+		{name: "rate limited", err: &APIStatusError{StatusCode: http.StatusTooManyRequests}, wantAttempts: packageRetries + 1},
+		{name: "request timeout", err: &APIStatusError{StatusCode: http.StatusRequestTimeout}, wantAttempts: packageRetries + 1},
+		{name: "server error", err: &APIStatusError{StatusCode: http.StatusBadGateway}, wantAttempts: packageRetries + 1},
+		{name: "transport error", err: errors.New("connection reset"), wantAttempts: packageRetries + 1},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			collector, _ := newFakeGitHubCollector(t, http.NotFoundHandler())
+
+			attempts := 0
+			err := collector.retryWithBackoff(context.Background(), func() error {
+				attempts++
+
+				return tc.err
+			}, packageRetries, 0)
+
+			if !errors.Is(err, tc.err) {
+				t.Errorf("err = %v, want it to wrap %v", err, tc.err)
+			}
+
+			if attempts != tc.wantAttempts {
+				t.Errorf("attempts = %d, want %d", attempts, tc.wantAttempts)
+			}
+		})
+	}
+}
+
+// A cancelled context ends the backoff wait instead of sleeping it out.
+func TestRetryWithBackoffStopsOnCancel(t *testing.T) {
+	collector, _ := newFakeGitHubCollector(t, http.NotFoundHandler())
+
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+
+	attempts := 0
+	err := collector.retryWithBackoff(ctx, func() error {
+		attempts++
+
+		return errors.New("boom")
+	}, packageRetries, time.Hour)
+
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("err = %v, want context.Canceled", err)
+	}
+
+	if attempts != 1 {
+		t.Errorf("attempts = %d, want 1", attempts)
+	}
+}
+
+// A missing package costs one attempt, not the whole retry budget.
+func TestCollectOwnerPackagesDoesNotRetryNotFound(t *testing.T) {
+	brokenRequests := 0
+
+	collector, _ := newFakeGitHubCollector(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.EscapedPath() {
+		case "/users/acme/packages":
+			_, _ = w.Write([]byte(`[{"name": "gone"}]`))
+		default:
+			brokenRequests++
+
+			http.NotFound(w, r)
+		}
+	}))
+
+	pkg := config.PackageGroup{Owner: "acme"}
+	collector.collectOwnerPackages(context.Background(), pkg.GetName(), pkg)
+
+	// One attempt: the user endpoint, then the org fallback.
+	if brokenRequests != 2 {
+		t.Errorf("requests for the missing package = %d, want 2", brokenRequests)
+	}
+}
+
+// Discovery stops, with an error, if the API never returns a short page.
+func TestGetOwnerPackagesPageCap(t *testing.T) {
+	collector, _ := newFakeGitHubCollector(t, http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		packages := make([]GHCRPackageResponse, ownerPackagesPerPage)
+		_ = json.NewEncoder(w).Encode(packages)
+	}))
+
+	if _, err := collector.getOwnerPackages(context.Background(), "acme"); err == nil {
+		t.Fatal("getOwnerPackages: want an error when pages never end")
 	}
 }
