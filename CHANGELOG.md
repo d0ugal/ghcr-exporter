@@ -5,6 +5,23 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.67](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.66...v2.13.67) (2026-10-23)
+
+
+### Bug Fixes
+
+* **collectors:** do not retry 4xx answers, and bound owner discovery ([b7fd8ac](https://github.com/d0ugal/ghcr-exporter/commit/b7fd8acc56745800fee62962adcebfc05050250a))
+* **collectors:** fail an owner collection when a package fails ([bf6347e](https://github.com/d0ugal/ghcr-exporter/commit/bf6347efed61ad987fed8e79a2d5acd821f1c003))
+* **ghcr:** scrape download counts from the package html_url ([1984b11](https://github.com/d0ugal/ghcr-exporter/commit/1984b11fefd3507d4b311469f80c5502f587cc8e))
+* **github:** escape nested package names in API paths ([aeff466](https://github.com/d0ugal/ghcr-exporter/commit/aeff466d54b7b64065315807291169c2198db070))
+* **packages:** discover every page of an owner's packages ([6b478f6](https://github.com/d0ugal/ghcr-exporter/commit/6b478f653cfcad724db282c2efe559a996b1a610))
+* Update go toolchain directive to v1.27.3 ([d5e5ad2](https://github.com/d0ugal/ghcr-exporter/commit/d5e5ad2dd596d8e038c06910a8fcf29cc40f5442))
+* Update google.golang.org/genproto/googleapis/api digest to ce908d2 ([dbccd40](https://github.com/d0ugal/ghcr-exporter/commit/dbccd40d5e402940ba7505cf1391f5c4e49d6114))
+* Update google.golang.org/genproto/googleapis/rpc digest to ce908d2 ([b0518ec](https://github.com/d0ugal/ghcr-exporter/commit/b0518ec305703205f31875db4c5a91d61b5664db))
+* Update module github.com/bytedance/sonic/loader to v0.5.3 ([da9b196](https://github.com/d0ugal/ghcr-exporter/commit/da9b1962525c0aad00801fd911c8cf95ce0e87a6))
+* Update module github.com/d0ugal/promexporter to v1.14.73 ([a7eea6e](https://github.com/d0ugal/ghcr-exporter/commit/a7eea6e08812aba872c2ce75451e1ca0ac87be92))
+* Update module github.com/prometheus/procfs to v0.23.0 ([1bb007f](https://github.com/d0ugal/ghcr-exporter/commit/1bb007fcd629faba658a20ba81f4de0cd8936b87))
+
 ## [2.13.66](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.65...v2.13.66) (2026-10-19)
 
 
