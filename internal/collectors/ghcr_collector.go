@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -192,7 +193,7 @@ func (gc *GHCRCollector) collectSinglePackage(ctx context.Context, name string, 
 
 	// Retry with exponential backoff
 	retryStart := time.Now()
-	err := gc.retryWithBackoff(func() error {
+	err := gc.retryWithBackoff(spanCtx, func() error {
 		return gc.collectPackageMetrics(spanCtx, pkg.Repo, pkg)
 	}, packageRetries, gc.retryDelay)
 	retryDuration := time.Since(retryStart).Seconds()
@@ -336,7 +337,7 @@ func (gc *GHCRCollector) collectOwnerPackages(ctx context.Context, name string, 
 			Repo:  discoveredPkg.Name,
 		}
 
-		err := gc.retryWithBackoff(func() error {
+		err := gc.retryWithBackoff(spanCtx, func() error {
 			return gc.collectPackageMetrics(spanCtx, discoveredPkg.Name, discoveredGroup)
 		}, packageRetries, gc.retryDelay)
 		if err != nil {
@@ -747,7 +748,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 			slog.Error("Error closing org response body", "error", err)
 		}
 
-		err = fmt.Errorf("API request failed with status %d", orgResp.StatusCode)
+		err = &APIStatusError{StatusCode: orgResp.StatusCode}
 		if collectorSpan != nil {
 			collectorSpan.RecordError(err, attribute.Int("status_code", orgResp.StatusCode))
 		}
@@ -760,7 +761,7 @@ func (gc *GHCRCollector) makeGitHubAPIRequest(ctx context.Context, path string) 
 		slog.Error("Error closing user response body", "error", err)
 	}
 
-	err = fmt.Errorf("API request failed with status %d", userResp.StatusCode)
+	err = &APIStatusError{StatusCode: userResp.StatusCode}
 	if collectorSpan != nil {
 		collectorSpan.RecordError(err, attribute.Int("status_code", userResp.StatusCode))
 	}
@@ -947,22 +948,62 @@ func (gc *GHCRCollector) updatePackageMetrics(ctx context.Context, pkg config.Pa
 		"last_published", lastPublished.Format(time.RFC3339))
 }
 
-func (gc *GHCRCollector) retryWithBackoff(operation func() error, maxRetries int, initialDelay time.Duration) error {
+// APIStatusError is a GitHub API response that was not a success.
+type APIStatusError struct {
+	StatusCode int
+}
+
+func (e *APIStatusError) Error() string {
+	return fmt.Sprintf("API request failed with status %d", e.StatusCode)
+}
+
+// retryable reports whether err may go away on its own. A 4xx answer (a
+// missing package, a bad token) repeats on every attempt, except a timeout
+// or a rate limit; transport errors and 5xx answers are worth another try.
+func retryable(err error) bool {
+	var statusErr *APIStatusError
+	if !errors.As(err, &statusErr) {
+		return true
+	}
+
+	switch statusErr.StatusCode {
+	case http.StatusRequestTimeout, http.StatusTooManyRequests:
+		return true
+	}
+
+	return statusErr.StatusCode < 400 || statusErr.StatusCode >= 500
+}
+
+func (gc *GHCRCollector) retryWithBackoff(ctx context.Context, operation func() error, maxRetries int, initialDelay time.Duration) error {
 	var lastErr error
 
 	delay := initialDelay
 
 	for i := 0; i <= maxRetries; i++ {
-		if err := operation(); err != nil {
-			lastErr = err
-			if i < maxRetries {
-				slog.Warn("Operation failed, retrying", "attempt", i+1, "error", err, "delay", delay)
-				time.Sleep(delay)
-				delay *= 2 // Exponential backoff
-			}
-		} else {
+		err := operation()
+		if err == nil {
 			return nil
 		}
+
+		lastErr = err
+
+		if !retryable(err) {
+			return fmt.Errorf("operation failed, not retrying: %w", err)
+		}
+
+		if i == maxRetries {
+			break
+		}
+
+		slog.Warn("Operation failed, retrying", "attempt", i+1, "error", err, "delay", delay)
+
+		select {
+		case <-time.After(delay):
+		case <-ctx.Done():
+			return fmt.Errorf("operation interrupted: %w", errors.Join(ctx.Err(), lastErr))
+		}
+
+		delay *= 2 // Exponential backoff
 	}
 
 	return fmt.Errorf("operation failed after %d retries: %w", maxRetries, lastErr)
@@ -1143,13 +1184,16 @@ func (gc *GHCRCollector) getPackageDownloadStats(ctx context.Context, owner, pac
 // ownerPackagesPerPage is the API maximum page size. A shorter page is the last one.
 const ownerPackagesPerPage = 100
 
+// maxOwnerPackagePages bounds discovery if the API keeps returning full pages.
+const maxOwnerPackagePages = 100
+
 // getOwnerPackages retrieves all packages for a given owner, every page of them
 func (gc *GHCRCollector) getOwnerPackages(ctx context.Context, owner string) ([]GHCRPackageResponse, error) {
 	slog.Info("Getting packages for owner", "owner", owner)
 
 	var packages []GHCRPackageResponse
 
-	for page := 1; ; page++ {
+	for page := 1; page <= maxOwnerPackagePages; page++ {
 		pagePackages, err := gc.getOwnerPackagesPage(ctx, owner, page)
 		if err != nil {
 			return nil, err
@@ -1158,13 +1202,13 @@ func (gc *GHCRCollector) getOwnerPackages(ctx context.Context, owner string) ([]
 		packages = append(packages, pagePackages...)
 
 		if len(pagePackages) < ownerPackagesPerPage {
-			break
+			slog.Info("Retrieved packages for owner", "owner", owner, "package_count", len(packages))
+
+			return packages, nil
 		}
 	}
 
-	slog.Info("Retrieved packages for owner", "owner", owner, "package_count", len(packages))
-
-	return packages, nil
+	return nil, fmt.Errorf("owner %s has more than %d package pages", owner, maxOwnerPackagePages)
 }
 
 // getOwnerPackagesPage retrieves one page of an owner's packages
