@@ -5,6 +5,25 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.70](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.69...v2.13.70) (2026-10-31)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/rpc digest to 2ffab32 ([dcb8c46](https://github.com/d0ugal/ghcr-exporter/commit/dcb8c46e7e1ec65e77a331c0b134fb29bf5e1d37))
+* Update module github.com/bytedance/sonic to v1.15.5 ([3ba6e0e](https://github.com/d0ugal/ghcr-exporter/commit/3ba6e0ed2aeca1789aed09e70993f7248db9de22))
+* Update module github.com/gin-contrib/sse to v1.2.0 ([9276a1b](https://github.com/d0ugal/ghcr-exporter/commit/9276a1b9990dd7f96802cdc240f834b2e23581e3))
+* Update module github.com/goccy/go-json to v0.12.0 ([ea4b060](https://github.com/d0ugal/ghcr-exporter/commit/ea4b060286f793395bddc3e01548ec5d9fb9ce32))
+* Update module github.com/grpc-ecosystem/grpc-gateway/v2 to v2.33.0 ([4a7d240](https://github.com/d0ugal/ghcr-exporter/commit/4a7d24013abdfa1b02d0fd44ddaf549cb3eb91e2))
+* Update module github.com/hashicorp/go-uuid to v1.0.4 ([cdb80b9](https://github.com/d0ugal/ghcr-exporter/commit/cdb80b9eca9e8e137714584a5c35e3f90187ec72))
+* Update module github.com/pandatix/go-abnf to v0.5.3 ([4bf2194](https://github.com/d0ugal/ghcr-exporter/commit/4bf21940c7ba1cfc968d8e9b314ce3340c9cb556))
+* Update module github.com/pandatix/go-abnf to v0.5.4 ([8fe9538](https://github.com/d0ugal/ghcr-exporter/commit/8fe9538ec715b7f03284b3d9e706fe602db5b836))
+* Update module github.com/pandatix/go-abnf to v0.5.5 ([b847f28](https://github.com/d0ugal/ghcr-exporter/commit/b847f283a900852546dbbef34380f862b79b03a4))
+* Update module github.com/prometheus/common to v0.73.0 ([2e339dd](https://github.com/d0ugal/ghcr-exporter/commit/2e339ddc01ef7badda06e167654c4d28a555defe))
+* Update module github.com/prometheus/common to v0.73.1 ([772a650](https://github.com/d0ugal/ghcr-exporter/commit/772a65049ecb6230957fd84ea7bd62b465259b9f))
+* Update module golang.org/x/net to v0.62.0 ([5c57873](https://github.com/d0ugal/ghcr-exporter/commit/5c578737450c75471237c0691ae555c7a0cd7f25))
+* Update module google.golang.org/grpc to v1.85.0 ([b6f6ceb](https://github.com/d0ugal/ghcr-exporter/commit/b6f6ceba13bdb219cb95c624db056adcee37cd1a))
+
 ## [2.13.69](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.68...v2.13.69) (2026-10-27)
 
 
