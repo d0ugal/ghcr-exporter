@@ -5,6 +5,17 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.71](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.70...v2.13.71) (2026-11-06)
+
+
+### Bug Fixes
+
+* Update google.golang.org/genproto/googleapis/api digest to d1e00e9 ([dec569f](https://github.com/d0ugal/ghcr-exporter/commit/dec569f642c4e0da9b446b399c707bc82c0ef988))
+* Update google.golang.org/genproto/googleapis/rpc digest to d1e00e9 ([5cefb54](https://github.com/d0ugal/ghcr-exporter/commit/5cefb545dabf8b9747903ba9817b5878c1f30a34))
+* Update module github.com/klauspost/cpuid/v2 to v2.4.2 ([a8910bc](https://github.com/d0ugal/ghcr-exporter/commit/a8910bc4535b724631aa838e1661e9779a0bb374))
+* Update module github.com/quic-go/quic-go to v0.65.0 ([d3700af](https://github.com/d0ugal/ghcr-exporter/commit/d3700af0a5ae5274bbb79385ecc9778ba0fcdbf5))
+* Update module go.mongodb.org/mongo-driver/v2 to v2.9.3 ([2e2c716](https://github.com/d0ugal/ghcr-exporter/commit/2e2c716a5d750e163f1d4684ddce1acd00870a1d))
+
 ## [2.13.70](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.69...v2.13.70) (2026-11-03)
 
 
