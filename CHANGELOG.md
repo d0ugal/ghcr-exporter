@@ -5,6 +5,13 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.72](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.71...v2.13.72) (2026-11-07)
+
+
+### Bug Fixes
+
+* Update module go.mongodb.org/mongo-driver/v2 to v2.10.0 ([e52008c](https://github.com/d0ugal/ghcr-exporter/commit/e52008c5d4abacb91e43ca720adfd9fcc58e2a6e))
+
 ## [2.13.71](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.70...v2.13.71) (2026-11-06)
 
 
