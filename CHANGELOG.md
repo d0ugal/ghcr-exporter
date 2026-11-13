@@ -5,6 +5,19 @@ All notable changes to ghcr-exporter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.73](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.72...v2.13.73) (2026-11-13)
+
+
+### Bug Fixes
+
+* Update go toolchain directive to v1.27.4 ([81ade62](https://github.com/d0ugal/ghcr-exporter/commit/81ade6243829a6ae0e86b5e7ab4ce9b78a905096))
+* Update google.golang.org/genproto/googleapis/rpc digest to 09e21b2 ([a86321e](https://github.com/d0ugal/ghcr-exporter/commit/a86321eb6aef956c73bbc1f41fee7abb043de4f9))
+* Update module github.com/d0ugal/promexporter to v1.14.76 ([dd82754](https://github.com/d0ugal/ghcr-exporter/commit/dd82754a49fc987635c86c9887cd66f1a7dd5398))
+* Update module github.com/d0ugal/promexporter to v1.14.77 ([9eb1ae1](https://github.com/d0ugal/ghcr-exporter/commit/9eb1ae10166e2e4320ace4f20d758cbe8d13a57a))
+* Update module github.com/grafana/pyroscope-go to v1.5.0 ([9bf5640](https://github.com/d0ugal/ghcr-exporter/commit/9bf56403ba4c16892a575f6009a5e460d7eba3d6))
+* Update module github.com/prometheus/common to v0.74.0 ([54ab569](https://github.com/d0ugal/ghcr-exporter/commit/54ab5691cdecfa354bbefcb0696fe2e1bc589dcc))
+* Update module golang.org/x/crypto to v0.59.0 ([3ea95f2](https://github.com/d0ugal/ghcr-exporter/commit/3ea95f29513bd2878cb0e56c81f123b7bea917b0))
+
 ## [2.13.72](https://github.com/d0ugal/ghcr-exporter/compare/v2.13.71...v2.13.72) (2026-11-10)
 
 
